@@ -32,6 +32,7 @@ let targets: [Target] = [
         resources: ["Resources/**"],
         scripts: scripts,
         dependencies: [
+            .Projects.feature
         ]
 //        settings: .settings(base: env.baseSetting)
     )
