@@ -34,6 +34,7 @@ let targets: [Target] = [
         dependencies: [
             .Projects.feature
         ]
+//        ],/
 //        settings: .settings(base: env.baseSetting)
     )
 ]
