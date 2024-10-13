@@ -14,7 +14,7 @@ public class OnboardingViewController: BaseViewController {
     private let logoImageView = UIImageView().then {
         $0.image = UIImage.logo
     }
-    private let startButton = DMButton(type: .start)
+    private let startButton = DMButtonView(type: .start)
     override public func addView() {
         [
             method,
