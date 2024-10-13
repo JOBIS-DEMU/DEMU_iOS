@@ -1,3 +1,11 @@
+//
+//  DMButtonView.swift
+//  DesignSystem
+//
+//  Created by 이지훈 on 10/13/24.
+//  Copyright © 2024 com.team.demu. All rights reserved.
+//
+
 import UIKit
 import SnapKit
 import Then
@@ -21,7 +29,7 @@ public enum BtType {
     }
 }
 
-public class DMButton: UIView {
+public class DMButtonView: UIView {
     let button = UIButton().then {
         $0.backgroundColor = UIColor.main1
         $0.setTitleColor(UIColor.white, for: .normal)
