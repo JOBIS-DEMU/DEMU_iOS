@@ -1,11 +1,3 @@
-//
-//  DMButtonView.swift
-//  DesignSystem
-//
-//  Created by 이지훈 on 10/13/24.
-//  Copyright © 2024 com.team.demu. All rights reserved.
-//
-
 import UIKit
 import SnapKit
 import Then
