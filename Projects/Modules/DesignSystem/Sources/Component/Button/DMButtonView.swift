@@ -7,15 +7,16 @@ public enum BtType {
     case next
     case login
     case signup
+
     var text: String {
         switch self {
-        case .next :
+        case .next:
             return "다음"
-        case .start :
+        case .start:
             return "시작하기"
-        case .login :
+        case .login:
             return "로그인"
-        case .signup :
+        case .signup:
             return "회원가입"
         }
     }

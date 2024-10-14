@@ -9,6 +9,7 @@ public enum TfType {
     case confirmpwd
     case nickname
     case authentication
+
     var text: String {
         switch self {
         case .email, .emailsend:
@@ -23,6 +24,7 @@ public enum TfType {
             return "인증코드"
         }
     }
+
     var placeholder: String {
         switch self {
         case .email, .emailsend:
@@ -42,7 +44,8 @@ public enum TfType {
 public class DMTextFieldView: UIView {
     private var iconClick = true
     private let type: TfType
-    let label = UILabel().then {
+
+    let titleLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 16, weight: .semibold)
     }
     let textField = UITextField().then {
@@ -76,7 +79,8 @@ public class DMTextFieldView: UIView {
         self.type = type
         super.init(frame: .zero)
         textField.placeholder = type.placeholder
-        label.text = type.text
+        titleLabel.text = type.text
+
         switch type {
         case .email:
             emailLabel.isHidden = false
@@ -100,18 +104,18 @@ public class DMTextFieldView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     private func addView() {
-        addSubview(label)
+        addSubview(titleLabel)
         addSubview(textField)
         textField.addSubview(line)
         textField.addSubview(emailLabel)
         textField.addSubview(sendButton)
     }
     private func layout() {
-        label.snp.makeConstraints {
+        titleLabel.snp.makeConstraints {
             $0.top.leading.equalToSuperview()
         }
         textField.snp.makeConstraints {
-            $0.top.equalTo(label.snp.bottom).offset(8)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(8)
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(45)
         }
