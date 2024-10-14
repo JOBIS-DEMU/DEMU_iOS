@@ -4,7 +4,6 @@
 //import SnapKit
 //import Then
 //
-//
-//public class LoginViewController: UIViewController {
-//    private
+//public class LoginViewController: BaseViewController {
+//    private 
 //}
