@@ -6,3 +6,11 @@
 //  Copyright © 2024 com.team.demu. All rights reserved.
 //
 
+
+import UIKit
+import Core
+
+
+class SearchViewController: UIViewController {
+     
+}
