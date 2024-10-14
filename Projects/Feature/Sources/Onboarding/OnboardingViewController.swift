@@ -17,6 +17,18 @@ public class OnboardingViewController: BaseViewController {
         $0.image = UIImage.logo
     }
     private let startButton = DMButtonView(type: .start)
+
+    override public func attribute() {
+        gradietView.layer.addSublayer(gradietLayer)
+        gradietLayer.colors = [
+            UIColor.white.cgColor,
+            UIColor.gradient.cgColor
+        ]
+        gradietLayer.startPoint = CGPoint(x: 0.8, y: 1)
+        gradietLayer.endPoint = CGPoint(x: 1, y: 0.35)
+        gradietLayer.frame = gradietView.bounds
+    }
+
     override public func addView() {
         view.addSubview(gradietView)
         [
@@ -42,16 +54,6 @@ public class OnboardingViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(64)
         }
-    }
-    override public func attribute() {
-        gradietView.layer.addSublayer(gradietLayer)
-        gradietLayer.colors = [
-            UIColor.white.cgColor,
-            UIColor.gradient.cgColor
-        ]
-        gradietLayer.startPoint = CGPoint(x: 0.8, y: 1)
-        gradietLayer.endPoint = CGPoint(x: 1, y: 0.35)
-        gradietLayer.frame = gradietView.bounds
     }
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
