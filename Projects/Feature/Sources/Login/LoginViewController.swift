@@ -25,6 +25,7 @@ public class LoginViewController: BaseViewController {
         view.backgroundColor = .background
         passWorldChagneButton.addTarget(self, action: #selector(passWorldChagneButtonTapped), for: .touchUpInside)
         loginButton.button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        signUpButton.textButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
     }
 
     override public func addView() {
@@ -72,5 +73,10 @@ public class LoginViewController: BaseViewController {
 
     @objc private func loginButtonTapped() {
         
+    }
+
+    @objc private func signUpButtonTapped() {
+        let vc = SignUpViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

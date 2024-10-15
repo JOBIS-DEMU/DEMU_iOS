@@ -20,6 +20,8 @@ public class SignUpViewController: BaseViewController {
 
     override public func attribute() {
         view.backgroundColor = UIColor.background
+        loginButton.textButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        navigationItem.setHidesBackButton(true, animated: false)
     }
 
     override public func addView() {
@@ -65,5 +67,8 @@ public class SignUpViewController: BaseViewController {
             $0.centerX.equalToSuperview()
             $0.width.equalTo(110)
         }
+    }
+    @objc private func loginButtonTapped() {
+        navigationController?.popViewController(animated: true)
     }
 }
