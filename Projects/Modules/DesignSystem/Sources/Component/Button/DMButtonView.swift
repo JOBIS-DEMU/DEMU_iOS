@@ -7,7 +7,7 @@ public enum BtType {
     case next
     case login
     case signup
-
+    case finish
     var text: String {
         switch self {
         case .next:
@@ -18,6 +18,8 @@ public enum BtType {
             return "로그인"
         case .signup:
             return "회원가입"
+        case .finish:
+            return "완료"
         }
     }
 }
