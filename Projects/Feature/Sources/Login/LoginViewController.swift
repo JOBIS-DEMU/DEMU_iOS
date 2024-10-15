@@ -13,7 +13,7 @@ public class LoginViewController: BaseViewController {
     private let emailTextField = DMTextFieldView(type: .email)
     private let passWordTextField = DMTextFieldView(type: .pwd)
 
-    private let passWorldChagneButton = UIButton().then {
+    private let passWordChagneButton = UIButton().then {
         $0.setTitle("비밀번호 변경", for: .normal)
         $0.setTitleColor(UIColor.text, for: .normal)
         $0.titleLabel?.font = .systemFont(ofSize: 11, weight: .semibold)
@@ -23,7 +23,8 @@ public class LoginViewController: BaseViewController {
 
     public override func attribute() {
         view.backgroundColor = .background
-        passWorldChagneButton.addTarget(self, action: #selector(passWorldChagneButtonTapped), for: .touchUpInside)
+        emailTextField.textField.addTarget(self, action: #selector(textFieldsDidChange), for: .editingChanged)
+        passWordChagneButton.addTarget(self, action: #selector(passWordChagneButtonTapped), for: .touchUpInside)
         loginButton.button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         signUpButton.textButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
     }
@@ -32,7 +33,7 @@ public class LoginViewController: BaseViewController {
         [
             emailTextField,
             passWordTextField,
-            passWorldChagneButton,
+            passWordChagneButton,
             loginButton,
             signUpButton
         ].forEach { view.addSubview($0) }
@@ -49,7 +50,7 @@ public class LoginViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(83)
         }
-        passWorldChagneButton.snp.makeConstraints {
+        passWordChagneButton.snp.makeConstraints {
             $0.top.equalTo(passWordTextField.snp.bottom)
             $0.trailing.equalToSuperview().inset(24)
         }
@@ -70,7 +71,11 @@ public class LoginViewController: BaseViewController {
         self.navigationItem.titleView = loginLabel
     }
 
-    @objc private func passWorldChagneButtonTapped() {
+    @objc private func textFieldsDidChange() {
+        
+    }
+
+    @objc private func passWordChagneButtonTapped() {
         let vc = EmailSendViewController()
         self.navigationController?.pushViewController(vc, animated: true)
     }

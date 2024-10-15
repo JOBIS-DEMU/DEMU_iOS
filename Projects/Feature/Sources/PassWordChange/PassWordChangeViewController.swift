@@ -5,7 +5,7 @@ import SnapKit
 import Then
 
 public class PassWordChangeViewController: BaseViewController {
-    private let passWorldChageLabel = UILabel().then {
+    private let passWordChageLabel = UILabel().then {
         $0.text = "비밀번호 변경"
         $0.font = .boldSystemFont(ofSize: 22)
     }
@@ -21,6 +21,7 @@ public class PassWordChangeViewController: BaseViewController {
     public override func attribute() {
         view.backgroundColor = UIColor.background
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        finishButton.button.addTarget(self, action: #selector(finishButtonTapped), for: .touchUpInside)
     }
     public override func addView() {
         [
@@ -48,12 +49,14 @@ public class PassWordChangeViewController: BaseViewController {
     }
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationItem.titleView = passWorldChageLabel
+        self.navigationItem.titleView = passWordChageLabel
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         self.navigationItem.setHidesBackButton(true, animated: true)
     }
-    @objc public func backButtonTapped() {
+    @objc private func finishButtonTapped() {
+        navigationController?.popToRootViewController(animated: true)
+    }
+    @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
 }
-

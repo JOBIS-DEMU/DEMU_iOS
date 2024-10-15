@@ -5,7 +5,7 @@ import SnapKit
 import Then
 
 public class EmailSendViewController: BaseViewController {
-    private let passWorldChageLabel = UILabel().then {
+    private let passWordChageLabel = UILabel().then {
         $0.text = "비밀번호 변경"
         $0.font = .boldSystemFont(ofSize: 22)
     }
@@ -20,6 +20,7 @@ public class EmailSendViewController: BaseViewController {
     public override func attribute() {
         view.backgroundColor = UIColor.background
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        emailSendTextField.sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
         nextButton.button.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
     }
 
@@ -45,9 +46,13 @@ public class EmailSendViewController: BaseViewController {
 
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationItem.titleView = passWorldChageLabel
+        self.navigationItem.titleView = passWordChageLabel
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         self.navigationItem.setHidesBackButton(true, animated: true)
+    }
+
+    @objc public func sendButtonTapped() {
+        self.emailSendTextField.sendButton.backgroundColor = UIColor.textField
     }
 
     @objc public func backButtonTapped() {
