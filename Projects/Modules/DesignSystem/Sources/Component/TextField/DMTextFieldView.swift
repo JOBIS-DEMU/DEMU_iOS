@@ -45,31 +45,31 @@ public class DMTextFieldView: UIView {
     private var iconClick = true
     private let type: TfType
 
-    let titleLabel = UILabel().then {
+    private let titleLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 16, weight: .semibold)
     }
-    let textField = UITextField().then {
+    public let textField = UITextField().then {
         $0.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         $0.leftViewMode = .always
         $0.font = .systemFont(ofSize: 14, weight: .semibold)
     }
-    let line = UIView().then {
+    public let line = UIView().then {
         $0.backgroundColor = .black
         $0.isUserInteractionEnabled = false
     }
-    let showPasswordButton = UIButton().then {
+    private let showPasswordButton = UIButton().then {
         $0.setImage(UIImage.eyeOff, for: .normal)
         $0.setImage(UIImage.eyeOpen, for: .selected)
         $0.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
         $0.contentEdgeInsets = UIEdgeInsets(top: 0, left: -13, bottom: 0, right: 10)
     }
-    let emailLabel = UILabel().then {
+    private let emailLabel = UILabel().then {
         $0.text = "@dsm.hs.kr"
         $0.font = .systemFont(ofSize: 14, weight: .semibold)
         $0.textColor = UIColor.textField
         $0.isHidden = true
     }
-    let sendButton = UIButton().then {
+    public let sendButton = UIButton().then {
         $0.setImage(UIImage.send.withRenderingMode(.alwaysOriginal), for: .normal)
         $0.backgroundColor = UIColor.main1
         $0.layer.cornerRadius = 4

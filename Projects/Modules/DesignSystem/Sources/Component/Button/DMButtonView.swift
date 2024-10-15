@@ -7,7 +7,7 @@ public enum BtType {
     case next
     case login
     case signup
-
+    case finish
     var text: String {
         switch self {
         case .next:
@@ -18,12 +18,14 @@ public enum BtType {
             return "로그인"
         case .signup:
             return "회원가입"
+        case .finish:
+            return "완료"
         }
     }
 }
 
 public class DMButtonView: UIView {
-    let button = UIButton().then {
+    public let button = UIButton().then {
         $0.backgroundColor = UIColor.main1
         $0.setTitleColor(UIColor.white, for: .normal)
         $0.layer.cornerRadius = 15
@@ -38,11 +40,11 @@ public class DMButtonView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    func addView() {
+    private func addView() {
         self.addSubview(button)
     }
 
-    func layout() {
+    private func layout() {
         button.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
