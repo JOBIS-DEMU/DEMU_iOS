@@ -36,7 +36,7 @@ public final class TabBarController: UITabBarController {
         searchViewController.tabBarItem = UITabBarItem(
             title: "검색",
             image: UIImage.search,
-            selectedImage: UIImage.search
+            selectedImage: UIImage.searchTrue
         )
         let blogViewController = BlogViewController()
         blogViewController.tabBarItem = UITabBarItem(

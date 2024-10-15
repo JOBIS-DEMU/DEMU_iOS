@@ -22,12 +22,15 @@ public class MyPageViewController: BaseViewController {
         $0.font = .systemFont(ofSize: 12, weight: .medium)
         $0.textColor = .textField
     }
+    
+    private let complexTextView = DMTextView(type: .complexintro)
     public override func addView() {
         [
             customBackView,
             imageView,
             nameLabel,
-            majorLabel
+            majorLabel,
+            complexTextView
         ].forEach { view.addSubview($0) }
     }
 
@@ -56,6 +59,12 @@ public class MyPageViewController: BaseViewController {
             $0.leading.equalTo(100)
             $0.trailing.equalTo(240)
         }
+        complexTextView.snp.makeConstraints {
+            $0.top.equalTo(customBackView.snp.bottom).offset(116)
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.width.equalTo(350)
+            $0.height.equalTo(56)
+        }
     }
     @objc func pickImage() {
         self.present(self.imagePicker, animated: true)
@@ -63,11 +72,13 @@ public class MyPageViewController: BaseViewController {
 
     public override func attribute() {
         self.navigationItem.title = "마이페이지"
+     
         imagePicker.delegate = self
         imagePicker.sourceType = .photoLibrary
         imagePicker.allowsEditing = true
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pickImage))
         imageView.addGestureRecognizer(tapGesture)
+        view.backgroundColor = .background
     }
 
     public func presentImagePicker() {
