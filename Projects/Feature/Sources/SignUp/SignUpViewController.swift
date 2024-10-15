@@ -18,13 +18,12 @@ public class SignUpViewController: BaseViewController {
     private let signUpButton = DMButtonView(type: .signup)
     private let loginButton = DMTextButtonView(type: .login)
 
-    override public func attribute() {
+    public override func attribute() {
         view.backgroundColor = UIColor.background
         loginButton.textButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
-        navigationItem.setHidesBackButton(true, animated: false)
     }
 
-    override public func addView() {
+    public override func addView() {
         [
             emailTextField,
             nicknameTextField,
@@ -33,10 +32,9 @@ public class SignUpViewController: BaseViewController {
             signUpButton,
             loginButton
         ].forEach{ view.addSubview($0)}
-        self.navigationItem.titleView = signUpLabel
     }
 
-    override public func layout() {
+    public override func layout() {
         emailTextField.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).inset(30)
             $0.leading.trailing.equalToSuperview().inset(24)
@@ -67,6 +65,11 @@ public class SignUpViewController: BaseViewController {
             $0.centerX.equalToSuperview()
             $0.width.equalTo(110)
         }
+    }
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationItem.titleView = signUpLabel
+        self.navigationItem.setHidesBackButton(true, animated: false)
     }
     @objc private func loginButtonTapped() {
         navigationController?.popViewController(animated: true)

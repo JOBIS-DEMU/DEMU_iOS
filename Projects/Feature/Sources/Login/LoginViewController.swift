@@ -21,14 +21,14 @@ public class LoginViewController: BaseViewController {
     private let loginButton = DMButtonView(type: .login)
     private let signUpButton = DMTextButtonView(type: .singup)
 
-    override public func attribute() {
+    public override func attribute() {
         view.backgroundColor = .background
         passWorldChagneButton.addTarget(self, action: #selector(passWorldChagneButtonTapped), for: .touchUpInside)
         loginButton.button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         signUpButton.textButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
     }
 
-    override public func addView() {
+    public override func addView() {
         [
             emailTextField,
             passWordTextField,
@@ -36,10 +36,9 @@ public class LoginViewController: BaseViewController {
             loginButton,
             signUpButton
         ].forEach { view.addSubview($0) }
-        self.navigationItem.titleView = loginLabel
 
     }
-    override public func layout() {
+    public override func layout() {
         emailTextField.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).inset(30)
             $0.leading.trailing.equalToSuperview().inset(24)
@@ -66,9 +65,14 @@ public class LoginViewController: BaseViewController {
         }
     }
 
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationItem.titleView = loginLabel
+    }
+
     @objc private func passWorldChagneButtonTapped() {
-        let vc = PassWordChangeViewController()
-        navigationController?.pushViewController(vc, animated: true)
+        let vc = EmailSendViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 
     @objc private func loginButtonTapped() {
