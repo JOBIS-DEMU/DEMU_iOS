@@ -19,6 +19,8 @@ public class EmailSendViewController: BaseViewController {
 
     public override func attribute() {
         view.backgroundColor = UIColor.background
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        nextButton.button.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
     }
 
     public override func addView() {
@@ -46,5 +48,14 @@ public class EmailSendViewController: BaseViewController {
         self.navigationItem.titleView = passWorldChageLabel
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         self.navigationItem.setHidesBackButton(true, animated: true)
+    }
+
+    @objc public func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+
+    @objc public func nextButtonTapped() {
+        let vc = PassWordChangeViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
