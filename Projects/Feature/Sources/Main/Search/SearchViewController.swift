@@ -6,11 +6,25 @@
 //  Copyright © 2024 com.team.demu. All rights reserved.
 //
 
-
 import UIKit
+import DesignSystem
 import Core
+import SnapKit
+import Then
 
 
-class SearchViewController: UIViewController {
+public class SearchViewController: BaseViewController {
      
+    
+    
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        
+    }
+    
+    
+    
+    
+  
 }

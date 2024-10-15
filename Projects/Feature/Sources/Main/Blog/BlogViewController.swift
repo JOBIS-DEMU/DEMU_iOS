@@ -7,10 +7,12 @@
 //
 
 import UIKit
+import DesignSystem
 import Core
+import SnapKit
+import Then
 
 
-
-class BlogViewController: UIViewController {
+class BlogViewController: BaseViewController {
     
 }

@@ -14,4 +14,5 @@ public extension UIImage {
     static let vlogFalse = DesignSystemAsset.demuVlogFalse.image
     static let vlogTrue = DesignSystemAsset.demuVlogTrue.image
     static let search = DesignSystemAsset.demuSearch.image
+    static let imagePicker = DesignSystemAsset.demuLogoWhite.image
 }

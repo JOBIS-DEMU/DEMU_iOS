@@ -10,13 +10,13 @@ import UIKit
 import SnapKit
 import Then
 import Core
+import DesignSystem
 
-final class TabBarController: UITabBarController {
-    
-    override func viewWillAppear(_ animated: Bool) {
+public final class TabBarController: UITabBarController {
+    public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setAttribute()
         setTabbar()
+        setAttribute()
     }
     func setTabbar() {
         let tabBar: UITabBar = self.tabBar
@@ -24,39 +24,32 @@ final class TabBarController: UITabBarController {
         tabBar.layer.borderWidth = 1
         tabBar.tintColor = .black
         tabBar.backgroundColor = .white
-        self.hidesBottomBarWhenPushed = true
     }
-    
-    
-    
     func setAttribute() {
-        let searchViewController = SearchViewController()
-        searchViewController.tabBarItem = UITabBarItem(
-            title: "유저검색",
-            image: UIImage(named: "userSearch")!,
-            selectedImage: UIImage(named: "userSearch")!
-        )
-        
         let homeViewController = HomeViewController()
         homeViewController.tabBarItem = UITabBarItem(
             title: "홈",
-            image: UIImage(named: "home")!,
-            selectedImage: UIImage(named: "home")!
+            image: UIImage.homeFalse,
+            selectedImage: UIImage.homeTrue
         )
-        
+        let searchViewController = SearchViewController()
+        searchViewController.tabBarItem = UITabBarItem(
+            title: "검색",
+            image: UIImage.search,
+            selectedImage: UIImage.search
+        )
         let blogViewController = BlogViewController()
         blogViewController.tabBarItem = UITabBarItem(
-            title: "찜",
-            image: UIImage(named: "heart")!,
-            selectedImage: UIImage(named: "heart")!
+            title: "블로그",
+            image: UIImage.vlogFalse,
+            selectedImage: UIImage.vlogTrue
         )
-        
         let myPageViewController = MyPageViewController()
         myPageViewController.tabBarItem = UITabBarItem(
-            title: "프로필",
-            image: UIImage(named: "user")!,
-            selectedImage: UIImage(named: "user")!
+            title: "마이페이지",
+            image: UIImage.myFalse,
+            selectedImage: UIImage.myTrue
         )
-        viewControllers = [searchViewController, homeViewController, blogViewController, myPageViewController]
+        viewControllers = [homeViewController, searchViewController, blogViewController, myPageViewController]
     }
 }
