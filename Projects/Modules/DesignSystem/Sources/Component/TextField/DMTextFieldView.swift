@@ -57,6 +57,10 @@ public class DMTextFieldView: UIView {
         $0.backgroundColor = .black
         $0.isUserInteractionEnabled = false
     }
+    public let errorLabel = UILabel().then {
+        $0.textColor = UIColor.error
+        $0.font = .systemFont(ofSize: 10, weight: .semibold)
+    }
     private let showPasswordButton = UIButton().then {
         $0.setImage(UIImage.eyeOff, for: .normal)
         $0.setImage(UIImage.eyeOpen, for: .selected)
@@ -104,11 +108,16 @@ public class DMTextFieldView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     private func addView() {
-        addSubview(titleLabel)
-        addSubview(textField)
-        textField.addSubview(line)
-        textField.addSubview(emailLabel)
-        textField.addSubview(sendButton)
+        [
+            titleLabel,
+            textField,
+            errorLabel
+        ].forEach{ self.addSubview($0) }
+        [
+            line,
+            emailLabel,
+            sendButton
+        ].forEach{ textField.addSubview($0) }
     }
     private func layout() {
         titleLabel.snp.makeConstraints {
@@ -138,6 +147,10 @@ public class DMTextFieldView: UIView {
                 $0.trailing.equalToSuperview().inset(5)
                 $0.centerY.equalToSuperview()
             }
+        }
+        errorLabel.snp.makeConstraints {
+            $0.top.equalTo(textField.snp.bottom).offset(3)
+            $0.leading.equalToSuperview()
         }
     }
     @objc private func togglePasswordVisibility(_ sender: UIButton) {
