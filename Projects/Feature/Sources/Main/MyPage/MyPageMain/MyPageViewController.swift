@@ -22,7 +22,10 @@ public class MyPageViewController: BaseViewController {
         $0.font = .systemFont(ofSize: 12, weight: .medium)
         $0.textColor = .textField
     }
-    
+    private let remainLabel = UILabel().then {
+        $0.text = "다음 등급 까지 30% 남았어요!"
+    }
+//    private let rank
     private let complexTextView = DMTextView(type: .complexintro)
     public override func addView() {
         [
@@ -30,7 +33,8 @@ public class MyPageViewController: BaseViewController {
             imageView,
             nameLabel,
             majorLabel,
-            complexTextView
+            complexTextView,
+            remainLabel
         ].forEach { view.addSubview($0) }
     }
 
@@ -65,6 +69,10 @@ public class MyPageViewController: BaseViewController {
             $0.width.equalTo(350)
             $0.height.equalTo(56)
         }
+        remainLabel.snp.makeConstraints {
+            $0.top.equalTo(complexTextView.snp.bottom).offset(6)
+            $0.leading.equalTo(20)
+        }
     }
     @objc func pickImage() {
         self.present(self.imagePicker, animated: true)
@@ -72,7 +80,6 @@ public class MyPageViewController: BaseViewController {
 
     public override func attribute() {
         self.navigationItem.title = "마이페이지"
-     
         imagePicker.delegate = self
         imagePicker.sourceType = .photoLibrary
         imagePicker.allowsEditing = true
