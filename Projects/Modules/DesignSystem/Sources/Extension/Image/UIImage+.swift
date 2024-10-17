@@ -16,4 +16,5 @@ public extension UIImage {
     static let search = DesignSystemAsset.demuSearch.image
     static let searchTrue = DesignSystemAsset.demuSearchTrue.image
     static let imagePicker = DesignSystemAsset.demuLogoWhite.image
+    static let back = DesignSystemAsset.back.image
 }
