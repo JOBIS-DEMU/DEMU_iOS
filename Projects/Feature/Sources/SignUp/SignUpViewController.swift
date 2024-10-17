@@ -12,14 +12,20 @@ public class SignUpViewController: BaseViewController {
 
     private let emailTextField = DMTextFieldView(type: .email)
     private let nicknameTextField = DMTextFieldView(type: .nickname)
-    private let passWordTextField = DMTextFieldView(type: .pwd)
-    private let confirmPassWordTextField = DMTextFieldView(type: .confirmpwd)
+    private let pwdTextField = DMTextFieldView(type: .pwd)
+    private let confirmPwdTextField = DMTextFieldView(type: .confirmpwd)
 
     private let signUpButton = DMButtonView(type: .signup)
     private let loginButton = DMTextButtonView(type: .login)
 
     public override func attribute() {
         view.backgroundColor = UIColor.background
+
+        emailTextField.textField.addTarget(self, action: #selector(updateLoginButtonState), for: .editingChanged)
+        nicknameTextField.textField.addTarget(self, action: #selector(updateLoginButtonState), for: .editingChanged)
+        pwdTextField.textField.addTarget(self, action: #selector(updateLoginButtonState), for: .editingChanged)
+        confirmPwdTextField.textField.addTarget(self, action: #selector(updateLoginButtonState), for: .editingChanged)
+
         loginButton.textButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
     }
 
@@ -27,8 +33,8 @@ public class SignUpViewController: BaseViewController {
         [
             emailTextField,
             nicknameTextField,
-            passWordTextField,
-            confirmPassWordTextField,
+            pwdTextField,
+            confirmPwdTextField,
             signUpButton,
             loginButton
         ].forEach{ view.addSubview($0)}
@@ -45,13 +51,13 @@ public class SignUpViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(83)
         }
-        passWordTextField.snp.makeConstraints {
+        pwdTextField.snp.makeConstraints {
             $0.top.equalTo(nicknameTextField.snp.bottom).offset(20)
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(83)
         }
-        confirmPassWordTextField.snp.makeConstraints {
-            $0.top.equalTo(passWordTextField.snp.bottom).offset(20)
+        confirmPwdTextField.snp.makeConstraints {
+            $0.top.equalTo(pwdTextField.snp.bottom).offset(20)
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(83)
         }
@@ -70,6 +76,21 @@ public class SignUpViewController: BaseViewController {
         super.viewWillAppear(animated)
         self.navigationItem.titleView = signUpLabel
         self.navigationItem.setHidesBackButton(true, animated: false)
+    }
+    @objc private func updateLoginButtonState() {
+        let emailTFNil = !(emailTextField.textField.text ?? "").isEmpty
+        let nickNameTFNil = !(nicknameTextField.textField.text ?? "").isEmpty
+        let pwdTFNil = !(pwdTextField.textField.text ?? "").isEmpty
+        let confirmPwdTFNil = !(confirmPwdTextField.textField.text ?? "").isEmpty
+        if emailTFNil && nickNameTFNil && pwdTFNil && confirmPwdTFNil {
+            signUpButton.button.backgroundColor = UIColor.main1
+            signUpButton.button.setTitleColor(UIColor.white, for: .normal)
+            signUpButton.button.isEnabled = true
+        } else {
+            signUpButton.button.backgroundColor = UIColor.textField
+            signUpButton.button.setTitleColor(.black, for: .normal)
+            signUpButton.button.isEnabled = false
+        }
     }
     @objc private func loginButtonTapped() {
         navigationController?.popViewController(animated: true)
