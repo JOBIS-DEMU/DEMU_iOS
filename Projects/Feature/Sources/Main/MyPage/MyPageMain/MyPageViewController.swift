@@ -22,27 +22,32 @@ public class MyPageViewController: BaseViewController {
         $0.font = .systemFont(ofSize: 12, weight: .medium)
         $0.textColor = .textField
     }
+    private let complexTextView = DMTextView(type: .complexintro)
     private let remainLabel = UILabel().then {
         $0.text = "다음 등급 까지 30% 남았어요!"
     }
-    
     private let progressView = UIProgressView().then {
-        $0.progressViewStyle = .default
+//        $0.progressViewStyle = .default
+        $0.layer.cornerRadius = 27.2
         $0.progressTintColor = .green
         $0.trackTintColor = .white
-        $0.progress = 0.3 // 초기값설정
+        $0.progress = 0.7
     }
-    private let complexTextView = DMTextView(type: .complexintro)
+    private let progressBackView = UIView().then {
+        $0.backgroundColor = .lightGray
+        $0.layer.cornerRadius = 10
+    }
     public override func addView() {
         [
             customBackView,
-            imageView,
-            nameLabel,
-            majorLabel,
-            complexTextView,
-            remainLabel,
-            progressView
+                    imageView,
+                    nameLabel,
+                    majorLabel,
+                    complexTextView,
+                    remainLabel,
+                    progressBackView
         ].forEach { view.addSubview($0) }
+        progressBackView.addSubview(progressView)
     }
 
     public override func layout() {
@@ -80,12 +85,17 @@ public class MyPageViewController: BaseViewController {
             $0.top.equalTo(complexTextView.snp.bottom).offset(6)
             $0.leading.equalTo(20)
         }
-        progressView.snp.makeConstraints {
-            $0.top.equalTo(complexTextView.snp.bottom).offset(42)
+        progressBackView.snp.makeConstraints {
+            $0.top.equalTo(complexTextView.snp.bottom).offset(28)
             $0.leading.trailing.equalToSuperview().inset(20)
+            $0.width.equalTo(350)
+            $0.height.equalTo(36)
+        }
+        progressView.snp.makeConstraints {
+            $0.centerX.centerY.equalToSuperview()
             $0.width.equalTo(241)
             $0.height.equalTo(10)
-        }
+            }
     }
     @objc func pickImage() {
         self.present(self.imagePicker, animated: true)
