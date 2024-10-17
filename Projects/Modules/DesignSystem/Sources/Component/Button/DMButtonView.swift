@@ -26,14 +26,21 @@ public enum BtType {
 
 public class DMButtonView: UIView {
     public let button = UIButton().then {
-        $0.backgroundColor = UIColor.main1
-        $0.setTitleColor(UIColor.white, for: .normal)
         $0.layer.cornerRadius = 15
         $0.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
     }
     public init(type: BtType) {
         super.init(frame: .zero)
         button.setTitle(type.text, for: .normal)
+        switch type {
+        case .start:
+            button.backgroundColor = UIColor.main1
+            button.setTitleColor(UIColor.white, for: .normal)
+        default:
+            button.backgroundColor = UIColor.textField
+            button.setTitleColor(UIColor.black, for: .normal)
+            button.isEnabled = false
+        }
         addView()
         layout()
     }

@@ -14,7 +14,7 @@ public class LoginViewController: BaseViewController {
     private let passWordTextField = DMTextFieldView(type: .pwd)
 
     private let passWordChagneButton = UIButton().then {
-        $0.setTitle("비밀번호 변경", for: .normal)
+        $0.setTitle("임시 비밀번호 받기", for: .normal)
         $0.setTitleColor(UIColor.text, for: .normal)
         $0.titleLabel?.font = .systemFont(ofSize: 11, weight: .semibold)
     }
@@ -23,7 +23,9 @@ public class LoginViewController: BaseViewController {
 
     public override func attribute() {
         view.backgroundColor = .background
-        emailTextField.textField.addTarget(self, action: #selector(textFieldsDidChange), for: .editingChanged)
+        emailTextField.textField.addTarget(self, action: #selector(updateLoginButtonState), for: .editingChanged)
+        passWordTextField.textField.addTarget(self, action: #selector(updateLoginButtonState), for: .editingChanged)
+
         passWordChagneButton.addTarget(self, action: #selector(passWordChagneButtonTapped), for: .touchUpInside)
         loginButton.button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         signUpButton.textButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
@@ -71,8 +73,18 @@ public class LoginViewController: BaseViewController {
         self.navigationItem.titleView = loginLabel
     }
 
-    @objc private func textFieldsDidChange() {
-        
+    @objc private func updateLoginButtonState() {
+        let emailTFNil = !(emailTextField.textField.text ?? "").isEmpty
+        let passWordTFNil = !(passWordTextField.textField.text ?? "").isEmpty
+        if emailTFNil && passWordTFNil {
+            loginButton.button.backgroundColor = UIColor.main1
+            loginButton.button.setTitleColor(UIColor.white, for: .normal)
+            loginButton.button.isEnabled = true
+        } else {
+            loginButton.button.backgroundColor = UIColor.textField
+            loginButton.button.setTitleColor(.black, for: .normal)
+            loginButton.button.isEnabled = false
+        }
     }
 
     @objc private func passWordChagneButtonTapped() {
@@ -80,9 +92,7 @@ public class LoginViewController: BaseViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
-    @objc private func loginButtonTapped() {
-        
-    }
+    @objc private func loginButtonTapped() { }
 
     @objc private func signUpButtonTapped() {
         let vc = SignUpViewController()
