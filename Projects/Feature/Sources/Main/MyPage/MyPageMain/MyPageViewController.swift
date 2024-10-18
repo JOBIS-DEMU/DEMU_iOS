@@ -23,94 +23,136 @@ public class MyPageViewController: BaseViewController {
         $0.textColor = .textField
     }
     private let complexTextView = DMTextView(type: .complexintro)
+    private let editButton = UIButton().then {
+        $0.setImage(UIImage.edit, for: .normal)
+    }
     private let remainLabel = UILabel().then {
         $0.text = "다음 등급 까지 30% 남았어요!"
     }
     private let progressView = UIProgressView().then {
-//        $0.progressViewStyle = .default
-        $0.layer.cornerRadius = 27.2
+        $0.layer.cornerRadius = 20
         $0.progressTintColor = .green
         $0.trackTintColor = .white
         $0.progress = 0.7
     }
     private let progressBackView = UIView().then {
-        $0.backgroundColor = .lightGray
+        $0.backgroundColor = UIColor.background2
         $0.layer.cornerRadius = 10
+    }
+    private let settingLabelView = DMMyLabelView(type: .setting)
+    private let settingButton = UIButton().then {
+        $0.backgroundColor = UIColor.background2
+        $0.layer.cornerRadius = 10
+    }
+    private let writeLabelView = DMMyLabelView(type: .write)
+    private let writeButton = UIButton().then {
+        $0.backgroundColor = UIColor.background2
+        $0.layer.cornerRadius = 10
+    }
+    public override func attribute() {
+        view.backgroundColor = UIColor.background
+
+        editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+        settingButton.addTarget(self, action: #selector(settingButtonTapped), for: .touchUpInside)
+        writeButton.addTarget(self, action: #selector(writeButtonTapped), for: .touchUpInside)
+        imageView.layer.cornerRadius = 100
+        imagePicker.delegate = self
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.allowsEditing = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pickImage))
+        imageView.addGestureRecognizer(tapGesture)
     }
     public override func addView() {
         [
             customBackView,
-                    imageView,
-                    nameLabel,
-                    majorLabel,
-                    complexTextView,
-                    remainLabel,
-                    progressBackView
+            imageView,
+            nameLabel,
+            majorLabel,
+            complexTextView,
+            remainLabel,
+            progressBackView,
+            settingButton,
+            writeButton
         ].forEach { view.addSubview($0) }
+        complexTextView.addSubview(editButton)
         progressBackView.addSubview(progressView)
+        settingButton.addSubview(settingLabelView)
+        writeButton.addSubview(writeLabelView)
     }
 
     public override func layout() {
         customBackView.snp.makeConstraints {
-            $0.top.equalTo(view.snp.top)
-            $0.leading.trailing.equalToSuperview()
+            $0.top.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(view.snp.bottom).inset(744)
-            $0.width.equalTo(390)
-            $0.height.equalTo(100)
         }
         imageView.snp.makeConstraints {
-//            $0.top.equalTo(view.safeAreaLayoutGuide).inset(27)
             $0.bottom.equalTo(view.snp.bottom).inset(673)
             $0.leading.equalTo(20)
-            $0.width.equalTo(106)
-            $0.height.equalTo(100)
         }
         nameLabel.snp.makeConstraints {
             $0.top.equalTo(imageView.snp.bottom).offset(9)
             $0.leading.equalTo(20)
-            $0.trailing.equalTo(296)
         }
         majorLabel.snp.makeConstraints {
-            $0.top.equalTo(customBackView.snp.bottom).offset(94)
-            $0.leading.equalTo(100)
-            $0.trailing.equalTo(240)
+            $0.top.equalTo(imageView.snp.bottom).offset(23)
+            $0.leading.equalTo(nameLabel.snp.trailing).offset(6)
         }
         complexTextView.snp.makeConstraints {
-            $0.top.equalTo(customBackView.snp.bottom).offset(116)
+            $0.top.equalTo(nameLabel.snp.bottom).offset(4)
             $0.leading.trailing.equalToSuperview().inset(20)
-            $0.width.equalTo(350)
             $0.height.equalTo(56)
+        }
+        editButton.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.trailing.equalToSuperview().inset(20)
         }
         remainLabel.snp.makeConstraints {
             $0.top.equalTo(complexTextView.snp.bottom).offset(6)
             $0.leading.equalTo(20)
         }
         progressBackView.snp.makeConstraints {
-            $0.top.equalTo(complexTextView.snp.bottom).offset(28)
+            $0.top.equalTo(remainLabel.snp.bottom).offset(6)
             $0.leading.trailing.equalToSuperview().inset(20)
-            $0.width.equalTo(350)
             $0.height.equalTo(36)
         }
         progressView.snp.makeConstraints {
-            $0.centerX.centerY.equalToSuperview()
-            $0.width.equalTo(241)
+            $0.centerY.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(55)
             $0.height.equalTo(10)
-            }
+        }
+        settingLabelView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+            $0.width.equalTo(52)
+        }
+        settingButton.snp.makeConstraints {
+            $0.top.equalTo(progressBackView.snp.bottom).offset(10)
+            $0.leading.equalToSuperview().inset(20)
+            $0.width.equalTo(180)
+            $0.height.equalTo(36)
+        }
+        writeLabelView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+            $0.width.equalTo(52)
+        }
+        writeButton.snp.makeConstraints {
+            $0.top.equalTo(progressBackView.snp.bottom).offset(10)
+            $0.leading.equalTo(settingButton.snp.trailing).offset(6)
+            $0.trailing.equalToSuperview().inset(20)
+            $0.height.equalTo(36)
+        }
+    }
+    @objc private func editButtonTapped() {
+        self.complexTextView.textView.isEditable = true
+    }
+    @objc private func settingButtonTapped() {
+        self.navigationController?.pushViewController(SettingViewController(), animated: true)
+    }
+    @objc private func writeButtonTapped() {
+        
     }
     @objc func pickImage() {
         self.present(self.imagePicker, animated: true)
     }
-
-    public override func attribute() {
-        self.navigationItem.title = "마이페이지"
-        imagePicker.delegate = self
-        imagePicker.sourceType = .photoLibrary
-        imagePicker.allowsEditing = true
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pickImage))
-        imageView.addGestureRecognizer(tapGesture)
-        view.backgroundColor = .background
-    }
-
     public func presentImagePicker() {
         self.present(imagePicker, animated: true, completion: nil)
     }
