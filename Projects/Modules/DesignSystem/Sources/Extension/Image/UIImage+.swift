@@ -17,4 +17,13 @@ public extension UIImage {
     static let searchTrue = DesignSystemAsset.demuSearchTrue.image
     static let imagePicker = DesignSystemAsset.demuLogoWhite.image
     static let back = DesignSystemAsset.back.image
+    static let major = DesignSystemAsset.demuMajor.image
+    static let logout = DesignSystemAsset.demuLogout.image
+    static let heart = DesignSystemAsset.demuHeart.image
+    static let comment = DesignSystemAsset.demuComment.image
+    static let edit = DesignSystemAsset.demuEdit.image
+    static let setting = DesignSystemAsset.demuSetting.image
+    static let logo2 = DesignSystemAsset.demuLogo2.image
+    static let nickname = DesignSystemAsset.demuNickName.image
+    static let pwd = DesignSystemAsset.demuPwd.image
 }
