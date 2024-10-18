@@ -81,8 +81,8 @@ public class LoginViewController: BaseViewController {
             loginButton.button.setTitleColor(UIColor.white, for: .normal)
             loginButton.button.isEnabled = true
         } else {
-            loginButton.button.backgroundColor = UIColor.textField
-            loginButton.button.setTitleColor(.black, for: .normal)
+            loginButton.button.backgroundColor = UIColor.main2
+            loginButton.button.setTitleColor(UIColor.text2, for: .normal)
             loginButton.button.isEnabled = false
         }
     }

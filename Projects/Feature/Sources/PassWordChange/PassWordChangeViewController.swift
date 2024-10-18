@@ -65,8 +65,8 @@ public class PassWordChangeViewController: BaseViewController {
             finishButton.button.setTitleColor(UIColor.white, for: .normal)
             finishButton.button.isEnabled = true
         } else {
-            finishButton.button.backgroundColor = UIColor.textField
-            finishButton.button.setTitleColor(.black, for: .normal)
+            finishButton.button.backgroundColor = UIColor.main2
+            finishButton.button.setTitleColor(UIColor.text2, for: .normal)
             finishButton.button.isEnabled = false
         }
     }

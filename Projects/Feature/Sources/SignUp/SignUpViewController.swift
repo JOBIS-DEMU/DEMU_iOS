@@ -87,8 +87,8 @@ public class SignUpViewController: BaseViewController {
             signUpButton.button.setTitleColor(UIColor.white, for: .normal)
             signUpButton.button.isEnabled = true
         } else {
-            signUpButton.button.backgroundColor = UIColor.textField
-            signUpButton.button.setTitleColor(.black, for: .normal)
+            signUpButton.button.backgroundColor = UIColor.main2
+            signUpButton.button.setTitleColor(UIColor.text2, for: .normal)
             signUpButton.button.isEnabled = false
         }
     }

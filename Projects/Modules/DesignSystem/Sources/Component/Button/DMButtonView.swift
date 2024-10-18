@@ -37,8 +37,8 @@ public class DMButtonView: UIView {
             button.backgroundColor = UIColor.main1
             button.setTitleColor(UIColor.white, for: .normal)
         default:
-            button.backgroundColor = UIColor.textField
-            button.setTitleColor(UIColor.black, for: .normal)
+            button.backgroundColor = UIColor.main2
+            button.setTitleColor(UIColor.text2, for: .normal)
             button.isEnabled = false
         }
         addView()
