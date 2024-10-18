@@ -56,13 +56,13 @@ class SettingViewController: BaseViewController {
         }
     }
     @objc private func nickNameTapped() {
-        print("nick")
+        self.navigationController?.pushViewController(NickNameChangeViewController(), animated: true)
     }
     @objc private func pwdTapped() {
-        print("pwd")
+        self.navigationController?.pushViewController(PwdViewController(), animated: true)
     }
     @objc private func majorTapped() {
-        print("major")
+        self.navigationController?.pushViewController(MajorChangeViewController(), animated: true)
     }
     @objc private func logoutTapped() {
         print("logout")

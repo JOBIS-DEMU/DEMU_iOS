@@ -4,6 +4,6 @@ import Core
 import SnapKit
 import Then
 
-class NickNameChangeViewController: BaseViewController {
+class PwdViewController: BaseViewController {
     
 }
