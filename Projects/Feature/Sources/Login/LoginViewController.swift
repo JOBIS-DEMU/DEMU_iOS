@@ -92,7 +92,10 @@ public class LoginViewController: BaseViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
-    @objc private func loginButtonTapped() { }
+    @objc private func loginButtonTapped() {
+        let vc = TabBarController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
 
     @objc private func signUpButtonTapped() {
         let vc = SignUpViewController()
