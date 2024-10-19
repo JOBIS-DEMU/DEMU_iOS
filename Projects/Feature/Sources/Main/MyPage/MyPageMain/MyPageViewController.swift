@@ -8,9 +8,9 @@ public class MyPageViewController: BaseViewController {
     private let customBackView = UIView().then {
         $0.backgroundColor = .main1
     }
-    private let imagePicker = UIImagePickerController()
-    private let imageView = UIImageView().then {
-        $0.image = UIImage.imagePicker
+//    private let imagePicker = UIImagePickerController()
+    private let profileImageView = UIImageView().then {
+        $0.image = UIImage.profile
         $0.isUserInteractionEnabled = true
     }
     private let nameLabel = UILabel().then {
@@ -55,17 +55,17 @@ public class MyPageViewController: BaseViewController {
         editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
         settingButton.addTarget(self, action: #selector(settingButtonTapped), for: .touchUpInside)
         writeButton.addTarget(self, action: #selector(writeButtonTapped), for: .touchUpInside)
-        imageView.layer.cornerRadius = 100
-        imagePicker.delegate = self
-        imagePicker.sourceType = .photoLibrary
-        imagePicker.allowsEditing = true
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pickImage))
-        imageView.addGestureRecognizer(tapGesture)
+//        imageView.layer.cornerRadius = 100
+//        imagePicker.delegate = self
+//        imagePicker.sourceType = .photoLibrary
+//        imagePicker.allowsEditing = true
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pickImage))
+//        imageView.addGestureRecognizer(tapGesture)
     }
     public override func addView() {
         [
             customBackView,
-            imageView,
+            profileImageView,
             nameLabel,
             majorLabel,
             complexTextView,
@@ -85,16 +85,16 @@ public class MyPageViewController: BaseViewController {
             $0.top.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(view.snp.bottom).inset(744)
         }
-        imageView.snp.makeConstraints {
+        profileImageView.snp.makeConstraints {
             $0.bottom.equalTo(view.snp.bottom).inset(673)
             $0.leading.equalTo(20)
         }
         nameLabel.snp.makeConstraints {
-            $0.top.equalTo(imageView.snp.bottom).offset(9)
+            $0.top.equalTo(profileImageView.snp.bottom).offset(9)
             $0.leading.equalTo(20)
         }
         majorLabel.snp.makeConstraints {
-            $0.top.equalTo(imageView.snp.bottom).offset(23)
+            $0.top.equalTo(profileImageView.snp.bottom).offset(23)
             $0.leading.equalTo(nameLabel.snp.trailing).offset(6)
         }
         complexTextView.snp.makeConstraints {
@@ -150,25 +150,25 @@ public class MyPageViewController: BaseViewController {
     @objc private func writeButtonTapped() {
         
     }
-    @objc func pickImage() {
-        self.present(self.imagePicker, animated: true)
-    }
-    public func presentImagePicker() {
-        self.present(imagePicker, animated: true, completion: nil)
-    }
+//    @objc func pickImage() {
+//        self.present(self.imagePicker, animated: true)
+//    }
+//    public func presentImagePicker() {
+//        self.present(imagePicker, animated: true, completion: nil)
+//    }
 }
 
-extension MyPageViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let editedImage = info[.editedImage] as? UIImage {
-            imageView.image = editedImage
-        } else if let originalImage = info[.originalImage] as? UIImage {
-            imageView.image = originalImage
-        }
-        picker.dismiss(animated: true, completion: nil)
-    }
-
-    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
-    }
-}
+//extension MyPageViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+//    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+//        if let editedImage = info[.editedImage] as? UIImage {
+//            imageView.image = editedImage
+//        } else if let originalImage = info[.originalImage] as? UIImage {
+//            imageView.image = originalImage
+//        }
+//        picker.dismiss(animated: true, completion: nil)
+//    }
+//
+//    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+//        picker.dismiss(animated: true, completion: nil)
+//    }
+//}
