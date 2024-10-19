@@ -26,4 +26,6 @@ public extension UIImage {
     static let logo2 = DesignSystemAsset.demuLogo2.image
     static let nickname = DesignSystemAsset.demuNickName.image
     static let pwd = DesignSystemAsset.demuPwd.image
+    static let profile = DesignSystemAsset.demuProfile.image
+    static let plus = DesignSystemAsset.demuPlus.image
 }
