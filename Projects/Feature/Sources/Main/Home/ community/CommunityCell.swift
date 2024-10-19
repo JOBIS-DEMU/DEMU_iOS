@@ -11,7 +11,12 @@ class CommunityCell: UITableViewCell {
         $0.clipsToBounds = true
         $0.backgroundColor = .systemGray5
     }
-    private let userNameLabel = UILabel().then {
+    private let writerProfileImageView = UIImageView().then {
+        $0.image = UIImage.profile
+        $0.layer.cornerRadius = 12
+        $0.layer.masksToBounds = true
+    }
+    private let writerNameLabel = UILabel().then {
         $0.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
         $0.textColor = .black
     }
@@ -24,23 +29,30 @@ class CommunityCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     private func addView() {
-        contentView.addSubview(logoImageView)
-        contentView.addSubview(userNameLabel)
+        [
+            writerProfileImageView,
+            writerNameLabel,
+            logoImageView
+        ].forEach { contentView.addSubview($0) }
     }
     private func layout() {
+        writerProfileImageView.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(12)
+            $0.leading.equalToSuperview().offset(14)
+            $0.height.width.equalTo(24)
+        }
+        writerNameLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(15)
+            $0.leading.equalTo(writerProfileImageView.snp.trailing).offset(4)
+        }
         logoImageView.snp.makeConstraints {
             $0.top.equalToSuperview().offset(24)
-            $0.left.equalToSuperview().offset(274)
+            $0.trailing.equalToSuperview().inset(14)
             $0.width.height.equalTo(102)
-        }
-        userNameLabel.snp.makeConstraints {
-            $0.top.equalTo(15)
-            $0.left.equalToSuperview().offset(42)
-            $0.right.equalToSuperview().offset(306)
         }
     }
     func configure(imageName: String, description: String) {
         logoImageView.image = UIImage(named: imageName)
-        userNameLabel.text = description
+        writerNameLabel.text = description
     }
 }
