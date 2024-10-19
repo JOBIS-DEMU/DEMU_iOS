@@ -9,8 +9,9 @@ class BlogChatCell: UITableViewCell {
         $0.contentMode = .scaleAspectFit
         $0.layer.cornerRadius = 10
         $0.clipsToBounds = true
+        $0.backgroundColor = .lightGray
     }
-    private let descriptionLabel = UILabel().then {
+    private let nameLabel = UILabel().then {
         $0.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         $0.textColor = .black
     }
@@ -19,30 +20,26 @@ class BlogChatCell: UITableViewCell {
         addView()
         layout()
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     private func addView() {
         contentView.addSubview(profileImageView)
-        contentView.addSubview(descriptionLabel)
+        contentView.addSubview(nameLabel)
     }
     private func layout() {
         profileImageView.snp.makeConstraints {
-            $0.left.equalToSuperview().offset(16)
-            $0.centerY.equalToSuperview()
-            $0.width.height.equalTo(60)
+            $0.top.equalTo(8)
+            $0.leading.equalTo(24)
+            $0.width.height.equalTo(24)
         }
-        descriptionLabel.snp.makeConstraints {
-            $0.left.equalTo(profileImageView.snp.right).offset(16)
-            $0.centerY.equalToSuperview()
-            $0.right.equalToSuperview().offset(-16)
+        nameLabel.snp.makeConstraints {
+            $0.top.equalTo(12)
+            $0.leading.equalTo(56)
         }
     }
-    
-    func configure(imageName: String, description: String) {
-        profileImageView.image = UIImage(named: imageName)
-        descriptionLabel.text = description
+    func configure(profileImage: String, description: String) {
+        profileImageView.image = UIImage(named: profileImage)
+        nameLabel.text = description
     }
 }

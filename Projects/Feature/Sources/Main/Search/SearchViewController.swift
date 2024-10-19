@@ -27,6 +27,7 @@ public class SearchViewController: BaseViewController {
             textField.layer.borderWidth = 1
             textField.layer.borderColor = UIColor.background.cgColor
             textField.layer.cornerRadius = 5
+            textField.placeholder = "검색"
         }
     }
     public override func addView() {
