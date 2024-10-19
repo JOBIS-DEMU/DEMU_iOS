@@ -5,6 +5,7 @@ import SnapKit
 import Then
 
 public class MyPageViewController: BaseViewController {
+
     private let customBackView = UIView().then {
         $0.backgroundColor = .main1
     }
