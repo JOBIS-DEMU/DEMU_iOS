@@ -14,20 +14,20 @@ class NickNameChangeViewController: BaseViewController {
         $0.font = .systemFont(ofSize: 20, weight: .semibold)
     }
     private let nickNameTextField = DMTextFieldView(type: .nickname)
-    private let finishiButton = DMButtonView(type: .finish)
+    private let finishButton = DMButtonView(type: .finish)
 
     override public func attribute() {
         view.backgroundColor = UIColor.background
 
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         nickNameTextField.textField.addTarget(self, action: #selector(updateFinishButtonState), for: .editingChanged)
-        finishiButton.button.addTarget(self, action: #selector(finishButtonTapped), for: .touchUpInside)
+        finishButton.button.addTarget(self, action: #selector(finishButtonTapped), for: .touchUpInside)
     }
     override public func addView() {
         [
             titleLabel,
             nickNameTextField,
-            finishiButton
+            finishButton
         ].forEach{ view.addSubview($0) }
     }
     override public func layout() {
@@ -40,7 +40,7 @@ class NickNameChangeViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(64)
         }
-        finishiButton.snp.makeConstraints {
+        finishButton.snp.makeConstraints {
             $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(64)
@@ -57,13 +57,13 @@ class NickNameChangeViewController: BaseViewController {
     @objc private func updateFinishButtonState() {
         let nickNameTFNil = !(nickNameTextField.textField.text ?? "").isEmpty
         if nickNameTFNil {
-            finishiButton.button.backgroundColor = UIColor.main1
-            finishiButton.button.setTitleColor(UIColor.white, for: .normal)
-            finishiButton.button.isEnabled = true
+            finishButton.button.backgroundColor = UIColor.main1
+            finishButton.button.setTitleColor(UIColor.white, for: .normal)
+            finishButton.button.isEnabled = true
         } else {
-            finishiButton.button.backgroundColor = UIColor.main2
-            finishiButton.button.setTitleColor(UIColor.text2, for: .normal)
-            finishiButton.button.isEnabled = false
+            finishButton.button.backgroundColor = UIColor.main2
+            finishButton.button.setTitleColor(UIColor.text2, for: .normal)
+            finishButton.button.isEnabled = false
         }
     }
     @objc private func finishButtonTapped() {
