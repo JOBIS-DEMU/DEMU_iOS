@@ -20,8 +20,9 @@ class DMTextView: UIView {
         $0.layer.cornerRadius = 8.35
         $0.backgroundColor = .white
         $0.textAlignment = .center
-        $0.layer.borderColor = UIColor.lightGray.cgColor
+        $0.layer.borderColor = UIColor.background2.cgColor
         $0.layer.borderWidth = 1
+        $0.isEditable = false
     }
     let placeholderText = UILabel().then {
         $0.font = .systemFont(ofSize: 14)
@@ -49,7 +50,7 @@ class DMTextView: UIView {
             $0.edges.equalToSuperview()
         }
         placeholderText.snp.makeConstraints {
-            $0.top.left.equalToSuperview().inset(12)
+            $0.center.equalToSuperview()
         }
     }
 }
