@@ -29,6 +29,7 @@ public class LoginViewController: BaseViewController {
         passWordChagneButton.addTarget(self, action: #selector(passWordChagneButtonTapped), for: .touchUpInside)
         loginButton.button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         signUpButton.textButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
+        self.navigationItem.setHidesBackButton(true, animated: true)
     }
 
     public override func addView() {
