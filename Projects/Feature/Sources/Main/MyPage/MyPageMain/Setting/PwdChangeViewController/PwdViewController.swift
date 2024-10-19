@@ -52,7 +52,7 @@ class PwdViewController: BaseViewController {
         self.navigationItem.setHidesBackButton(true, animated: true)
     }
     @objc private func backButtonTapped() {
-        self.navigationController?.popToRootViewController(animated: true)
+        self.navigationController?.popViewController(animated: true)
     }
     @objc private func updateNextButtonState() {
         let pwdTFNil = !(pwdTextField.textField.text ?? "").isEmpty

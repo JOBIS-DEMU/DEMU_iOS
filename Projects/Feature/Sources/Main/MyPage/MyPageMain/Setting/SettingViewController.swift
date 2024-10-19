@@ -7,6 +7,9 @@ import Then
 class SettingViewController: BaseViewController {
     private let profileView = DMBackView(type: .profile)
 
+    private let xButton = UIButton().then {
+        $0.setImage(UIImage.cancel, for: .normal)
+    }
     private let imagePicker = UIImagePickerController()
     private let profileEditImageView = UIImageView().then {
         $0.image = UIImage.profile
@@ -40,6 +43,7 @@ class SettingViewController: BaseViewController {
     override public func attribute() {
         view.backgroundColor = UIColor.background
 
+        xButton.addTarget(self, action: #selector(xButtonTapped), for: .touchUpInside)
         nickNameView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(nickNameTapped)))
         pwdView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pwdTapped)))
         majorView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(majorTapped)))
@@ -59,6 +63,7 @@ class SettingViewController: BaseViewController {
             logoutView
         ].forEach{ view.addSubview($0) }
         [
+            xButton,
             profileEditImageView,
             plusButton,
             nickNameLabel,
@@ -68,9 +73,13 @@ class SettingViewController: BaseViewController {
     }
     override public func layout() {
         profileView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).inset(10)
+            $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(100)
+        }
+        xButton.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(14)
+            $0.trailing.equalToSuperview().inset(14)
         }
         profileEditImageView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
@@ -113,6 +122,13 @@ class SettingViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(45)
         }
+    }
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationItem.setHidesBackButton(true, animated: true)
+    }
+    @objc private func xButtonTapped() {
+        self.navigationController?.popViewController(animated: true)
     }
     @objc private func nickNameTapped() {
         self.navigationController?.pushViewController(NickNameChangeViewController(), animated: true)

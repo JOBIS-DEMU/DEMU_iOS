@@ -28,4 +28,5 @@ public extension UIImage {
     static let pwd = DesignSystemAsset.demuPwd.image
     static let profile = DesignSystemAsset.demuProfile.image
     static let plus = DesignSystemAsset.demuPlus.image
+    static let cancel = DesignSystemAsset.demuX.image
 }
