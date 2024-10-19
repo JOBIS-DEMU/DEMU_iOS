@@ -17,7 +17,6 @@ public class OnboardingViewController: BaseViewController {
         $0.image = UIImage.logo
     }
     private let startButton = DMButtonView(type: .start)
-
     override public func attribute() {
         gradietView.layer.addSublayer(gradietLayer)
         gradietLayer.colors = [
@@ -27,6 +26,12 @@ public class OnboardingViewController: BaseViewController {
         gradietLayer.startPoint = CGPoint(x: 0.8, y: 1)
         gradietLayer.endPoint = CGPoint(x: 1, y: 0.35)
         gradietLayer.frame = gradietView.bounds
+        startButton.button.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
+    }
+    @objc private func startButtonTapped() {
+        let vc = LoginViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
+
     }
 
     override public func addView() {

@@ -27,6 +27,7 @@ public class SignUpViewController: BaseViewController {
         confirmPwdTextField.textField.addTarget(self, action: #selector(updateLoginButtonState), for: .editingChanged)
 
         loginButton.textButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        signUpButton.button.addTarget(self, action: #selector (signUpButtonTapped), for: .touchUpInside)
     }
 
     public override func addView() {
@@ -92,6 +93,11 @@ public class SignUpViewController: BaseViewController {
             signUpButton.button.isEnabled = false
         }
     }
+    @objc private func signUpButtonTapped() {
+        let vc = LoginViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
     @objc private func loginButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
