@@ -29,4 +29,8 @@ public extension UIImage {
     static let profile = DesignSystemAsset.demuProfile.image
     static let plus = DesignSystemAsset.demuPlus.image
     static let cancel = DesignSystemAsset.demuX.image
+    static let bronze = DesignSystemAsset.demuBronze.image
+    static let silver = DesignSystemAsset.demuSilver.image
+    static let gold = DesignSystemAsset.demuGold.image
+    static let master = DesignSystemAsset.demuMaster.image
 }
