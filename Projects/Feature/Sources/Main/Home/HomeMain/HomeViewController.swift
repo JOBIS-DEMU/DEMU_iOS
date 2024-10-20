@@ -6,17 +6,19 @@ import Then
 
 class HomeViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
     private let data = [
-        (imageName: "", description: "이지훈"),
-        (imageName: "", description: "이지훈"),
-        (imageName: "", description: "이지훈"),
-        (imageName: "", description: "이지훈"),
-        (imageName: "", description: "이지훈"),
-        (imageName: "", description: "이지훈"),
-        (imageName: "", description: "이지훈"),
-        (imageName: "", description: "이지훈")
+        (imageName: "", description: "하원", level: "",title: "내가 최고 동아리 은하와 자비스에 합격했던 비결", detail: "이번 글에서는 제가 동아리에 합격할 수 있었던 이유를 소개해 보려고 합니다. 네 저는 -1살 때부터 코딩을 시작했는데요. 네.. 코딩을 너무 늦게 시작했죠."),
+        (imageName: "", description: "히원", level: "", title: "내가 1학년 iOS 짱인 이유", detail: "그냥 내가 짱이니까"),
+        (imageName: "", description: "하원", level: "", title: "먼작귀가 너무 귀여워요", detail: "모두 치이카와 보구 가세용~"),
+        (imageName: "", description: "하원", level: "", title: "컨플릭트 해결", detail: "누가 컨플릭트 좀 해결해주세요 ㅜㅜ 이런 경우 어떻게 해결하나요 ㅜ"),
+        (imageName: "", description: "이지훈", level: "", title: "", detail: ""),
+        (imageName: "", description: "이지훈", level: "", title: "", detail: ""),
+        (imageName: "", description: "이지훈", level: "", title: "", detail: ""),
+        (imageName: "", description: "이지훈", level: "", title: "", detail: "")
     ]
 
     private let tableView = UITableView().then {
+        $0.backgroundColor = UIColor.background
+        $0.separatorStyle = .none
         $0.register(CommunityCell.self, forCellReuseIdentifier: "ClubCell")
         $0.rowHeight = UITableView.automaticDimension
         $0.estimatedRowHeight = 100
@@ -50,6 +52,7 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
     }
 
     override public func attribute() {
+        view.backgroundColor = UIColor.background
         tableView.dataSource = self
         tableView.delegate = self
     }
@@ -102,7 +105,8 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
             return UITableViewCell()
         }
         let club = data[indexPath.row]
-        cell.configure(imageName: club.imageName, description: club.description)
+        cell.configure(imageName: club.imageName, description: club.description, level: club.level, title: club.title, detail: club.detail)
+        cell.selectionStyle = .none
         return cell
     }
     internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
