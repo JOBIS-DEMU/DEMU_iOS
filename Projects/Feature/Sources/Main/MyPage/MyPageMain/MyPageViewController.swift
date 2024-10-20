@@ -4,7 +4,9 @@ import Core
 import SnapKit
 import Then
 
+
 public class MyPageViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
+
 
     private let customBackView = UIView().then {
         $0.backgroundColor = .main1
