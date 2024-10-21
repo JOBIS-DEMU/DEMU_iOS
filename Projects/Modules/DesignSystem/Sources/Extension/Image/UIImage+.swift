@@ -33,4 +33,8 @@ public extension UIImage {
     static let silver = DesignSystemAsset.demuSilver.image
     static let gold = DesignSystemAsset.demuGold.image
     static let master = DesignSystemAsset.demuMaster.image
+    static let down = DesignSystemAsset.demuDown.image
+    static let up = DesignSystemAsset.demuUp.image
+    static let image = DesignSystemAsset.demuImage.image
+    static let imagex = DesignSystemAsset.demuImageX.image
 }

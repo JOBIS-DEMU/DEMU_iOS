@@ -13,9 +13,18 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
         $0.setTitle("등록", for: .normal)
         $0.setTitleColor(.black, for: .normal)
     }
+//    private let imagePickerBackView = UIView().then {
+//        $0.backgroundColor = .white
+//        $0.
+//    }
+    private let dropDownLabel = UILabel().then {
+        $0.text = "backend"
+        $0.font = .systemFont(ofSize: 24, weight: .semibold)
+        $0.textColor = .main1
+    }
     private let imagePicker = UIImagePickerController()
     private let profileEditImageView = UIImageView().then {
-        $0.image = UIImage.profile
+        $0.image = UIImage.image
         $0.layer.cornerRadius = 30
         $0.layer.masksToBounds = true
     }
@@ -29,7 +38,8 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
         [
             cancelButton,
             checkButton,
-            profileEditImageView
+            profileEditImageView,
+            dropDownLabel
         ].forEach { view.addSubview($0) }
     }
     public override func layout() {
@@ -46,8 +56,12 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
             $0.leading.equalTo(24)
             $0.width.height.equalTo(50)
         }
+        dropDownLabel.snp.makeConstraints {
+            $0.top.equalTo(58)
+            $0.leading.equalTo(132)
+            $0.trailing.equalTo(156)
+        }
     }
-    
     @objc func pickImage() {
         self.present(self.imagePicker, animated: true)
     }
@@ -55,4 +69,3 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
         self.present(imagePicker, animated: true, completion: nil)
     }
 }
-
