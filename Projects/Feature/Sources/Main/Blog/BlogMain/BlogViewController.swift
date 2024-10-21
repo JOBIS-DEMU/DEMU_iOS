@@ -22,6 +22,9 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
         $0.font = .systemFont(ofSize: 24, weight: .semibold)
         $0.textColor = .main1
     }
+    private let downButton = UIButton().then {
+        $0.setImage(UIImage.down, for: .normal)
+    }
     private let imagePicker = UIImagePickerController()
     private let profileEditImageView = UIImageView().then {
         $0.image = UIImage.image
@@ -39,7 +42,8 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
             cancelButton,
             checkButton,
             profileEditImageView,
-            dropDownLabel
+            dropDownLabel,
+            downButton
         ].forEach { view.addSubview($0) }
     }
     public override func layout() {
@@ -60,6 +64,11 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
             $0.top.equalTo(58)
             $0.leading.equalTo(132)
             $0.trailing.equalTo(156)
+        }
+        downButton.snp.makeConstraints {
+            $0.top.equalTo(70)
+            $0.leading.equalTo(242)
+            $0.trailing.equalTo(132)
         }
     }
     @objc func pickImage() {
