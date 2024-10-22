@@ -5,7 +5,12 @@ import SnapKit
 import Then
 import RxSwift
 
+protocol BlogModalViewControllerDelegate: AnyObject {
+    func didSelectMajor(_ major: String)
+}
+
 class BlogModalViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
+    weak var delegate: BlogModalViewControllerDelegate?
     private let tableView = UITableView()
     let major = ["backend", "frontend", "iOS", "AOS", "AI", "design", "flutter", "full stack", "game", "security", "embedded", "devops", "기타 전공", "전체 글"]
     private var selectedIndexPath: IndexPath?
@@ -17,6 +22,7 @@ class BlogModalViewController: BaseViewController, UITableViewDelegate, UITableV
         $0.font = .systemFont(ofSize: 26, weight: .semibold)
         $0.textColor = .main1
     }
+
     public override func addView() {
         [
             titleLabel,
@@ -30,8 +36,8 @@ class BlogModalViewController: BaseViewController, UITableViewDelegate, UITableV
         tableView.dataSource = self
         tableView.delegate = self
         tableView.allowsMultipleSelection = false
-
     }
+
     public override func layout() {
         titleLabel.snp.makeConstraints {
             $0.top.equalToSuperview()
@@ -43,6 +49,7 @@ class BlogModalViewController: BaseViewController, UITableViewDelegate, UITableV
             $0.leading.trailing.equalToSuperview()
         }
     }
+
     internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return major.count
     }
@@ -62,7 +69,8 @@ class BlogModalViewController: BaseViewController, UITableViewDelegate, UITableV
         guard let cell = tableView.cellForRow(at: indexPath) as? BlogModalCell else { return }
         cell.titleLabel.textColor = UIColor.main1
         selectedIndexPath = indexPath
-        
-        titleLabel.text = major[indexPath.row]
+        let selectedMajor = major[indexPath.row]
+        titleLabel.text = selectedMajor
+        delegate?.didSelectMajor(selectedMajor)
     }
 }

@@ -4,7 +4,8 @@ import Core
 import SnapKit
 import Then
 
-class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
+class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate, BlogModalViewControllerDelegate {
+    
     private let cancelButton = UIButton().then {
         $0.setTitle("취소", for: .normal)
         $0.setTitleColor(.black, for: .normal)
@@ -37,10 +38,12 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
         $0.layer.borderWidth = 2
         $0.layer.borderColor = UIColor.gray.cgColor
     }
+    
     public override func viewWillAppear(_ animated: Bool) {
-         super.viewWillAppear(animated)
-         navigationController?.setNavigationBarHidden(true, animated: false)
-     }
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
     public override func attribute() {
         view.backgroundColor = .background
         imagePicker.delegate = self
@@ -50,6 +53,7 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
         downButton.addTarget(self, action: #selector(presentBlogModal), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
     }
+    
     public override func addView() {
         [
             cancelButton,
@@ -76,11 +80,11 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
         }
         dropDownLabel.snp.makeConstraints {
             $0.top.equalTo(58)
-            $0.leading.equalTo(132)
+            $0.centerX.equalToSuperview()
         }
         downButton.snp.makeConstraints {
             $0.top.equalTo(65)
-            $0.leading.equalTo(242)
+            $0.leading.equalTo(dropDownLabel.snp.trailing).offset(12)
         }
         imageSquareView.snp.makeConstraints {
             $0.top.equalTo(113)
@@ -97,19 +101,24 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
             $0.width.height.equalTo(18)
         }
     }
+
     @objc func presentBlogModal() {
         let modalVC = BlogModalViewController()
         modalVC.modalPresentationStyle = .formSheet
         modalVC.modalTransitionStyle = .coverVertical
+        modalVC.delegate = self
         self.present(modalVC, animated: true, completion: nil)
+    }
+    func didSelectMajor(_ major: String) {
+        dropDownLabel.text = major
     }
     @objc func cancelButtonTapped() {
         self.navigationController?.popViewController(animated: true)
     }
-
     @objc func pickImage() {
         self.present(self.imagePicker, animated: true)
     }
+
     public func presentImagePicker() {
         self.present(imagePicker, animated: true, completion: nil)
     }
