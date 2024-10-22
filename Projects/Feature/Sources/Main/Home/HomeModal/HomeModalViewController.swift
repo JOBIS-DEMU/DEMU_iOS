@@ -69,12 +69,8 @@ class HomeModalViewController: BaseViewController, UITableViewDelegate, UITableV
         guard let cell = tableView.cellForRow(at: indexPath) as? HomeModalCell else { return }
         cell.titleLabel.textColor = UIColor.main1
         selectedIndexPath = indexPath
-        
-        // 선택된 전공을 delegate를 통해 전달
         let selectedMajor = major[indexPath.row]
         delegate?.didSelectMajor(selectedMajor)
-        
-        // 모달 뷰 dismiss (선택 후 자동으로 닫히도록)
         self.dismiss(animated: true, completion: nil)
     }
 
