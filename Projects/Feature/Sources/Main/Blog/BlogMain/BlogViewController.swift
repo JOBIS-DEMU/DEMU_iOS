@@ -142,10 +142,10 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
             selectedImages.append(originalImage)
         }
         picker.dismiss(animated: true, completion: nil)
-        updateImageDisplay()
+        updateImage()
     }
 
-    private func updateImageDisplay() {
+    private func updateImage() {
         if let lastImage = selectedImages.last {
             profileEditImageView.image = lastImage
         }
