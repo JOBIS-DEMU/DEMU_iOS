@@ -28,6 +28,8 @@ public class SearchViewController: BaseViewController {
             textField.layer.borderColor = UIColor.background.cgColor
             textField.layer.cornerRadius = 5
             textField.placeholder = "검색"
+            self.navigationItem.hidesBackButton = true
+
         }
     }
     public override func addView() {
@@ -39,7 +41,7 @@ public class SearchViewController: BaseViewController {
     }
     public override func layout() {
         searchBar.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(11)
+            $0.top.equalTo(55)
             $0.leading.trailing.equalToSuperview().inset(24)
         }
         curiousLabel.snp.makeConstraints {

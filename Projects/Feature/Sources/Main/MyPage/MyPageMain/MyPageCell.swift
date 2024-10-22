@@ -4,7 +4,6 @@ import Core
 import SnapKit
 import Then
 
-
 class MyPageCell: UITableViewCell {
     private let logoImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFit
@@ -49,7 +48,6 @@ class MyPageCell: UITableViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        
         contentView.backgroundColor = UIColor.white
         self.backgroundColor = .background
         contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0))
@@ -135,4 +133,3 @@ class MyPageCell: UITableViewCell {
         detailLabel.text = detail
     }
 }
-
