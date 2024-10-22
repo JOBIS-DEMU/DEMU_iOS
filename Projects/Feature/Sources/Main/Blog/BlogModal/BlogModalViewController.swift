@@ -72,5 +72,6 @@ class BlogModalViewController: BaseViewController, UITableViewDelegate, UITableV
         let selectedMajor = major[indexPath.row]
         titleLabel.text = selectedMajor
         delegate?.didSelectMajor(selectedMajor)
+        self.dismiss(animated: true, completion: nil)
     }
 }
