@@ -3,12 +3,13 @@ import DesignSystem
 import Core
 import SnapKit
 import Then
+import RxSwift
 
 class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate, BlogModalViewControllerDelegate {
-
+    
     private let maxImageCount = 5
     private var selectedImages = [UIImage]()
-
+    
     private let cancelButton = UIButton().then {
         $0.setTitle("취소", for: .normal)
         $0.setTitleColor(.black, for: .normal)
@@ -34,7 +35,7 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
     private let numberCountLabel = UILabel().then {
         $0.text = "0/5"
         $0.font = .systemFont(ofSize: 8, weight: .medium)
-        $0.textColor = .gray
+        $0.textColor = UIColor.textField
     }
     private let imageSquareView = UIView().then {
         $0.layer.cornerRadius = 5
@@ -42,40 +43,73 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
         $0.layer.borderWidth = 2
         $0.layer.borderColor = UIColor.gray.cgColor
     }
-
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: false)
+    private let titlePlaceholderText = UILabel().then {
+        $0.text = "제목 (25자 이하)"
+        $0.font = .systemFont(ofSize: 26, weight: .semibold)
+        $0.textColor = UIColor.textField
+        $0.isHidden = false
     }
-
+    private let titleTextView = UITextView().then {
+        $0.font = .systemFont(ofSize: 26, weight: .semibold)
+        $0.textColor = UIColor.text
+        $0.backgroundColor = UIColor.background
+        $0.isScrollEnabled = false
+    }
+    private let lineView = UIView().then {
+        $0.backgroundColor = UIColor.background2
+    }
+    private let detailPlaceholderText = UILabel().then {
+        $0.text = "(3000자 이하) 본문에 내용을 추가해 주세요"
+        $0.font = .systemFont(ofSize: 15, weight: .regular)
+        $0.textColor = UIColor.textField
+        $0.isHidden = false
+    }
+    private let detailTextView = UITextView().then {
+        $0.font = .systemFont(ofSize: 15, weight: .regular)
+        $0.textColor = UIColor.text
+        $0.backgroundColor = UIColor.background
+        $0.isScrollEnabled = false
+    }
+    
     public override func attribute() {
         view.backgroundColor = .background
         imagePicker.delegate = self
+        detailTextView.delegate = self
         imagePicker.sourceType = .photoLibrary
         imagePicker.allowsEditing = true
         self.navigationItem.hidesBackButton = true
 
+        titleTextView.delegate = self
+        titlePlaceholderText.isHidden = !titleTextView.text.isEmpty
+        detailPlaceholderText.isHidden = !detailTextView.text.isEmpty
+        
         downButton.addTarget(self, action: #selector(presentBlogModal), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(pickImage))
         profileEditImageView.addGestureRecognizer(tapGestureRecognizer)
     }
-
+    
     public override func addView() {
         [
             cancelButton,
             checkButton,
             dropDownLabel,
             downButton,
-            imageSquareView
+            imageSquareView,
+            titleTextView,
+            lineView,
+            detailTextView
         ].forEach { view.addSubview($0) }
-
+        
+        titleTextView.addSubview(titlePlaceholderText)
+        detailTextView.addSubview(detailPlaceholderText)
+        
         [
             numberCountLabel,
             profileEditImageView
         ].forEach { imageSquareView.addSubview($0) }
     }
-
+    
     public override func layout() {
         cancelButton.snp.makeConstraints {
             $0.top.equalTo(62)
@@ -107,6 +141,34 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
             $0.leading.equalTo(16)
             $0.width.height.equalTo(18)
         }
+        titleTextView.snp.makeConstraints {
+            $0.top.equalTo(imageSquareView.snp.bottom).offset(20)
+            $0.leading.trailing.equalToSuperview().inset(24)
+            $0.height.greaterThanOrEqualTo(40)
+        }
+        titlePlaceholderText.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(8)
+            $0.leading.equalToSuperview().inset(5)
+        }
+        lineView.snp.makeConstraints {
+            $0.top.equalTo(titleTextView.snp.bottom).offset(12)
+            $0.leading.trailing.equalToSuperview().inset(24)
+            $0.height.equalTo(1)
+        }
+        detailTextView.snp.makeConstraints {
+            $0.top.equalTo(lineView.snp.bottom).offset(12)
+            $0.leading.trailing.equalToSuperview().inset(24)
+            $0.height.greaterThanOrEqualTo(16)
+        }
+        detailPlaceholderText.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(8)
+            $0.leading.equalToSuperview().inset(5)
+        }
+    }
+
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
 
     @objc func presentBlogModal() {
@@ -154,5 +216,37 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
 
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension BlogViewController: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView == titleTextView {
+            titlePlaceholderText.isHidden = true
+        } else if textView == detailTextView {
+            detailPlaceholderText.isHidden = true
+        }
+    }
+
+    func textViewDidChange(_ textView: UITextView) {
+        if textView == titleTextView {
+            if titleTextView.text.count > 25 {
+                titleTextView.text = String(titleTextView.text.prefix(25))
+            }
+            titlePlaceholderText.isHidden = !titleTextView.text.isEmpty
+        } else if textView == detailTextView {
+            if detailTextView.text.count > 3000 {
+                detailTextView.text = String(detailTextView.text.prefix(3000))
+            }
+            detailPlaceholderText.isHidden = !detailTextView.text.isEmpty
+        }
+    }
+
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView == titleTextView {
+            titlePlaceholderText.isHidden = !titleTextView.text.isEmpty
+        } else if textView == detailTextView {
+            detailPlaceholderText.isHidden = !detailTextView.text.isEmpty
+        }
     }
 }
