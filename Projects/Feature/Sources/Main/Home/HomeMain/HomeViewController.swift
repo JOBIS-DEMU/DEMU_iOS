@@ -4,7 +4,7 @@ import Core
 import SnapKit
 import Then
 
-class HomeViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
+class HomeViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate, HomeModalViewControllerDelegate {
     private let dropDownLabel = UILabel().then {
         $0.text = "backend"
         $0.font = .systemFont(ofSize: 24, weight: .semibold)
@@ -61,11 +61,14 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
 
     override public func attribute() {
         view.backgroundColor = UIColor.background
-
-        
+        downButton.addTarget(self, action: #selector(presentHomeModal), for: .touchUpInside)
         tableView.dataSource = self
         tableView.delegate = self
         self.navigationItem.hidesBackButton = true
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.isNavigationBarHidden = true
     }
     override public func addView() {
         [
@@ -79,7 +82,7 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
         [
             titleProfileImageView,
             titleNickNameLabel
-        ].forEach{titleImageView.addSubview($0)}
+        ].forEach {titleImageView.addSubview($0)}
     }
     override public func layout() {
         dropDownLabel.snp.makeConstraints {
@@ -135,5 +138,15 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.navigationController?.pushViewController(PostViewController(), animated: true)
+    }
+    @objc func presentHomeModal() {
+        let modalVC = HomeModalViewController()
+        modalVC.modalPresentationStyle = .formSheet
+        modalVC.modalTransitionStyle = .coverVertical
+        modalVC.delegate = self
+        self.present(modalVC, animated: true, completion: nil)
+    }
+    func didSelectMajor(_ major: String) {
+        dropDownLabel.text = major
     }
 }
