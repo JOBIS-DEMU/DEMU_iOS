@@ -5,7 +5,6 @@ import SnapKit
 import Then
 
 class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate, BlogModalViewControllerDelegate {
-    
     private let cancelButton = UIButton().then {
         $0.setTitle("취소", for: .normal)
         $0.setTitleColor(.black, for: .normal)
@@ -38,12 +37,10 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
         $0.layer.borderWidth = 2
         $0.layer.borderColor = UIColor.gray.cgColor
     }
-    
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
-    
     public override func attribute() {
         view.backgroundColor = .background
         imagePicker.delegate = self
@@ -53,7 +50,6 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
         downButton.addTarget(self, action: #selector(presentBlogModal), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
     }
-    
     public override func addView() {
         [
             cancelButton,
