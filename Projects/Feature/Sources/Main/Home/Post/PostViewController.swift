@@ -65,7 +65,7 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
     }
     private let heartImageView = UIImageView().then {
         $0.image = UIImage.heart
-        $0.isUserInteractionEnabled = true // 제스처 인식을 위해 설정
+        $0.isUserInteractionEnabled = true
     }
     private let heartNumberLabel = UILabel().then {
         $0.text = "16"
@@ -74,6 +74,7 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
     }
     private let commentImageView = UIImageView().then {
         $0.image = UIImage.comment
+        $0.isUserInteractionEnabled = true
     }
     private let commetNumberLabel = UILabel().then {
         $0.text = "16"
@@ -86,6 +87,8 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         let heartTapGesture = UITapGestureRecognizer(target: self, action: #selector(heartImageViewTapped))
            heartImageView.addGestureRecognizer(heartTapGesture)
+        let commentTapGesture = UITapGestureRecognizer(target: self, action: #selector(commentImageViewTapped))
+            commentImageView.addGestureRecognizer(commentTapGesture)
     }
     override public func addView() {
         [
@@ -217,6 +220,10 @@ extension PostViewController {
         } else {
             heartImageView.image = UIImage.heart
         }
+    }
+    @objc private func commentImageViewTapped() {
+        let commentVC = BlogChatViewController()
+        navigationController?.pushViewController(commentVC, animated: true)
     }
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let currentPage = Int(round(imageScrollView.contentOffset.x / UIScreen.main.bounds.width))
