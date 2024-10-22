@@ -41,16 +41,16 @@ public class SearchViewController: BaseViewController {
     }
     public override func layout() {
         searchBar.snp.makeConstraints {
-            $0.top.equalTo(55)
+            $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.leading.trailing.equalToSuperview().inset(24)
         }
         curiousLabel.snp.makeConstraints {
             $0.top.equalTo(searchBar.snp.bottom).offset(243)
-            $0.leading.trailing.equalToSuperview().inset(86)
+            $0.centerX.equalToSuperview()
         }
         moreLabel.snp.makeConstraints {
             $0.top.equalTo(searchBar.snp.bottom).offset(268)
-            $0.leading.trailing.equalToSuperview().inset(122)
+            $0.centerX.equalToSuperview()
         }
     }
 }
