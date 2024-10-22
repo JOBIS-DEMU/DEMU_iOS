@@ -5,6 +5,14 @@ import SnapKit
 import Then
 
 class HomeViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
+    private let dropDownLabel = UILabel().then {
+        $0.text = "backend"
+        $0.font = .systemFont(ofSize: 24, weight: .semibold)
+        $0.textColor = .main1
+    }
+    private let downButton = UIButton().then {
+        $0.setImage(UIImage.down, for: .normal)
+    }
     private let data = [
         (imageName: "", description: "하원", level: "",title: "내가 최고 동아리 은하와 자비스에 합격했던 비결", detail: "이번 글에서는 제가 동아리에 합격할 수 있었던 이유를 소개해 보려고 합니다. 네 저는 -1살 때부터 코딩을 시작했는데요. 네.. 코딩을 너무 늦게 시작했죠."),
         (imageName: "", description: "히원", level: "", title: "내가 1학년 iOS 짱인 이유", detail: "그냥 내가 짱이니까"),
@@ -55,20 +63,28 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
         view.backgroundColor = UIColor.background
         tableView.dataSource = self
         tableView.delegate = self
+        self.navigationItem.hidesBackButton = true
+
     }
     override public func addView() {
         [
+            dropDownLabel,
             popularLabel,
             imageBackView,
-            tableView
+            tableView,
+            downButton
         ].forEach { view.addSubview($0) }
         imageBackView.addSubview(titleImageView)
         [
             titleProfileImageView,
             titleNickNameLabel
-        ].forEach{ titleImageView.addSubview($0) }
+        ].forEach{titleImageView.addSubview($0)}
     }
     override public func layout() {
+        dropDownLabel.snp.makeConstraints {
+            $0.top.equalTo(58)
+            $0.leading.equalTo(132)
+        }
         popularLabel.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.leading.equalTo(15)
@@ -94,6 +110,10 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
         tableView.snp.makeConstraints {
             $0.top.equalTo(imageBackView.snp.bottom).offset(20)
             $0.leading.trailing.bottom.equalToSuperview()
+        }
+        downButton.snp.makeConstraints {
+            $0.top.equalTo(65)
+            $0.leading.equalTo(242)
         }
     }
 

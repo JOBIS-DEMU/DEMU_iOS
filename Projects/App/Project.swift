@@ -29,7 +29,7 @@ let targets: [Target] = [
         deploymentTarget: env.deploymentTarget,
         infoPlist: .file(path: "Support/Info.plist"),
         sources: ["Sources/**"],
-        resources: ["Resources/**"],
+        resources: ["Resources/**","Resources/LaunchScreen.storyboard"],
         scripts: scripts,
         dependencies: [
             .Projects.feature
