@@ -5,11 +5,11 @@ import SnapKit
 import Then
 import RxSwift
 
-class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate, BlogModalViewControllerDelegate {
-    
+class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
+
     private let maxImageCount = 5
-    private var selectedImages = [UIImage]()
-    
+    private var selectedImages = [UIImageView]()
+
     private let cancelButton = UIButton().then {
         $0.setTitle("취소", for: .normal)
         $0.setTitleColor(.black, for: .normal)
@@ -40,9 +40,10 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
     private let imageSquareView = UIView().then {
         $0.layer.cornerRadius = 5
         $0.backgroundColor = .clear
-        $0.layer.borderWidth = 2
-        $0.layer.borderColor = UIColor.gray.cgColor
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor.textField.cgColor
     }
+    private var removeButton = UIButton()
     private let titlePlaceholderText = UILabel().then {
         $0.text = "제목 (25자 이하)"
         $0.font = .systemFont(ofSize: 26, weight: .semibold)
@@ -70,7 +71,7 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
         $0.backgroundColor = UIColor.background
         $0.isScrollEnabled = false
     }
-    
+
     public override func attribute() {
         view.backgroundColor = .background
         imagePicker.delegate = self
@@ -82,7 +83,7 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
         titleTextView.delegate = self
         titlePlaceholderText.isHidden = !titleTextView.text.isEmpty
         detailPlaceholderText.isHidden = !detailTextView.text.isEmpty
-        
+
         downButton.addTarget(self, action: #selector(presentBlogModal), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(pickImage))
@@ -100,16 +101,16 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
             lineView,
             detailTextView
         ].forEach { view.addSubview($0) }
-        
+
         titleTextView.addSubview(titlePlaceholderText)
         detailTextView.addSubview(detailPlaceholderText)
-        
+
         [
             numberCountLabel,
             profileEditImageView
         ].forEach { imageSquareView.addSubview($0) }
     }
-    
+
     public override func layout() {
         cancelButton.snp.makeConstraints {
             $0.top.equalTo(62)
@@ -186,37 +187,6 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
     @objc func cancelButtonTapped() {
         self.navigationController?.popViewController(animated: true)
     }
-
-    @objc func pickImage() {
-        if selectedImages.count >= maxImageCount {
-            let alert = UIAlertController(title: "알림", message: "최대 5장까지 선택할 수 있습니다.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        } else {
-            self.present(self.imagePicker, animated: true)
-        }
-    }
-
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let editedImage = info[.editedImage] as? UIImage {
-            selectedImages.append(editedImage)
-        } else if let originalImage = info[.originalImage] as? UIImage {
-            selectedImages.append(originalImage)
-        }
-        picker.dismiss(animated: true, completion: nil)
-        updateImage()
-    }
-
-    private func updateImage() {
-        if let lastImage = selectedImages.last {
-            profileEditImageView.image = lastImage
-        }
-        numberCountLabel.text = "\(selectedImages.count)/\(maxImageCount)"
-    }
-
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
-    }
 }
 
 extension BlogViewController: UITextViewDelegate {
@@ -248,5 +218,84 @@ extension BlogViewController: UITextViewDelegate {
         } else if textView == detailTextView {
             detailPlaceholderText.isHidden = !detailTextView.text.isEmpty
         }
+    }
+}
+
+extension BlogViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    @objc func pickImage() {
+        if selectedImages.count >= maxImageCount {
+            let alert = UIAlertController(title: "알림", message: "최대 5장까지 선택할 수 있습니다.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            self.present(self.imagePicker, animated: true)
+        }
+    }
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let selectedImage = info[.originalImage] as? UIImage {
+            addImageView(with: selectedImage)
+        }
+        dismiss(animated: true, completion: nil)
+        updateImageDisplay()
+    }
+    private func updateImageDisplay() {
+        numberCountLabel.text = "\(selectedImages.count)/\(maxImageCount)"
+    }
+
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+    private func addImageView(with image: UIImage) {
+        let imageView = UIImageView()
+        imageView.image = image
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 5
+        imageView.layer.borderWidth = 1
+        imageView.layer.borderColor = UIColor.textField.cgColor
+
+        view.addSubview(imageView)
+        selectedImages.append(imageView)
+
+        let index = selectedImages.count - 1
+
+        imageView.snp.makeConstraints {
+            $0.width.height.equalTo(50)
+            $0.leading.equalTo(imageSquareView.snp.trailing).offset(10 + (index * 60))
+            $0.centerY.equalTo(imageSquareView)
+        }
+
+        addRemoveButton(to: imageView)
+    }
+    private func addRemoveButton(to imageView: UIImageView) {
+        removeButton.removeFromSuperview()
+
+        removeButton = UIButton()
+        removeButton.setImage(UIImage.imagex, for: .normal)
+        removeButton.addTarget(self, action: #selector(removeImage), for: .touchUpInside)
+
+        view.addSubview(removeButton)
+
+        removeButton.snp.makeConstraints {
+            $0.bottom.equalTo(imageView.snp.bottom)
+            $0.leading.equalTo(imageView.snp.trailing).offset(2)
+            $0.width.height.equalTo(25)
+        }
+    }
+    @objc private func removeImage() {
+        guard let lastImageView = selectedImages.last else { return }
+
+        lastImageView.removeFromSuperview()
+        removeButton.removeFromSuperview()
+
+        selectedImages.removeLast()
+
+        if let newLastImageView = selectedImages.last {
+            addRemoveButton(to: newLastImageView)
+        } else {
+            removeButton.isHidden = true
+        }
+        updateImageDisplay()
     }
 }
