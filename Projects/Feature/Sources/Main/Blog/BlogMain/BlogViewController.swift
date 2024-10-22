@@ -78,23 +78,25 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
 
     public override func layout() {
         cancelButton.snp.makeConstraints {
-            $0.top.equalTo(62)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(14)
             $0.leading.equalTo(24)
         }
         checkButton.snp.makeConstraints {
-            $0.top.equalTo(62)
-            $0.trailing.equalTo(-24)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(14)
+            $0.leading.equalTo(332)
         }
         dropDownLabel.snp.makeConstraints {
-            $0.top.equalTo(58)
-            $0.centerX.equalToSuperview()
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(14)
+            $0.leading.equalTo(130)
         }
         downButton.snp.makeConstraints {
-            $0.top.equalTo(65)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(26)
             $0.leading.equalTo(dropDownLabel.snp.trailing).offset(12)
+            $0.width.equalTo(16)
+            $0.height.equalTo(8)
         }
         imageSquareView.snp.makeConstraints {
-            $0.top.equalTo(113)
+            $0.top.equalTo(cancelButton.snp.bottom).offset(29)
             $0.leading.equalTo(24)
             $0.width.height.equalTo(50)
         }
