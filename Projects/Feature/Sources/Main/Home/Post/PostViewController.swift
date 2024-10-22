@@ -81,6 +81,7 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
     public override func attribute() {
         view.backgroundColor = UIColor.background
         setImageSlider(images: ["DEMU_Profile", "image2", "image3"])
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
     }
     override public func addView() {
         [
@@ -212,6 +213,9 @@ extension PostViewController {
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let currentPage = Int(round(imageScrollView.contentOffset.x / UIScreen.main.bounds.width))
         imagePageControl.currentPage = currentPage
+    }
+    @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
     }
 }
 
