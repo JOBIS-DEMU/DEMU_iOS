@@ -4,10 +4,12 @@ import Core
 import SnapKit
 import Then
 
-
 public class MyPageViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
-
-
+    private let mypageLabel = UILabel().then {
+        $0.text = "마이페이지"
+        $0.font = .systemFont(ofSize: 18, weight: .semibold)
+        $0.textColor = .white
+    }
     private let customBackView = UIView().then {
         $0.backgroundColor = .main1
     }
@@ -58,7 +60,6 @@ public class MyPageViewController: BaseViewController, UITableViewDataSource, UI
         $0.rowHeight = UITableView.automaticDimension
         $0.estimatedRowHeight = 100
     }
-    
     private let data = [
         (imageName: "", description: "하원", level: "",title: "내가 최고 동아리 은하와 자비스에 합격했던 비결", detail: "이번 글에서는 제가 동아리에 합격할 수 있었던 이유를 소개해 보려고 합니다. 네 저는 -1살 때부터 코딩을 시작했는데요. 네.. 코딩을 너무 늦게 시작했죠."),
         (imageName: "", description: "히원", level: "", title: "내가 1학년 iOS 짱인 이유", detail: "그냥 내가 짱이니까"),
@@ -92,7 +93,8 @@ public class MyPageViewController: BaseViewController, UITableViewDataSource, UI
             progressBackView,
             settingButton,
             writeButton,
-            tableView
+            tableView,
+            mypageLabel
         ].forEach { view.addSubview($0) }
         complexTextView.addSubview(editButton)
         progressBackView.addSubview(progressView)
@@ -163,6 +165,10 @@ public class MyPageViewController: BaseViewController, UITableViewDataSource, UI
         tableView.snp.makeConstraints {
             $0.top.equalTo(settingButton.snp.bottom).offset(20)
             $0.leading.trailing.bottom.equalToSuperview()
+        }
+        mypageLabel.snp.makeConstraints {
+            $0.top.equalTo(75)
+            $0.leading.equalTo(153)
         }
     }
 
