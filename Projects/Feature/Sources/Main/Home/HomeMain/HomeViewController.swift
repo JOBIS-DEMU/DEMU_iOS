@@ -61,10 +61,11 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
 
     override public func attribute() {
         view.backgroundColor = UIColor.background
+
+        
         tableView.dataSource = self
         tableView.delegate = self
         self.navigationItem.hidesBackButton = true
-
     }
     override public func addView() {
         [
@@ -131,5 +132,8 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
     }
     internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.navigationController?.pushViewController(PostViewController(), animated: true)
     }
 }
