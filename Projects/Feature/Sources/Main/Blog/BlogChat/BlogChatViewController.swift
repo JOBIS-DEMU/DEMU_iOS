@@ -3,14 +3,20 @@ import DesignSystem
 import Core
 import SnapKit
 import Then
+import RxSwift
 
 public class BlogChatViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
     private var clubs = [
         (imageName: "", description: "이지훈", chat: ""),
         (imageName: "", description: "이지훈", chat: "어쩔팁이 저쩔팁이 안물안궁 어미ㅏㅓㅇ라ㅓㅁ아ㅓㄹ마ㅣㅓ이라ㅓ")
     ]
-    private let tableView = UITableView().then {
+    private lazy var tableView = UITableView().then {
+        $0.dataSource = self
+        $0.delegate = self
         $0.register(BlogChatCell.self, forCellReuseIdentifier: "BlogChatCell")
+    }
+    private let backButton = UIButton().then {
+        $0.setImage(UIImage.back, for: .normal)
     }
     private let commentBackView = UIView().then {
         $0.backgroundColor = .red
@@ -22,7 +28,6 @@ public class BlogChatViewController: BaseViewController, UITableViewDataSource, 
         $0.placeholder = "댓글 입력"
         $0.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 0))
         $0.leftViewMode = .always
-        $0.becomeFirstResponder()
     }
     private let registerButton = UIButton().then {
         $0.setTitle("등록", for: .normal)
@@ -30,16 +35,14 @@ public class BlogChatViewController: BaseViewController, UITableViewDataSource, 
         $0.backgroundColor = .main1
         $0.isEnabled = true
     }
-
+    
     public override func attribute() {
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = UITableView.automaticDimension
         title = "댓글"
         commentTextField.addTarget(self, action: #selector(updateRegisterButton), for: .editingChanged)
         registerButton.addTarget(self, action: #selector(didTapRegister), for: .touchUpInside)
-        self.navigationItem.hidesBackButton = true
+
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     public override func addView() {
         [
@@ -69,20 +72,33 @@ public class BlogChatViewController: BaseViewController, UITableViewDataSource, 
             $0.width.equalTo(80)
         }
     }
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return clubs.count
+
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        self.navigationItem.setHidesBackButton(true, animated: true)
     }
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "BlogChatCell", for: indexPath) as? BlogChatCell else {
-            return UITableViewCell()
+
+    @objc private func keyboardWillShow(notification: Notification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            let textFieldYValue = view.frame.height - keyboardSize.height - commentBackView.frame.height
+            UIView.animate(withDuration: 0.3) {
+                        self.commentBackView.frame.origin.y = textFieldYValue
+            }
         }
-        let club = clubs[indexPath.row]
-        cell.configure(profileImage: club.imageName, description: club.description, chat: club.chat)
-        return cell
     }
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+
+    @objc private func keyboardWillHide(notification: Notification) {
+        UIView.animate(withDuration: 0.3) {
+                self.commentBackView.frame.origin.y = self.view.frame.height - self.commentBackView.frame.height
+        }
     }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
     @objc private func updateRegisterButton() {
         let commentTFNil = !(commentTextField.text ?? "").isEmpty
         if commentTFNil {
@@ -96,8 +112,26 @@ public class BlogChatViewController: BaseViewController, UITableViewDataSource, 
             registerButton.isEnabled = false
             return
         }
-        clubs.append((imageName: "", description: "이지훈", chat: text))
+        clubs.append((imageName: "", description: "하원", chat: text))
         tableView.reloadData()
         commentTextField.text = ""
+    }
+    let disposeBag = DisposeBag()
+}
+
+extension BlogChatViewController {
+    public func tableView(_ tableView: UITableView, heightForRowAtindexPath: IndexPath) -> CGFloat {
+        return tableView.rowHeight
+    }
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return clubs.count
+    }
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "BlogChatCell", for: indexPath) as? BlogChatCell else {
+            return UITableViewCell()
+        }
+        let club = clubs[indexPath.row]
+        cell.configure(profileImage: club.imageName, description: club.description, chat: club.chat)
+        return cell
     }
 }
