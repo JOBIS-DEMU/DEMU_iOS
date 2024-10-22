@@ -113,7 +113,7 @@ public class BlogChatViewController: BaseViewController, UITableViewDataSource, 
             registerButton.isEnabled = false
             return
         }
-        clubs.append((imageName: "", description: "이지훈", chat: text))
+        clubs.append((imageName: "", description: "하원", chat: text))
         tableView.reloadData()
         commentTextField.text = ""
     }
