@@ -32,7 +32,7 @@ public final class TabBarController: UITabBarController {
         )
         let blogViewController = BlogViewController()
         blogViewController.tabBarItem = UITabBarItem(
-            title: "블로그",
+            title: "작성하기",
             image: UIImage.vlogFalse,
             selectedImage: UIImage.vlogTrue
         )
