@@ -28,9 +28,11 @@ class BlogChatCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     private func addView() {
-        contentView.addSubview(profileImageView)
-        contentView.addSubview(nameLabel)
-        contentView.addSubview(chatLabel)
+        [
+            profileImageView,
+            nameLabel,
+            chatLabel
+        ].forEach{ contentView.addSubview($0) }
     }
     private func layout() {
         profileImageView.snp.makeConstraints {
@@ -45,6 +47,7 @@ class BlogChatCell: UITableViewCell {
         chatLabel.snp.makeConstraints {
             $0.top.equalTo(profileImageView.snp.bottom).offset(14)
             $0.leading.trailing.equalToSuperview().inset(24)
+            $0.bottom.equalToSuperview().inset(14)
         }
     }
     public func configure(profileImage: String, description: String, chat: String) {
