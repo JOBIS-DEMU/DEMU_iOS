@@ -5,6 +5,10 @@ import SnapKit
 import Then
 
 class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate, BlogModalViewControllerDelegate {
+
+    private let maxImageCount = 5
+    private var selectedImages = [UIImage]()
+
     private let cancelButton = UIButton().then {
         $0.setTitle("취소", for: .normal)
         $0.setTitleColor(.black, for: .normal)
@@ -25,9 +29,10 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
     private let profileEditImageView = UIImageView().then {
         $0.image = UIImage.image
         $0.layer.masksToBounds = true
+        $0.isUserInteractionEnabled = true
     }
     private let numberCountLabel = UILabel().then {
-        $0.text = "4/5"
+        $0.text = "0/5"
         $0.font = .systemFont(ofSize: 8, weight: .medium)
         $0.textColor = .gray
     }
@@ -37,19 +42,25 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
         $0.layer.borderWidth = 2
         $0.layer.borderColor = UIColor.gray.cgColor
     }
+
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
+
     public override func attribute() {
         view.backgroundColor = .background
         imagePicker.delegate = self
         imagePicker.sourceType = .photoLibrary
         imagePicker.allowsEditing = true
         self.navigationItem.hidesBackButton = true
+
         downButton.addTarget(self, action: #selector(presentBlogModal), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(pickImage))
+        profileEditImageView.addGestureRecognizer(tapGestureRecognizer)
     }
+
     public override func addView() {
         [
             cancelButton,
@@ -105,17 +116,43 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
         modalVC.delegate = self
         self.present(modalVC, animated: true, completion: nil)
     }
+
     func didSelectMajor(_ major: String) {
         dropDownLabel.text = major
     }
+
     @objc func cancelButtonTapped() {
         self.navigationController?.popViewController(animated: true)
     }
+
     @objc func pickImage() {
-        self.present(self.imagePicker, animated: true)
+        if selectedImages.count >= maxImageCount {
+            let alert = UIAlertController(title: "알림", message: "최대 5장까지 선택할 수 있습니다.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            self.present(self.imagePicker, animated: true)
+        }
     }
 
-    public func presentImagePicker() {
-        self.present(imagePicker, animated: true, completion: nil)
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let editedImage = info[.editedImage] as? UIImage {
+            selectedImages.append(editedImage)
+        } else if let originalImage = info[.originalImage] as? UIImage {
+            selectedImages.append(originalImage)
+        }
+        picker.dismiss(animated: true, completion: nil)
+        updateImageDisplay()
+    }
+
+    private func updateImageDisplay() {
+        if let lastImage = selectedImages.last {
+            profileEditImageView.image = lastImage
+        }
+        numberCountLabel.text = "\(selectedImages.count)/\(maxImageCount)"
+    }
+
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
     }
 }
