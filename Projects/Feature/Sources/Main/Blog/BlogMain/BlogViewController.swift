@@ -32,13 +32,17 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
         $0.font = .systemFont(ofSize: 8, weight: .medium)
         $0.textColor = .gray
     }
+    public override func viewWillAppear(_ animated: Bool) {
+         super.viewWillAppear(animated)
+         navigationController?.setNavigationBarHidden(true, animated: false)
+     }
     public override func attribute() {
         view.backgroundColor = .background
         imagePicker.delegate = self
         imagePicker.sourceType = .photoLibrary
         imagePicker.allowsEditing = true
         self.navigationItem.hidesBackButton = true
-
+        downButton.addTarget(self, action: #selector(presentBlogModal), for: .touchUpInside)
     }
     public override func addView() {
         [
@@ -77,6 +81,13 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
             $0.leading.equalTo(42)
         }
     }
+    @objc func presentBlogModal() {
+        let modalVC = BlogModalViewController()
+        modalVC.modalPresentationStyle = .formSheet
+        modalVC.modalTransitionStyle = .coverVertical
+        self.present(modalVC, animated: true, completion: nil)
+    }
+
     @objc func pickImage() {
         self.present(self.imagePicker, animated: true)
     }
