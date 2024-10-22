@@ -63,6 +63,8 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
         view.backgroundColor = UIColor.background
         tableView.dataSource = self
         tableView.delegate = self
+        self.navigationItem.hidesBackButton = true
+
     }
     override public func addView() {
         [

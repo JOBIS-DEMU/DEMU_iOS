@@ -28,6 +28,8 @@ public class SearchViewController: BaseViewController {
             textField.layer.borderColor = UIColor.background.cgColor
             textField.layer.cornerRadius = 5
             textField.placeholder = "검색"
+            self.navigationItem.hidesBackButton = true
+
         }
     }
     public override func addView() {

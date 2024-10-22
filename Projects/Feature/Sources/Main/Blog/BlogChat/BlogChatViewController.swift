@@ -39,7 +39,7 @@ public class BlogChatViewController: BaseViewController, UITableViewDataSource, 
         title = "댓글"
         commentTextField.addTarget(self, action: #selector(updateRegisterButton), for: .editingChanged)
         registerButton.addTarget(self, action: #selector(didTapRegister), for: .touchUpInside)
-
+        self.navigationItem.hidesBackButton = true
     }
     public override func addView() {
         [

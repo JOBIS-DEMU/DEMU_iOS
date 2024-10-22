@@ -79,7 +79,7 @@ public class MyPageViewController: BaseViewController, UITableViewDataSource, UI
         writeButton.addTarget(self, action: #selector(writeButtonTapped), for: .touchUpInside)
         tableView.dataSource = self
         tableView.delegate = self
-
+        self.navigationItem.hidesBackButton = true
     }
 
     public override func addView() {

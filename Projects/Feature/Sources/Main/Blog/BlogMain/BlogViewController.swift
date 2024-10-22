@@ -37,6 +37,8 @@ class BlogViewController: BaseViewController, UIImagePickerControllerDelegate & 
         imagePicker.delegate = self
         imagePicker.sourceType = .photoLibrary
         imagePicker.allowsEditing = true
+        self.navigationItem.hidesBackButton = true
+
     }
     public override func addView() {
         [
