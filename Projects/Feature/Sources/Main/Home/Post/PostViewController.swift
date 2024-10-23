@@ -20,6 +20,9 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
         $0.layer.borderWidth = 1
         $0.layer.borderColor = UIColor.background2.cgColor
     }
+    private let topBackView = UIView().then {
+        $0.backgroundColor = .background
+    }
     private let titleLabel = UILabel().then {
         $0.text = "iOS 잘하는 법에 대해 알아봅시다 람쥐귀엽다구리까기"
         $0.numberOfLines = 0
@@ -94,7 +97,8 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
         [
             scrollView,
             titleBackView,
-            bottomBackView
+            bottomBackView,
+            topBackView
         ].forEach { view.addSubview($0) }
         scrollView.addSubview(contentView)
         [
@@ -117,8 +121,16 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
         ].forEach { bottomBackView.addSubview($0) }
     }
     override public func layout() {
+        topBackView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            $0.top.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(750)
+            $0.width.equalTo(390)
+            $0.height.equalTo(101)
+        }
+
         titleBackView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(57)
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(writerProfileImageView.snp.bottom).offset(10)
         }
@@ -153,7 +165,7 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
             $0.trailing.equalToSuperview().inset(24)
         }
         imageScrollView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(120)
+            $0.top.equalToSuperview().offset(190)
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(170)
         }
