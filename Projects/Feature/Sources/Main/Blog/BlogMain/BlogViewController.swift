@@ -114,21 +114,19 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
     public override func layout() {
         cancelButton.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(14)
-            $0.leading.equalTo(24)
+            $0.leading.equalToSuperview().inset(24)
         }
         checkButton.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(14)
-            $0.leading.equalTo(332)
+            $0.trailing.equalToSuperview().inset(24)
         }
         dropDownLabel.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(14)
-            $0.leading.equalTo(130)
+            $0.centerX.equalToSuperview()
         }
         downButton.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(26)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(18)
             $0.leading.equalTo(dropDownLabel.snp.trailing).offset(12)
-            $0.width.equalTo(16)
-            $0.height.equalTo(8)
         }
         imageSquareView.snp.makeConstraints {
             $0.top.equalTo(cancelButton.snp.bottom).offset(29)

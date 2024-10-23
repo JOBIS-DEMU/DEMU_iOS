@@ -7,7 +7,7 @@ import Then
 public class MyPageViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
     private let mypageLabel = UILabel().then {
         $0.text = "마이페이지"
-        $0.font = .systemFont(ofSize: 18, weight: .semibold)
+        $0.font = .systemFont(ofSize: 20, weight: .bold)
         $0.textColor = .white
     }
     private let customBackView = UIView().then {
@@ -168,7 +168,7 @@ public class MyPageViewController: BaseViewController, UITableViewDataSource, UI
         }
         mypageLabel.snp.makeConstraints {
             $0.top.equalTo(75)
-            $0.leading.equalTo(153)
+            $0.centerX.equalToSuperview()
         }
     }
 
