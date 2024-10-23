@@ -24,7 +24,11 @@ let dependencies = Dependencies.init(
             .remote(
                 url: "https://github.com/devxoul/Then.git",
                 requirement: .upToNextMajor(from: "3.0.0")
-            )
+            ),
+            .remote(
+                url: "https://github.com/RxSwiftCommunity/RxDataSources.git",
+                requirement: .upToNextMajor(from: "5.0.0")
+                       ),
         ]
         
 //        
