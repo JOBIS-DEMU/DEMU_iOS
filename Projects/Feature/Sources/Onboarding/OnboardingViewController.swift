@@ -3,8 +3,11 @@ import DesignSystem
 import Core
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
 
 public class OnboardingViewController: BaseViewController {
+    let disposeBag = DisposeBag()
     let gradietView = UIView()
     let gradietLayer = CAGradientLayer()
     private let method = UILabel().then {
@@ -26,14 +29,14 @@ public class OnboardingViewController: BaseViewController {
         gradietLayer.startPoint = CGPoint(x: 0.8, y: 1)
         gradietLayer.endPoint = CGPoint(x: 1, y: 0.35)
         gradietLayer.frame = gradietView.bounds
-        startButton.button.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
+        startButton.rx.tap
+                   .subscribe(onNext: { [weak self] in
+                       let vc = LoginViewController()
+                       self?.navigationController?.pushViewController(vc, animated: true)
+                   })
+                   .disposed(by: disposeBag)
+           }
     }
-    @objc private func startButtonTapped() {
-        let vc = LoginViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
-
-    }
-
     override public func addView() {
         view.addSubview(gradietView)
         [
@@ -64,4 +67,3 @@ public class OnboardingViewController: BaseViewController {
         super.viewDidLayoutSubviews()
         gradietLayer.frame = gradietView.bounds
     }
-}
