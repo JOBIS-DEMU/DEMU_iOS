@@ -23,6 +23,9 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
     private let topBackView = UIView().then {
         $0.backgroundColor = .background
     }
+    private let beforeButton = UIButton().then {
+        $0.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+    }
     private let titleLabel = UILabel().then {
         $0.text = "iOS 잘하는 법에 대해 알아봅시다 람쥐귀엽다구리까기"
         $0.numberOfLines = 0
@@ -102,6 +105,9 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
         ].forEach { view.addSubview($0) }
         scrollView.addSubview(contentView)
         [
+            beforeButton
+        ].forEach { topBackView.addSubview($0) }
+        [
             imageScrollView,
             imagePageControl,
             detailLabel
@@ -127,6 +133,12 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
             $0.bottom.equalToSuperview().inset(750)
             $0.width.equalTo(390)
             $0.height.equalTo(101)
+        }
+        beforeButton.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(14)
+            $0.leading.equalTo(24)
+            $0.width.equalTo(16)
+            $0.height.equalTo(8)
         }
 
         titleBackView.snp.makeConstraints {
