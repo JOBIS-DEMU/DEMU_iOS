@@ -123,10 +123,10 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
         }
     }
 
-    internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
     }
-    internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ClubCell", for: indexPath) as? CommunityCell else {
             return UITableViewCell()
         }
@@ -135,7 +135,7 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
         cell.selectionStyle = .none
         return cell
     }
-    internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -152,3 +152,4 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
         dropDownLabel.text = major
     }
 }
+

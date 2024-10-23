@@ -92,7 +92,7 @@ class MyPageCell: UITableViewCell {
             $0.width.equalTo(15)
         }
         logoImageView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(24)
+            $0.centerY.equalToSuperview()
             $0.trailing.equalToSuperview().inset(14)
             $0.width.height.equalTo(102)
         }
