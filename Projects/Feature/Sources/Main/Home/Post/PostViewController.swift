@@ -6,6 +6,7 @@ import Then
 
 public class PostViewController: BaseViewController, UIScrollViewDelegate {
     private var images: [String] = []
+    private var isHeartSelected = false
     private let scrollView = UIScrollView().then {
         $0.alwaysBounceVertical = true
         $0.alwaysBounceHorizontal = false
@@ -64,6 +65,7 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
     }
     private let heartImageView = UIImageView().then {
         $0.image = UIImage.heart
+        $0.isUserInteractionEnabled = true
     }
     private let heartNumberLabel = UILabel().then {
         $0.text = "16"
@@ -72,6 +74,7 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
     }
     private let commentImageView = UIImageView().then {
         $0.image = UIImage.comment
+        $0.isUserInteractionEnabled = true
     }
     private let commetNumberLabel = UILabel().then {
         $0.text = "16"
@@ -82,13 +85,17 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
         view.backgroundColor = UIColor.background
         setImageSlider(images: ["DEMU_Profile", "image2", "image3"])
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        let heartTapGesture = UITapGestureRecognizer(target: self, action: #selector(heartImageViewTapped))
+           heartImageView.addGestureRecognizer(heartTapGesture)
+        let commentTapGesture = UITapGestureRecognizer(target: self, action: #selector(commentImageViewTapped))
+            commentImageView.addGestureRecognizer(commentTapGesture)
     }
     override public func addView() {
         [
             scrollView,
             titleBackView,
             bottomBackView
-        ].forEach{ view.addSubview($0) }
+        ].forEach { view.addSubview($0) }
         scrollView.addSubview(contentView)
         [
             imageScrollView,
@@ -101,13 +108,13 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
             writerNameLabel,
             levelImageView,
             moreButton
-        ].forEach{ titleBackView.addSubview($0) }
+        ].forEach { titleBackView.addSubview($0) }
         [
             heartImageView,
             heartNumberLabel,
             commentImageView,
             commetNumberLabel
-        ].forEach{ bottomBackView.addSubview($0) }
+        ].forEach { bottomBackView.addSubview($0) }
     }
     override public func layout() {
         titleBackView.snp.makeConstraints {
@@ -194,22 +201,30 @@ extension PostViewController {
     func setImageSlider(images: [String]) {
         self.images = images
         imagePageControl.numberOfPages = images.count
-        
         for index in 0..<images.count {
             let imageView = UIImageView()
             imageView.image = UIImage.major
             imageView.contentMode = .scaleAspectFit
             imageView.layer.cornerRadius = 5
             imageView.clipsToBounds = true
-            
             let xPosition = self.view.frame.width * CGFloat(index)
             imageView.frame = CGRect(x: xPosition, y: 0, width: self.view.frame.width, height: self.view.frame.width)
-            
             imageScrollView.contentSize.width = self.view.frame.width * CGFloat(index + 1)
             imageScrollView.addSubview(imageView)
         }
     }
-    
+    @objc private func heartImageViewTapped() {
+        isHeartSelected.toggle()
+        if isHeartSelected {
+            heartImageView.image = UIImage.heartFilled
+        } else {
+            heartImageView.image = UIImage.heart
+        }
+    }
+    @objc private func commentImageViewTapped() {
+        let commentVC = BlogChatViewController()
+        navigationController?.pushViewController(commentVC, animated: true)
+    }
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let currentPage = Int(round(imageScrollView.contentOffset.x / UIScreen.main.bounds.width))
         imagePageControl.currentPage = currentPage
@@ -218,4 +233,3 @@ extension PostViewController {
         navigationController?.popViewController(animated: true)
     }
 }
-

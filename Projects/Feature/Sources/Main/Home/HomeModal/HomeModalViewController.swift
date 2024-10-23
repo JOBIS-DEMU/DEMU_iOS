@@ -5,12 +5,12 @@ import SnapKit
 import Then
 import RxSwift
 
-protocol BlogModalViewControllerDelegate: AnyObject {
+protocol HomeModalViewControllerDelegate: AnyObject {
     func didSelectMajor(_ major: String)
 }
 
-class BlogModalViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
-    weak var delegate: BlogModalViewControllerDelegate?
+class HomeModalViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
+    weak var delegate: HomeModalViewControllerDelegate?
     private let tableView = UITableView()
     let major = ["backend", "frontend", "iOS", "AOS", "AI", "design", "flutter", "full stack", "game", "security", "embedded", "devops", "기타 전공", "전체 글"]
     private var selectedIndexPath: IndexPath?
@@ -32,7 +32,7 @@ class BlogModalViewController: BaseViewController, UITableViewDelegate, UITableV
 
     override func attribute() {
         view.backgroundColor = UIColor.background
-        tableView.register(BlogModalCell.self, forCellReuseIdentifier: "blogModalCell")
+        tableView.register(HomeModalCell.self, forCellReuseIdentifier: "HomeModalCell")
         tableView.dataSource = self
         tableView.delegate = self
         tableView.allowsMultipleSelection = false
@@ -55,7 +55,7 @@ class BlogModalViewController: BaseViewController, UITableViewDelegate, UITableV
     }
 
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "blogModalCell", for: indexPath) as? BlogModalCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "HomeModalCell", for: indexPath) as? HomeModalCell else { return UITableViewCell() }
         cell.selectionStyle = .none
         cell.titleLabel.text = major[indexPath.row]
         return cell
@@ -63,15 +63,15 @@ class BlogModalViewController: BaseViewController, UITableViewDelegate, UITableV
 
     internal func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let previousIndexPath = selectedIndexPath {
-            guard let previousCell = tableView.cellForRow(at: previousIndexPath) as? BlogModalCell else { return }
+            guard let previousCell = tableView.cellForRow(at: previousIndexPath) as? HomeModalCell else { return }
             previousCell.titleLabel.textColor = UIColor.textField
         }
-        guard let cell = tableView.cellForRow(at: indexPath) as? BlogModalCell else { return }
+        guard let cell = tableView.cellForRow(at: indexPath) as? HomeModalCell else { return }
         cell.titleLabel.textColor = UIColor.main1
         selectedIndexPath = indexPath
         let selectedMajor = major[indexPath.row]
-        titleLabel.text = selectedMajor
         delegate?.didSelectMajor(selectedMajor)
         self.dismiss(animated: true, completion: nil)
     }
+
 }
