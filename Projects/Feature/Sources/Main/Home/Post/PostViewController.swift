@@ -96,6 +96,7 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
         let commentTapGesture = UITapGestureRecognizer(target: self, action: #selector(commentImageViewTapped))
             commentImageView.addGestureRecognizer(commentTapGesture)
         beforeButton.tintColor = UIColor.black
+        beforeButton.addTarget(self, action: #selector(beforeButtonTapped), for: .touchUpInside)
     }
     override public func addView() {
         [
@@ -255,6 +256,9 @@ extension PostViewController {
         imagePageControl.currentPage = currentPage
     }
     @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    @objc private func beforeButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
 }
