@@ -24,7 +24,7 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
         $0.backgroundColor = .background
     }
     private let beforeButton = UIButton().then {
-        $0.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        $0.setImage(UIImage.before, for: .normal)
     }
     private let titleLabel = UILabel().then {
         $0.text = "iOS 잘하는 법에 대해 알아봅시다 람쥐귀엽다구리까기"
@@ -95,6 +95,7 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
            heartImageView.addGestureRecognizer(heartTapGesture)
         let commentTapGesture = UITapGestureRecognizer(target: self, action: #selector(commentImageViewTapped))
             commentImageView.addGestureRecognizer(commentTapGesture)
+        beforeButton.tintColor = UIColor.black
     }
     override public func addView() {
         [
