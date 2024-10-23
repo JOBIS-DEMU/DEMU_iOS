@@ -12,9 +12,6 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
         $0.alwaysBounceHorizontal = false
     }
     private let contentView = UIView()
-    private let backButton = UIButton().then {
-        $0.setImage(UIImage.back, for: .normal)
-    }
     private let titleBackView = UIView().then {
         $0.backgroundColor = UIColor.background
         $0.layer.borderWidth = 1
@@ -90,12 +87,10 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
     public override func attribute() {
         view.backgroundColor = UIColor.background
         setImageSlider(images: ["DEMU_Profile", "image2", "image3"])
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         let heartTapGesture = UITapGestureRecognizer(target: self, action: #selector(heartImageViewTapped))
            heartImageView.addGestureRecognizer(heartTapGesture)
         let commentTapGesture = UITapGestureRecognizer(target: self, action: #selector(commentImageViewTapped))
             commentImageView.addGestureRecognizer(commentTapGesture)
-        beforeButton.tintColor = UIColor.black
         beforeButton.addTarget(self, action: #selector(beforeButtonTapped), for: .touchUpInside)
     }
     override public func addView() {
@@ -139,8 +134,6 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
         beforeButton.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(14)
             $0.leading.equalTo(24)
-            $0.width.equalTo(16)
-            $0.height.equalTo(8)
         }
 
         titleBackView.snp.makeConstraints {
@@ -218,7 +211,6 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
     }
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         self.navigationItem.setHidesBackButton(true, animated: true)
     }
 }
