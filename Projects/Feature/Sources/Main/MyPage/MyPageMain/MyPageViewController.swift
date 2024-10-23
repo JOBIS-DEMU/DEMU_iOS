@@ -53,12 +53,13 @@ public class MyPageViewController: BaseViewController, UITableViewDataSource, UI
         $0.backgroundColor = UIColor.background2
         $0.layer.cornerRadius = 10
     }
-    private let tableView = UITableView().then {
+    private lazy var tableView = UITableView().then {
         $0.backgroundColor = UIColor.background
         $0.separatorStyle = .none
         $0.register(MyPageCell.self, forCellReuseIdentifier: "ClubCell")
         $0.rowHeight = UITableView.automaticDimension
-        $0.estimatedRowHeight = 100
+        $0.delegate = self
+        $0.dataSource = self
     }
     private let data = [
         (imageName: "", description: "하원", level: "",title: "내가 최고 동아리 은하와 자비스에 합격했던 비결", detail: "이번 글에서는 제가 동아리에 합격할 수 있었던 이유를 소개해 보려고 합니다. 네 저는 -1살 때부터 코딩을 시작했는데요. 네.. 코딩을 너무 늦게 시작했죠."),
@@ -77,8 +78,6 @@ public class MyPageViewController: BaseViewController, UITableViewDataSource, UI
         editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
         settingButton.addTarget(self, action: #selector(settingButtonTapped), for: .touchUpInside)
         writeButton.addTarget(self, action: #selector(writeButtonTapped), for: .touchUpInside)
-        tableView.dataSource = self
-        tableView.delegate = self
         self.navigationItem.hidesBackButton = true
     }
 
@@ -180,12 +179,15 @@ public class MyPageViewController: BaseViewController, UITableViewDataSource, UI
         self.navigationController?.pushViewController(SettingViewController(), animated: true)
     }
     @objc private func writeButtonTapped() {
+        self.navigationController?.pushViewController(BlogViewController(), animated: true)
     }
+}
+extension MyPageViewController  {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
     }
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ClubCell", for: indexPath) as? CommunityCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ClubCell", for: indexPath) as? MyPageCell else {
             return UITableViewCell()
         }
         let club = data[indexPath.row]
@@ -195,5 +197,8 @@ public class MyPageViewController: BaseViewController, UITableViewDataSource, UI
     }
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
+    }
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.navigationController?.pushViewController(PostViewController(), animated: true)
     }
 }
