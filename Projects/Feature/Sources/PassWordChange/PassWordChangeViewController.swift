@@ -3,8 +3,11 @@ import DesignSystem
 import Core
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
 
 public class PassWordChangeViewController: BaseViewController {
+    private let disposeBag = DisposeBag()
     private let passWordChageLabel = UILabel().then {
         $0.text = "비밀번호 변경"
         $0.font = .boldSystemFont(ofSize: 22)
@@ -17,23 +20,43 @@ public class PassWordChangeViewController: BaseViewController {
     private let pwdTextField = DMTextFieldView(type: .pwd)
     private let confirmPwdTextField = DMTextFieldView(type: .confirmpwd)
     private let finishButton = DMButtonView(type: .finish)
-
     public override func attribute() {
         view.backgroundColor = UIColor.background
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        backButton.rx.tap
+            .bind { [weak self] in
+                self?.navigationController?.popViewController(animated: true)
+            }
+            .disposed(by: disposeBag)
 
-        pwdTextField.textField.addTarget(self, action: #selector(updateLoginButtonState), for: .editingChanged)
-        confirmPwdTextField.textField.addTarget(self, action: #selector(updateLoginButtonState), for: .editingChanged)
+        pwdTextField.textField.rx.text
+            .orEmpty
+            .bind { [weak self] _ in
+                self?.loginButtonCheck()
+            }
+            .disposed(by: disposeBag)
 
-        finishButton.button.addTarget(self, action: #selector(finishButtonTapped), for: .touchUpInside)
+        confirmPwdTextField.textField.rx.text
+            .orEmpty
+            .bind { [weak self] _ in
+                self?.loginButtonCheck()
+            }
+            .disposed(by: disposeBag)
+
+        finishButton.button.rx.tap
+            .bind { [weak self] in
+                self?.navigationController?.popToViewController(LoginViewController(), animated: true)
+            }
+            .disposed(by: disposeBag)
     }
+
     public override func addView() {
         [
             pwdTextField,
             confirmPwdTextField,
             finishButton
-        ].forEach{view.addSubview($0)}
+        ].forEach { view.addSubview($0) }
     }
+
     public override func layout() {
         pwdTextField.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).inset(30)
@@ -51,16 +74,19 @@ public class PassWordChangeViewController: BaseViewController {
             $0.height.equalTo(64)
         }
     }
+
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationItem.titleView = passWordChageLabel
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         self.navigationItem.setHidesBackButton(true, animated: true)
     }
-    @objc private func updateLoginButtonState() {
-        let pwdTFNil = !(pwdTextField.textField.text ?? "").isEmpty
-        let confirmPwdTFNil = !(confirmPwdTextField.textField.text ?? "").isEmpty
-        if pwdTFNil && confirmPwdTFNil {
+
+    private func loginButtonCheck() {
+        let pwdTFNone = !(pwdTextField.textField.text ?? "").isEmpty
+        let confirmNone = !(confirmPwdTextField.textField.text ?? "").isEmpty
+
+        if pwdTFNone && confirmNone {
             finishButton.button.backgroundColor = UIColor.main1
             finishButton.button.setTitleColor(UIColor.white, for: .normal)
             finishButton.button.isEnabled = true
@@ -69,11 +95,5 @@ public class PassWordChangeViewController: BaseViewController {
             finishButton.button.setTitleColor(UIColor.text2, for: .normal)
             finishButton.button.isEnabled = false
         }
-    }
-    @objc private func finishButtonTapped() {
-        navigationController?.popToRootViewController(animated: true)
-    }
-    @objc private func backButtonTapped() {
-        navigationController?.popViewController(animated: true)
     }
 }
