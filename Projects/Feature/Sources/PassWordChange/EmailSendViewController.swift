@@ -3,32 +3,45 @@ import DesignSystem
 import Core
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
 
 public class EmailSendViewController: BaseViewController {
+    private let disposeBag = DisposeBag()
     private let passWordChageLabel = UILabel().then {
         $0.text = "임시 비밀번호 받기"
         $0.font = .boldSystemFont(ofSize: 22)
     }
-
     private let backButton = UIButton().then {
         $0.setImage(UIImage.back, for: .normal)
     }
-
     private let emailSendTextField = DMTextFieldView(type: .emailsend)
     private let finishButton = DMButtonView(type: .finish)
 
     public override func attribute() {
         view.backgroundColor = UIColor.background
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        emailSendTextField.sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
-        finishButton.button.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+        backButton.rx.tap
+            .bind { [weak self] in
+                self?.backButtonTapped()
+            }
+            .disposed(by: disposeBag)
+        emailSendTextField.sendButton.rx.tap
+            .bind { [weak self] in
+                self?.sendButtonTapped()
+            }
+            .disposed(by: disposeBag)
+        finishButton.button.rx.tap
+            .bind { [weak self] in
+                self?.nextButtonTapped()
+            }
+            .disposed(by: disposeBag)
     }
 
     public override func addView() {
         [
             emailSendTextField,
             finishButton
-        ].forEach{ view.addSubview($0) }
+        ].forEach { view.addSubview($0) }
     }
 
     public override func layout() {
@@ -63,6 +76,6 @@ public class EmailSendViewController: BaseViewController {
     }
 
     @objc public func nextButtonTapped() {
-        navigationController?.popViewController(animated: true)
+        navigationController?.pushViewController(PassWordChangeViewController(), animated: true)
     }
 }
