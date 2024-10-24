@@ -25,7 +25,6 @@ public class EmailSendViewController: BaseViewController {
                 self?.navigationController?.popViewController(animated: true)
             }
             .disposed(by: disposeBag)
-        
         emailSendTextField.textField.rx.text.orEmpty
             .map { !$0.isEmpty }
             .subscribe(onNext: { [weak self] isEnabled in
@@ -33,15 +32,12 @@ public class EmailSendViewController: BaseViewController {
                 self?.emailSendTextField.sendButton.backgroundColor = isEnabled ? UIColor.main1 : UIColor.gray
             })
             .disposed(by: disposeBag)
-
-        
         emailSendTextField.sendButton.rx.tap
             .bind { [weak self] in
                 self?.onButton()
             }
             .disposed(by: disposeBag)
 
-        
         finishButton.button.rx.tap
             .bind { [weak self] in
                 self?.navigationController?.pushViewController(PassWordChangeViewController(), animated: true)
@@ -76,7 +72,6 @@ public class EmailSendViewController: BaseViewController {
         self.navigationItem.setHidesBackButton(true, animated: true)
     }
 
-    
     private func onButton() {
         emailSendTextField.sendButton.backgroundColor = UIColor.textField
         finishButton.button.backgroundColor = UIColor.main1
