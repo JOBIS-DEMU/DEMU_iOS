@@ -22,17 +22,29 @@ public class EmailSendViewController: BaseViewController {
         view.backgroundColor = UIColor.background
         backButton.rx.tap
             .bind { [weak self] in
-                self?.backButtonTapped()
+                self?.navigationController?.popViewController(animated: true)
             }
             .disposed(by: disposeBag)
+        
+        emailSendTextField.textField.rx.text.orEmpty
+            .map { !$0.isEmpty }
+            .subscribe(onNext: { [weak self] isEnabled in
+                self?.emailSendTextField.sendButton.isEnabled = isEnabled
+                self?.emailSendTextField.sendButton.backgroundColor = isEnabled ? UIColor.main1 : UIColor.gray
+            })
+            .disposed(by: disposeBag)
+
+        
         emailSendTextField.sendButton.rx.tap
             .bind { [weak self] in
-                self?.sendButtonTapped()
+                self?.onButton()
             }
             .disposed(by: disposeBag)
+
+        
         finishButton.button.rx.tap
             .bind { [weak self] in
-                self?.nextButtonTapped()
+                self?.navigationController?.pushViewController(PassWordChangeViewController(), animated: true)
             }
             .disposed(by: disposeBag)
     }
@@ -64,18 +76,11 @@ public class EmailSendViewController: BaseViewController {
         self.navigationItem.setHidesBackButton(true, animated: true)
     }
 
-    @objc public func sendButtonTapped() {
-        self.emailSendTextField.sendButton.backgroundColor = UIColor.textField
+    
+    private func onButton() {
+        emailSendTextField.sendButton.backgroundColor = UIColor.textField
         finishButton.button.backgroundColor = UIColor.main1
         finishButton.button.setTitleColor(UIColor.white, for: .normal)
         finishButton.button.isEnabled = true
-    }
-
-    @objc public func backButtonTapped() {
-        navigationController?.popViewController(animated: true)
-    }
-
-    @objc public func nextButtonTapped() {
-        navigationController?.pushViewController(PassWordChangeViewController(), animated: true)
     }
 }
