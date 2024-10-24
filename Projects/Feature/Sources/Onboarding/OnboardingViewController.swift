@@ -29,13 +29,14 @@ public class OnboardingViewController: BaseViewController {
         gradietLayer.startPoint = CGPoint(x: 0.8, y: 1)
         gradietLayer.endPoint = CGPoint(x: 1, y: 0.35)
         gradietLayer.frame = gradietView.bounds
-        startButton.rx.tap
-                   .subscribe(onNext: { [weak self] in
-                       let vc = LoginViewController()
-                       self?.navigationController?.pushViewController(vc, animated: true)
-                   })
-                   .disposed(by: disposeBag)
-           }
+    }
+    override public func bindAction() {
+        startButton.button.rx.tap
+            .subscribe(onNext: { [weak self] in
+                let vc = LoginViewController()
+                self?.navigationController?.pushViewController(vc, animated: true)
+            })
+            .disposed(by: disposeBag)
     }
     override public func addView() {
         view.addSubview(gradietView)
@@ -67,3 +68,4 @@ public class OnboardingViewController: BaseViewController {
         super.viewDidLayoutSubviews()
         gradietLayer.frame = gradietView.bounds
     }
+}
