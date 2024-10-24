@@ -3,8 +3,11 @@ import DesignSystem
 import Core
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
 
-public class SignUpViewController: BaseViewController {
+class SignUpViewController: BaseViewController {
+    private let disposeBag = DisposeBag()
     private let signUpLabel = UILabel().then {
         $0.text = "회원가입"
         $0.font = .boldSystemFont(ofSize: 22)
@@ -20,14 +23,34 @@ public class SignUpViewController: BaseViewController {
 
     public override func attribute() {
         view.backgroundColor = UIColor.background
+    }
 
-        emailTextField.textField.addTarget(self, action: #selector(updateLoginButtonState), for: .editingChanged)
-        nicknameTextField.textField.addTarget(self, action: #selector(updateLoginButtonState), for: .editingChanged)
-        pwdTextField.textField.addTarget(self, action: #selector(updateLoginButtonState), for: .editingChanged)
-        confirmPwdTextField.textField.addTarget(self, action: #selector(updateLoginButtonState), for: .editingChanged)
+    private func bindTextField(_ textField: UITextField) {
+        textField.rx.text
+            .orEmpty
+            .subscribe(onNext: { [weak self] _ in
+                self?.updateLoginButtonState()
+            })
+            .disposed(by: disposeBag)
+    }
 
-        loginButton.textButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
-        signUpButton.button.addTarget(self, action: #selector (signUpButtonTapped), for: .touchUpInside)
+    public override func bindAction() {
+        bindTextField(emailTextField.textField)
+        bindTextField(nicknameTextField.textField)
+        bindTextField(pwdTextField.textField)
+        bindTextField(confirmPwdTextField.textField)
+
+        signUpButton.button.rx.tap
+            .subscribe(onNext: { [weak self] in
+                let vc = SignUpViewController()
+                self?.navigationController?.pushViewController(vc, animated: true)
+            })
+            .disposed(by: disposeBag)
+        loginButton.textButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                self?.navigationController?.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
     }
 
     public override func addView() {
@@ -78,7 +101,7 @@ public class SignUpViewController: BaseViewController {
         self.navigationItem.titleView = signUpLabel
         self.navigationItem.setHidesBackButton(true, animated: false)
     }
-    @objc private func updateLoginButtonState() {
+    private func updateLoginButtonState() {
         let emailTFNil = !(emailTextField.textField.text ?? "").isEmpty
         let nickNameTFNil = !(nicknameTextField.textField.text ?? "").isEmpty
         let pwdTFNil = !(pwdTextField.textField.text ?? "").isEmpty
@@ -92,13 +115,5 @@ public class SignUpViewController: BaseViewController {
             signUpButton.button.setTitleColor(UIColor.text2, for: .normal)
             signUpButton.button.isEnabled = false
         }
-    }
-    @objc private func signUpButtonTapped() {
-        let vc = LoginViewController()
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    @objc private func loginButtonTapped() {
-        navigationController?.popViewController(animated: true)
     }
 }
