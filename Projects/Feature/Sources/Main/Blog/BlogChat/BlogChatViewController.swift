@@ -7,7 +7,9 @@ import RxSwift
 import RxCocoa
 
 class BlogChatViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
+
     private let disposeBag = DisposeBag()
+
     private var clubs = [
         (imageName: "", description: "이지훈", chat: ""),
         (imageName: "", description: "이지훈", chat: "어쩔팁이 저쩔팁이 안물안궁 어미ㅏㅓㅇ라ㅓㅁ아ㅓㄹ마ㅣㅓ이라ㅓ")
@@ -47,15 +49,15 @@ class BlogChatViewController: BaseViewController, UITableViewDataSource, UITable
         $0.isEnabled = true
     }
 
-    public override func attribute() {
+    override func attribute() {
         view.backgroundColor = .white
     }
 
-    override public func bindAction() {
+    override func bindAction() {
         beforeButton.rx.tap
-            .subscribe(onNext: { _ in
+            .bind {
                 self.navigationController?.popViewController(animated: true)
-            })
+            }
             .disposed(by: disposeBag)
         commentTextField.rx.text
             .subscribe(onNext: { _ in
@@ -98,7 +100,7 @@ class BlogChatViewController: BaseViewController, UITableViewDataSource, UITable
             .disposed(by: disposeBag)
     }
 
-    override public func addView() {
+    override func addView() {
         [
             chatLabel,
             beforeButton,
@@ -109,7 +111,7 @@ class BlogChatViewController: BaseViewController, UITableViewDataSource, UITable
         commentBackView.addSubview(registerButton)
     }
 
-    override public func layout() {
+    override func layout() {
         chatLabel.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(13)
             $0.centerX.equalToSuperview()
@@ -138,12 +140,6 @@ class BlogChatViewController: BaseViewController, UITableViewDataSource, UITable
         }
     }
 
-    override public func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-        self.navigationItem.setHidesBackButton(true, animated: true)
-    }
-
     deinit {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -151,13 +147,13 @@ class BlogChatViewController: BaseViewController, UITableViewDataSource, UITable
 }
 
 extension BlogChatViewController {
-    public func tableView(_ tableView: UITableView, heightForRowAtindexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAtindexPath: IndexPath) -> CGFloat {
         return tableView.rowHeight
     }
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return clubs.count
     }
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "BlogChatCell", for: indexPath) as? BlogChatCell else {
             return UITableViewCell()
         }
