@@ -6,13 +6,14 @@ import Then
 import RxSwift
 import RxCocoa
 
-public class PassWordChangeViewController: BaseViewController {
+class PassWordChangeViewController: BaseViewController {
+
     private let disposeBag = DisposeBag()
+
     private let passWordChageLabel = UILabel().then {
         $0.text = "비밀번호 변경"
         $0.font = .boldSystemFont(ofSize: 22)
     }
-
     private let backButton = UIButton().then {
         $0.setImage(UIImage.back, for: .normal)
     }
@@ -20,31 +21,36 @@ public class PassWordChangeViewController: BaseViewController {
     private let pwdTextField = DMTextFieldView(type: .pwd)
     private let confirmPwdTextField = DMTextFieldView(type: .confirmpwd)
     private let finishButton = DMButtonView(type: .finish)
-    public override func attribute() {
+
+    override public func attribute() {
         view.backgroundColor = UIColor.background
+    }
+
+    override func bindAction() {
         backButton.rx.tap
-            .bind { [weak self] in
-                self?.navigationController?.popViewController(animated: true)
+            .bind { _ in
+                self.navigationController?.popViewController(animated: true)
             }
             .disposed(by: disposeBag)
 
         pwdTextField.textField.rx.text
             .orEmpty
-            .bind { [weak self] _ in
-                self?.loginButtonCheck()
+            .bind { _ in
+                self.loginButtonCheck()
             }
             .disposed(by: disposeBag)
 
         confirmPwdTextField.textField.rx.text
             .orEmpty
-            .bind { [weak self] _ in
-                self?.loginButtonCheck()
+            .bind { _ in
+                self.loginButtonCheck()
             }
             .disposed(by: disposeBag)
 
         finishButton.button.rx.tap
-            .bind { [weak self] in
-                self?.navigationController?.popToViewController(LoginViewController(), animated: true)
+            .bind { _ in
+                let vc =  LoginViewController()
+                self.navigationController?.popToViewController(vc, animated: true)
             }
             .disposed(by: disposeBag)
     }
