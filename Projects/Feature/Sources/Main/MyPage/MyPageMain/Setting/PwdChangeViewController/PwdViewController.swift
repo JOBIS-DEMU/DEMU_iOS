@@ -7,7 +7,9 @@ import RxSwift
 import RxCocoa
 
 class PwdViewController: BaseViewController {
+
     private let disposeBag = DisposeBag()
+
     private let backButton = UIButton().then {
         $0.setImage(UIImage.back, for: .normal)
     }
@@ -19,13 +21,11 @@ class PwdViewController: BaseViewController {
     }
     private let pwdTextField = DMTextFieldView(type: .pwd)
     private let nextButton = DMButtonView(type: .next)
-    override internal func attribute() {
-        view.backgroundColor = UIColor.background
 
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        pwdTextField.textField.addTarget(self, action: #selector(updateNextButtonState), for: .editingChanged)
-        nextButton.button.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+    override public func attribute() {
+        view.backgroundColor = UIColor.background
     }
+
     override public func bindAction() {
         backButton.rx.tap
             .subscribe(onNext: {
@@ -34,7 +34,8 @@ class PwdViewController: BaseViewController {
             .disposed(by: disposeBag)
         nextButton.button.rx.tap
             .subscribe(onNext: {
-                self.navigationController?.popViewController(animated: true)
+                let vc = PassWordChangeViewController()
+                self.navigationController?.pushViewController(vc, animated: true)
             })
             .disposed(by: disposeBag)
 
@@ -53,16 +54,23 @@ class PwdViewController: BaseViewController {
             })
             .disposed(by: disposeBag)
     }
-    override internal func addView() {
+
+    override public func addView() {
         [
+            backButton,
             titleLabel,
             pwdTextField,
             nextButton
         ].forEach { view.addSubview($0) }
     }
-    override internal func layout() {
+
+    override public func layout() {
+        backButton.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(3)
+            $0.leading.equalToSuperview().inset(20)
+        }
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).inset(15)
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(50)
             $0.leading.equalToSuperview().inset(24)
         }
         pwdTextField.snp.makeConstraints {
@@ -75,28 +83,5 @@ class PwdViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(64)
         }
-    }
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-        self.navigationItem.setHidesBackButton(true, animated: true)
-    }
-    @objc private func backButtonTapped() {
-        self.navigationController?.popViewController(animated: true)
-    }
-    @objc private func updateNextButtonState() {
-        let pwdTFNil = !(pwdTextField.textField.text ?? "").isEmpty
-        if pwdTFNil {
-            nextButton.button.backgroundColor = UIColor.main1
-            nextButton.button.setTitleColor(UIColor.white, for: .normal)
-            nextButton.button.isEnabled = true
-        } else {
-            nextButton.button.backgroundColor = UIColor.main2
-            nextButton.button.setTitleColor(UIColor.text2, for: .normal)
-            nextButton.button.isEnabled = false
-        }
-    }
-    @objc private func nextButtonTapped() {
-        self.navigationController?.pushViewController(PassWordChangeViewController(), animated: true)
     }
 }

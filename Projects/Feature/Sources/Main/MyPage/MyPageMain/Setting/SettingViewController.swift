@@ -77,7 +77,7 @@ class SettingViewController: BaseViewController {
         pwdView.addGestureRecognizer(pwdViewtapGesture)
         pwdViewtapGesture.rx.event
             .subscribe(onNext: { _ in
-                let vc = PassWordChangeViewController()
+                let vc = PwdViewController()
                 self.navigationController?.pushViewController(vc, animated: true)
             })
             .disposed(by: disposeBag)
