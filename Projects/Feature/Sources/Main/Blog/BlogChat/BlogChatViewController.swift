@@ -4,8 +4,10 @@ import Core
 import SnapKit
 import Then
 import RxSwift
+import RxCocoa
 
 public class BlogChatViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
+    private let disposeBag = DisposeBag()
     private var clubs = [
         (imageName: "", description: "이지훈", chat: ""),
         (imageName: "", description: "이지훈", chat: "어쩔팁이 저쩔팁이 안물안궁 어미ㅏㅓㅇ라ㅓㅁ아ㅓㄹ마ㅣㅓ이라ㅓ")
@@ -38,12 +40,50 @@ public class BlogChatViewController: BaseViewController, UITableViewDataSource, 
     
     public override func attribute() {
         title = "댓글"
-        commentTextField.addTarget(self, action: #selector(updateRegisterButton), for: .editingChanged)
-        registerButton.addTarget(self, action: #selector(didTapRegister), for: .touchUpInside)
-
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
+
+    override public func bindAction() {
+        commentTextField.rx.text
+            .subscribe(onNext: { _ in
+                let commentTFNil = !(self.commentTextField.text ?? "").isEmpty
+                if commentTFNil {
+                    self.registerButton.isEnabled = true
+                } else {
+                    self.registerButton.isEnabled = false
+                }
+            })
+            .disposed(by: disposeBag)
+        registerButton.rx.tap
+            .subscribe(onNext: { _ in
+                guard let text = self.commentTextField.text, !text.isEmpty else {
+                    self.registerButton.isEnabled = false
+                    return
+                }
+                self.clubs.append((imageName: "", description: "하원", chat: text))
+                self.tableView.reloadData()
+                self.commentTextField.text = ""
+            })
+            .disposed(by: disposeBag)
+
+        NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
+            .subscribe(onNext: { notification in
+                if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+                    let textFieldYValue = self.view.frame.height - keyboardSize.height - self.commentBackView.frame.height
+                    UIView.animate(withDuration: 0.3) {
+                                self.commentBackView.frame.origin.y = textFieldYValue
+                    }
+                }
+            })
+            .disposed(by: disposeBag)
+        NotificationCenter.default.rx.notification(UIResponder.keyboardWillHideNotification)
+            .subscribe(onNext: { _ in
+                UIView.animate(withDuration: 0.3) {
+                        self.commentBackView.frame.origin.y = self.view.frame.height - self.commentBackView.frame.height
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+
     public override func addView() {
         [
             tableView,
@@ -79,44 +119,10 @@ public class BlogChatViewController: BaseViewController, UITableViewDataSource, 
         self.navigationItem.setHidesBackButton(true, animated: true)
     }
 
-    @objc private func keyboardWillShow(notification: Notification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            let textFieldYValue = view.frame.height - keyboardSize.height - commentBackView.frame.height
-            UIView.animate(withDuration: 0.3) {
-                        self.commentBackView.frame.origin.y = textFieldYValue
-            }
-        }
-    }
-
-    @objc private func keyboardWillHide(notification: Notification) {
-        UIView.animate(withDuration: 0.3) {
-                self.commentBackView.frame.origin.y = self.view.frame.height - self.commentBackView.frame.height
-        }
-    }
-
     deinit {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-
-    @objc private func updateRegisterButton() {
-        let commentTFNil = !(commentTextField.text ?? "").isEmpty
-        if commentTFNil {
-            registerButton.isEnabled = true
-        } else {
-            registerButton.isEnabled = false
-        }
-    }
-    @objc private func didTapRegister() {
-        guard let text = commentTextField.text, !text.isEmpty else {
-            registerButton.isEnabled = false
-            return
-        }
-        clubs.append((imageName: "", description: "하원", chat: text))
-        tableView.reloadData()
-        commentTextField.text = ""
-    }
-    let disposeBag = DisposeBag()
 }
 
 extension BlogChatViewController {
