@@ -87,7 +87,7 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
         detailPlaceholderText.isHidden = !detailTextView.text.isEmpty
     }
 
-    public override func bindAction() {
+    override public func bindAction() {
         downButton.rx.tap
             .subscribe(onNext: { _ in
                 let modalVC = BlogModalViewController()
@@ -99,7 +99,14 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
             .disposed(by: disposeBag)
         cancelButton.rx.tap
             .subscribe(onNext: { _ in
-                self.navigationController?.popViewController(animated: true)
+                let vc = TabBarController()
+                self.navigationController?.pushViewController(vc, animated: true)
+            })
+            .disposed(by: disposeBag)
+        checkButton.rx.tap
+            .subscribe(onNext: { _ in
+                let vc = TabBarController()
+                self.navigationController?.pushViewController(vc, animated: true)
             })
             .disposed(by: disposeBag)
 
@@ -118,7 +125,7 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
             .disposed(by: disposeBag)
     }
 
-    public override func addView() {
+     override public func addView() {
         [
             cancelButton,
             checkButton,
@@ -139,7 +146,7 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
         ].forEach { imageSquareView.addSubview($0) }
     }
 
-    public override func layout() {
+    override public func layout() {
         cancelButton.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(14)
             $0.leading.equalToSuperview().inset(24)
@@ -195,7 +202,7 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
         }
     }
 
-    public override func viewWillAppear(_ animated: Bool) {
+    override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
@@ -238,7 +245,7 @@ extension BlogViewController: UITextViewDelegate {
 }
 
 extension BlogViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    @objc func pickImage() {
+    private func pickImage() {
         if selectedImages.count >= maxImageCount {
             let alert = UIAlertController(title: "알림", message: "최대 5장까지 선택할 수 있습니다.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
@@ -289,7 +296,23 @@ extension BlogViewController: UIImagePickerControllerDelegate, UINavigationContr
 
         removeButton = UIButton()
         removeButton.setImage(UIImage.imagex, for: .normal)
-        removeButton.addTarget(self, action: #selector(removeImage), for: .touchUpInside)
+        removeButton.rx.tap
+            .subscribe(onNext: { _ in
+                guard let lastImageView = self.selectedImages.last else { return }
+
+                lastImageView.removeFromSuperview()
+                self.removeButton.removeFromSuperview()
+
+                self.selectedImages.removeLast()
+
+                if let newLastImageView = self.selectedImages.last {
+                    self.addRemoveButton(to: newLastImageView)
+                } else {
+                    self.removeButton.isHidden = true
+                }
+                self.updateImageDisplay()
+            })
+            .disposed(by: disposeBag)
 
         view.addSubview(removeButton)
 
@@ -298,20 +321,5 @@ extension BlogViewController: UIImagePickerControllerDelegate, UINavigationContr
             $0.leading.equalTo(imageView.snp.trailing).offset(2)
             $0.width.height.equalTo(25)
         }
-    }
-    @objc private func removeImage() {
-        guard let lastImageView = selectedImages.last else { return }
-
-        lastImageView.removeFromSuperview()
-        removeButton.removeFromSuperview()
-
-        selectedImages.removeLast()
-
-        if let newLastImageView = selectedImages.last {
-            addRemoveButton(to: newLastImageView)
-        } else {
-            removeButton.isHidden = true
-        }
-        updateImageDisplay()
     }
 }
