@@ -3,10 +3,14 @@ import DesignSystem
 import Core
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
 
-public class PostViewController: BaseViewController, UIScrollViewDelegate {
+class PostViewController: BaseViewController, UIScrollViewDelegate {
+    private let disposeBag = DisposeBag()
     private var images: [String] = []
     private var isHeartSelected = false
+
     private let scrollView = UIScrollView().then {
         $0.alwaysBounceVertical = true
         $0.alwaysBounceHorizontal = false
@@ -84,15 +88,41 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
         $0.textColor = UIColor.textField
         $0.font = .systemFont(ofSize: 15, weight: .semibold)
     }
-    public override func attribute() {
+
+    override public func attribute() {
         view.backgroundColor = UIColor.background
-        setImageSlider(images: ["DEMU_Profile", "image2", "image3"])
-        let heartTapGesture = UITapGestureRecognizer(target: self, action: #selector(heartImageViewTapped))
-           heartImageView.addGestureRecognizer(heartTapGesture)
-        let commentTapGesture = UITapGestureRecognizer(target: self, action: #selector(commentImageViewTapped))
-            commentImageView.addGestureRecognizer(commentTapGesture)
-        beforeButton.addTarget(self, action: #selector(beforeButtonTapped), for: .touchUpInside)
     }
+
+    override public func bindAction() {
+        let heartTapGesture = UITapGestureRecognizer()
+        heartImageView.addGestureRecognizer(heartTapGesture)
+        heartTapGesture.rx.event
+            .subscribe(onNext: { _ in
+                self.isHeartSelected.toggle()
+                if self.isHeartSelected {
+                    self.heartImageView.image = UIImage.heartFilled
+                } else {
+                    self.heartImageView.image = UIImage.heart
+                }
+            })
+            .disposed(by: disposeBag)
+
+        let commentTapGesture = UITapGestureRecognizer()
+        commentImageView.addGestureRecognizer(commentTapGesture)
+        commentTapGesture.rx.event
+            .subscribe(onNext: { _ in
+                let commentVC = BlogChatViewController()
+                self.navigationController?.pushViewController(commentVC, animated: true)
+            })
+            .disposed(by: disposeBag)
+
+        beforeButton.rx.tap
+            .subscribe(onNext: { _ in
+                self.navigationController?.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
+    }
+
     override public func addView() {
         [
             scrollView,
@@ -209,7 +239,7 @@ public class PostViewController: BaseViewController, UIScrollViewDelegate {
             $0.leading.equalTo(commentImageView.snp.trailing).offset(5)
         }
     }
-    public override func viewWillAppear(_ animated: Bool) {
+    override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationItem.setHidesBackButton(true, animated: true)
     }
@@ -231,26 +261,8 @@ extension PostViewController {
             imageScrollView.addSubview(imageView)
         }
     }
-    @objc private func heartImageViewTapped() {
-        isHeartSelected.toggle()
-        if isHeartSelected {
-            heartImageView.image = UIImage.heartFilled
-        } else {
-            heartImageView.image = UIImage.heart
-        }
-    }
-    @objc private func commentImageViewTapped() {
-        let commentVC = BlogChatViewController()
-        navigationController?.pushViewController(commentVC, animated: true)
-    }
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let currentPage = Int(round(imageScrollView.contentOffset.x / UIScreen.main.bounds.width))
         imagePageControl.currentPage = currentPage
-    }
-    @objc private func backButtonTapped() {
-        navigationController?.popViewController(animated: true)
-    }
-    @objc private func beforeButtonTapped() {
-        navigationController?.popViewController(animated: true)
     }
 }
