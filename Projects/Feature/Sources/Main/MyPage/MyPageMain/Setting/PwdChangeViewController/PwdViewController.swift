@@ -22,21 +22,21 @@ class PwdViewController: BaseViewController {
     private let pwdTextField = DMTextFieldView(type: .pwd)
     private let nextButton = DMButtonView(type: .next)
 
-    override public func attribute() {
+    override func attribute() {
         view.backgroundColor = UIColor.background
     }
 
-    override public func bindAction() {
+    override func bindAction() {
         backButton.rx.tap
-            .subscribe(onNext: {
+            .bind {
                 self.navigationController?.popViewController(animated: true)
-            })
+            }
             .disposed(by: disposeBag)
         nextButton.button.rx.tap
-            .subscribe(onNext: {
+            .bind {
                 let vc = PassWordChangeViewController()
                 self.navigationController?.pushViewController(vc, animated: true)
-            })
+            }
             .disposed(by: disposeBag)
 
         pwdTextField.textField.rx.text
@@ -55,7 +55,7 @@ class PwdViewController: BaseViewController {
             .disposed(by: disposeBag)
     }
 
-    override public func addView() {
+    override func addView() {
         [
             backButton,
             titleLabel,
@@ -64,7 +64,7 @@ class PwdViewController: BaseViewController {
         ].forEach { view.addSubview($0) }
     }
 
-    override public func layout() {
+    override func layout() {
         backButton.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).inset(3)
             $0.leading.equalToSuperview().inset(20)

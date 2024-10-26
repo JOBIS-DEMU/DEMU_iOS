@@ -7,7 +7,9 @@ import RxSwift
 import RxCocoa
 
 class MyPageViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
+
     private let disposeBag = DisposeBag()
+
     private let data = [
         (imageName: "", description: "하원", level: "",title: "내가 최고 동아리 은하와 자비스에 합격했던 비결"),
         (imageName: "", description: "히원", level: "", title: "내가 1학년 iOS 짱인 이유"),
@@ -27,6 +29,7 @@ class MyPageViewController: BaseViewController, UITableViewDataSource, UITableVi
     private let customBackView = UIView().then {
         $0.backgroundColor = UIColor.main1
     }
+
     private let profileImageView = UIImageView().then {
         $0.image = UIImage.profile
         $0.isUserInteractionEnabled = true
@@ -76,30 +79,32 @@ class MyPageViewController: BaseViewController, UITableViewDataSource, UITableVi
         $0.dataSource = self
     }
 
-    override public func attribute() {
+    override func attribute() {
         view.backgroundColor = UIColor.background
         self.navigationItem.hidesBackButton = true
     }
 
-    override public func bindAction() {
+    override func bindAction() {
         editButton.rx.tap
-            .subscribe(onNext: { _ in
+            .bind {
                 self.complexTextView.textView.isEditable = true
-            })
+            }
             .disposed(by: disposeBag)
         settingButton.rx.tap
-            .subscribe(onNext: { _ in
-                self.navigationController?.pushViewController(SettingViewController(), animated: true)
-            })
+            .bind {
+                let vc = SettingViewController()
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
             .disposed(by: disposeBag)
         writeButton.rx.tap
-            .subscribe(onNext: { _ in
-                self.navigationController?.pushViewController(BlogViewController(), animated: true)
-            })
+            .bind {
+                let vc = BlogViewController()
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
             .disposed(by: disposeBag)
     }
 
-    override public func addView() {
+    override func addView() {
         [
             customBackView,
             profileImageView,
@@ -119,7 +124,7 @@ class MyPageViewController: BaseViewController, UITableViewDataSource, UITableVi
         writeButton.addSubview(writeLabelView)
     }
 
-    override public func layout() {
+    override func layout() {
         customBackView.snp.makeConstraints {
             $0.top.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(view.snp.bottom).inset(744)
@@ -190,10 +195,10 @@ class MyPageViewController: BaseViewController, UITableViewDataSource, UITableVi
     }
 }
 extension MyPageViewController  {
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
     }
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ClubCell", for: indexPath) as? MyPageCell else {
             return UITableViewCell()
         }
@@ -202,10 +207,10 @@ extension MyPageViewController  {
         cell.selectionStyle = .none
         return cell
     }
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.navigationController?.pushViewController(PostViewController(), animated: true)
     }
 }
