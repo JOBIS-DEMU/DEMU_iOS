@@ -8,6 +8,16 @@ import RxCocoa
 
 class HomeViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate, HomeModalViewControllerDelegate {
     private let disposeBag = DisposeBag()
+    private let data = [
+        (imageName: "", description: "하원", level: "",title: "내가 최고 동아리 은하와 자비스에 합격했던 비결"),
+        (imageName: "", description: "히원", level: "", title: "내가 1학년 iOS 짱인 이유"),
+        (imageName: "", description: "하원", level: "", title: "먼작귀가 너무 귀여워요"),
+        (imageName: "", description: "하원", level: "", title: "컨플릭트 해결"),
+        (imageName: "", description: "이지훈", level: "", title: ""),
+        (imageName: "", description: "이지훈", level: "", title: ""),
+        (imageName: "", description: "이지훈", level: "", title: ""),
+        (imageName: "", description: "이지훈", level: "", title: "")
+    ]
     private let dropDownLabel = UILabel().then {
         $0.text = "backend"
         $0.font = .systemFont(ofSize: 24, weight: .semibold)
@@ -16,23 +26,15 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
     private let downButton = UIButton().then {
         $0.setImage(UIImage.down, for: .normal)
     }
-    private let data = [
-        (imageName: "", description: "하원", level: "",title: "내가 최고 동아리 은하와 자비스에 합격했던 비결", detail: "이번 글에서는 제가 동아리에 합격할 수 있었던 이유를 소개해 보려고 합니다. 네 저는 -1살 때부터 코딩을 시작했는데요. 네.. 코딩을 너무 늦게 시작했죠."),
-        (imageName: "", description: "히원", level: "", title: "내가 1학년 iOS 짱인 이유", detail: "그냥 내가 짱이니까"),
-        (imageName: "", description: "하원", level: "", title: "먼작귀가 너무 귀여워요", detail: "모두 치이카와 보구 가세용~"),
-        (imageName: "", description: "하원", level: "", title: "컨플릭트 해결", detail: "누가 컨플릭트 좀 해결해주세요 ㅜㅜ 이런 경우 어떻게 해결하나요 ㅜ"),
-        (imageName: "", description: "이지훈", level: "", title: "", detail: ""),
-        (imageName: "", description: "이지훈", level: "", title: "", detail: ""),
-        (imageName: "", description: "이지훈", level: "", title: "", detail: ""),
-        (imageName: "", description: "이지훈", level: "", title: "", detail: "")
-    ]
 
-    private let tableView = UITableView().then {
+    private lazy var tableView = UITableView().then {
         $0.backgroundColor = UIColor.background
         $0.separatorStyle = .none
         $0.register(CommunityCell.self, forCellReuseIdentifier: "ClubCell")
         $0.rowHeight = UITableView.automaticDimension
         $0.estimatedRowHeight = 100
+        $0.dataSource = self
+        $0.delegate = self
     }
 
     private let majorSelectButton = UIButton().then {
@@ -64,10 +66,6 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
 
     override public func attribute() {
         view.backgroundColor = UIColor.background
-        downButton.addTarget(self, action: #selector(presentHomeModal), for: .touchUpInside)
-        tableView.dataSource = self
-        tableView.delegate = self
-        self.navigationItem.hidesBackButton = true
     }
 
     override public func bindAction() {
@@ -84,8 +82,10 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationItem.hidesBackButton = true
         self.navigationController?.isNavigationBarHidden = true
     }
+
     override public func addView() {
         [
             dropDownLabel,
@@ -139,6 +139,12 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
         }
     }
 
+    func didSelectMajor(_ major: String) {
+        dropDownLabel.text = major
+    }
+}
+
+extension HomeViewController {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
     }
@@ -147,7 +153,7 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
             return UITableViewCell()
         }
         let club = data[indexPath.row]
-        cell.configure(imageName: club.imageName, description: club.description, level: club.level, title: club.title, detail: club.detail)
+        cell.configure(imageName: club.imageName, description: club.description, level: club.level, title: club.title)
         cell.selectionStyle = .none
         return cell
     }
@@ -157,15 +163,4 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.navigationController?.pushViewController(PostViewController(), animated: true)
     }
-    @objc func presentHomeModal() {
-        let modalVC = HomeModalViewController()
-        modalVC.modalPresentationStyle = .formSheet
-        modalVC.modalTransitionStyle = .coverVertical
-        modalVC.delegate = self
-        self.present(modalVC, animated: true, completion: nil)
-    }
-    func didSelectMajor(_ major: String) {
-        dropDownLabel.text = major
-    }
 }
-
