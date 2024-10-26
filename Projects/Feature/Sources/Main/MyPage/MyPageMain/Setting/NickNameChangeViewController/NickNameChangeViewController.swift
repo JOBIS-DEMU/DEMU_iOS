@@ -7,7 +7,9 @@ import RxSwift
 import RxCocoa
 
 class NickNameChangeViewController: BaseViewController {
+
     private let disposeBag = DisposeBag()
+
     private let backButton = UIButton().then {
         $0.setImage(UIImage.back, for: .normal)
     }
@@ -53,14 +55,20 @@ class NickNameChangeViewController: BaseViewController {
 
     override public func addView() {
         [
+            backButton,
             titleLabel,
             nickNameTextField,
             finishButton
         ].forEach{ view.addSubview($0) }
     }
+
     override public func layout() {
+        backButton.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(3)
+            $0.leading.equalToSuperview().inset(20)
+        }
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).inset(15)
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(50)
             $0.leading.equalToSuperview().inset(24)
         }
         nickNameTextField.snp.makeConstraints {
@@ -73,10 +81,5 @@ class NickNameChangeViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(64)
         }
-    }
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-        self.navigationItem.setHidesBackButton(true, animated: true)
     }
 }
