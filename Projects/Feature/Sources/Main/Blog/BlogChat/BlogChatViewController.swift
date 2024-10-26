@@ -6,12 +6,21 @@ import Then
 import RxSwift
 import RxCocoa
 
-public class BlogChatViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
+class BlogChatViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
     private let disposeBag = DisposeBag()
     private var clubs = [
         (imageName: "", description: "이지훈", chat: ""),
         (imageName: "", description: "이지훈", chat: "어쩔팁이 저쩔팁이 안물안궁 어미ㅏㅓㅇ라ㅓㅁ아ㅓㄹ마ㅣㅓ이라ㅓ")
     ]
+
+    private let chatLabel = UILabel().then {
+        $0.text = "댓글"
+        $0.textColor = UIColor.text
+        $0.font = .systemFont(ofSize: 16, weight: .semibold)
+    }
+    private let beforeButton = UIButton().then {
+        $0.setImage(UIImage.before, for: .normal)
+    }
     private lazy var tableView = UITableView().then {
         $0.dataSource = self
         $0.delegate = self
@@ -37,12 +46,17 @@ public class BlogChatViewController: BaseViewController, UITableViewDataSource, 
         $0.backgroundColor = .main1
         $0.isEnabled = true
     }
-    
+
     public override func attribute() {
-        title = "댓글"
+        view.backgroundColor = .white
     }
 
     override public func bindAction() {
+        beforeButton.rx.tap
+            .subscribe(onNext: { _ in
+                self.navigationController?.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
         commentTextField.rx.text
             .subscribe(onNext: { _ in
                 let commentTFNil = !(self.commentTextField.text ?? "").isEmpty
@@ -84,18 +98,29 @@ public class BlogChatViewController: BaseViewController, UITableViewDataSource, 
             .disposed(by: disposeBag)
     }
 
-    public override func addView() {
+    override public func addView() {
         [
+            chatLabel,
+            beforeButton,
             tableView,
             commentBackView
         ].forEach { view.addSubview($0) }
         commentBackView.addSubview(commentTextField)
         commentBackView.addSubview(registerButton)
     }
-    public override func layout() {
+
+    override public func layout() {
+        chatLabel.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(13)
+            $0.centerX.equalToSuperview()
+        }
+        beforeButton.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(13)
+            $0.leading.equalTo(24)
+        }
         tableView.snp.makeConstraints {
-            $0.top.equalTo(101)
-            $0.edges.equalToSuperview()
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(50)
+            $0.bottom.leading.trailing.equalToSuperview()
         }
         commentBackView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
@@ -113,7 +138,7 @@ public class BlogChatViewController: BaseViewController, UITableViewDataSource, 
         }
     }
 
-    public override func viewWillAppear(_ animated: Bool) {
+    override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         self.navigationItem.setHidesBackButton(true, animated: true)
