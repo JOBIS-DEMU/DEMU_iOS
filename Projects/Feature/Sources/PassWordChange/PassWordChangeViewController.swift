@@ -28,34 +28,32 @@ class PassWordChangeViewController: BaseViewController {
 
     override func bindAction() {
         backButton.rx.tap
-            .bind { _ in
+            .bind {
                 self.navigationController?.popViewController(animated: true)
             }
             .disposed(by: disposeBag)
 
-        pwdTextField.textField.rx.text
-            .orEmpty
-            .bind { _ in
+        pwdTextField.textField.rx.text.orEmpty
+            .bind {_ in 
                 self.loginButtonCheck()
             }
             .disposed(by: disposeBag)
 
-        confirmPwdTextField.textField.rx.text
-            .orEmpty
-            .bind { _ in
+        confirmPwdTextField.textField.rx.text.orEmpty
+            .bind {_ in 
                 self.loginButtonCheck()
             }
             .disposed(by: disposeBag)
 
         finishButton.button.rx.tap
-            .bind { _ in
+            .bind {
                 let vc =  LoginViewController()
                 self.navigationController?.popToViewController(vc, animated: true)
             }
             .disposed(by: disposeBag)
     }
 
-    public override func addView() {
+    override func addView() {
         [
             pwdTextField,
             confirmPwdTextField,
@@ -63,7 +61,7 @@ class PassWordChangeViewController: BaseViewController {
         ].forEach { view.addSubview($0) }
     }
 
-    public override func layout() {
+    override func layout() {
         pwdTextField.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).inset(30)
             $0.leading.trailing.equalToSuperview().inset(24)
@@ -81,7 +79,7 @@ class PassWordChangeViewController: BaseViewController {
         }
     }
 
-    public override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationItem.titleView = passWordChageLabel
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)

@@ -7,7 +7,9 @@ import RxSwift
 import RxCocoa
 
 class HomeViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate, HomeModalViewControllerDelegate {
+
     private let disposeBag = DisposeBag()
+
     private let data = [
         (imageName: "", description: "하원", level: "",title: "내가 최고 동아리 은하와 자비스에 합격했던 비결"),
         (imageName: "", description: "히원", level: "", title: "내가 1학년 iOS 짱인 이유"),
@@ -18,6 +20,7 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
         (imageName: "", description: "이지훈", level: "", title: ""),
         (imageName: "", description: "이지훈", level: "", title: "")
     ]
+
     private let dropDownLabel = UILabel().then {
         $0.text = "backend"
         $0.font = .systemFont(ofSize: 24, weight: .semibold)
@@ -64,29 +67,23 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
         $0.backgroundColor = .background2
     }
 
-    override public func attribute() {
+    override func attribute() {
         view.backgroundColor = UIColor.background
     }
 
-    override public func bindAction() {
+    override func bindAction() {
         downButton.rx.tap
-            .subscribe(onNext: { [weak self] in
+            .bind { _ in
                 let modalVC = HomeModalViewController()
-                self?.present(modalVC, animated: true, completion: nil)
+                self.present(modalVC, animated: true, completion: nil)
                 modalVC.modalPresentationStyle = .formSheet
                 modalVC.modalTransitionStyle = .coverVertical
                 modalVC.delegate = self
-            })
+            }
             .disposed(by: disposeBag)
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationItem.hidesBackButton = true
-        self.navigationController?.isNavigationBarHidden = true
-    }
-
-    override public func addView() {
+    override func addView() {
         [
             dropDownLabel,
             popularLabel,
@@ -95,12 +92,14 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
             downButton
         ].forEach { view.addSubview($0) }
         imageBackView.addSubview(titleImageView)
+
         [
             titleProfileImageView,
             titleNickNameLabel
         ].forEach {titleImageView.addSubview($0)}
     }
-    override public func layout() {
+
+    override func layout() {
         dropDownLabel.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(0)
             $0.leading.equalTo(24)
@@ -137,6 +136,13 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
             $0.width.equalTo(16)
             $0.height.equalTo(8)
         }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.navigationItem.hidesBackButton = true
+        self.navigationController?.isNavigationBarHidden = true
     }
 
     func didSelectMajor(_ major: String) {

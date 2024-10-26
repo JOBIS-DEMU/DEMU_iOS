@@ -7,7 +7,9 @@ import RxSwift
 import RxCocoa
 
 class SignUpViewController: BaseViewController {
+
     private let disposeBag = DisposeBag()
+
     private let signUpLabel = UILabel().then {
         $0.text = "회원가입"
         $0.font = .boldSystemFont(ofSize: 22)
@@ -21,39 +23,39 @@ class SignUpViewController: BaseViewController {
     private let signUpButton = DMButtonView(type: .signup)
     private let loginButton = DMTextButtonView(type: .login)
 
-    public override func attribute() {
+    override func attribute() {
         view.backgroundColor = UIColor.background
     }
 
     private func bindTextField(_ textField: UITextField) {
         textField.rx.text
             .orEmpty
-            .subscribe(onNext: { [weak self] _ in
-                self?.updateLoginButtonState()
-            })
+            .bind { _ in
+                self.updateLoginButtonState()
+            }
             .disposed(by: disposeBag)
     }
 
-    public override func bindAction() {
+    override func bindAction() {
         bindTextField(emailTextField.textField)
         bindTextField(nicknameTextField.textField)
         bindTextField(pwdTextField.textField)
         bindTextField(confirmPwdTextField.textField)
 
         signUpButton.button.rx.tap
-            .subscribe(onNext: { [weak self] in
+            .bind {
                 let vc = SignUpViewController()
-                self?.navigationController?.pushViewController(vc, animated: true)
-            })
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
             .disposed(by: disposeBag)
         loginButton.textButton.rx.tap
-            .subscribe(onNext: { [weak self] in
-                self?.navigationController?.popViewController(animated: true)
-            })
+            .bind {
+                self.navigationController?.popViewController(animated: true)
+            }
             .disposed(by: disposeBag)
     }
 
-    public override func addView() {
+    override func addView() {
         [
             emailTextField,
             nicknameTextField,
@@ -64,7 +66,7 @@ class SignUpViewController: BaseViewController {
         ].forEach{ view.addSubview($0)}
     }
 
-    public override func layout() {
+    override func layout() {
         emailTextField.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).inset(30)
             $0.leading.trailing.equalToSuperview().inset(24)
@@ -96,11 +98,14 @@ class SignUpViewController: BaseViewController {
             $0.width.equalTo(110)
         }
     }
-    public override func viewWillAppear(_ animated: Bool) {
+
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
         self.navigationItem.titleView = signUpLabel
         self.navigationItem.setHidesBackButton(true, animated: false)
     }
+
     private func updateLoginButtonState() {
         let emailTFNil = !(emailTextField.textField.text ?? "").isEmpty
         let nickNameTFNil = !(nicknameTextField.textField.text ?? "").isEmpty

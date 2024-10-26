@@ -6,8 +6,10 @@ import Then
 import RxSwift
 import RxCocoa
 
-public class LoginViewController: BaseViewController {
+class LoginViewController: BaseViewController {
+
     private let disposeBag = DisposeBag()
+
     private let loginLabel = UILabel().then {
         $0.text = "로그인"
         $0.font = .boldSystemFont(ofSize: 22)
@@ -24,9 +26,8 @@ public class LoginViewController: BaseViewController {
     private let loginButton = DMButtonView(type: .login)
     private let signUpButton = DMTextButtonView(type: .singup)
 
-    public override func attribute() {
+    override func attribute() {
         view.backgroundColor = .background
-        self.navigationItem.setHidesBackButton(true, animated: true)
     }
 
     private func bindTextField(_ textField: UITextField) {
@@ -40,28 +41,29 @@ public class LoginViewController: BaseViewController {
 
     override public func bindAction() {
         loginButton.button.rx.tap
-            .subscribe(onNext: { [weak self] in
+            .bind {
                 let vc = TabBarController()
-                self?.navigationController?.pushViewController(vc, animated: true)
-            })
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
             .disposed(by: disposeBag)
-
         signUpButton.textButton.rx.tap
-            .subscribe(onNext: { [weak self] in
+            .bind {
                 let vc = SignUpViewController()
-                self?.navigationController?.pushViewController(vc, animated: true)
-            })
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
             .disposed(by: disposeBag)
         passWordChagneButton.rx.tap
-            .subscribe(onNext: {
+            .bind {
                 let vc = EmailSendViewController()
                 self.navigationController?.pushViewController(vc, animated: true)
-            })
+            }
+            .disposed(by: disposeBag)
+
         bindTextField(emailTextField.textField)
         bindTextField(passWordTextField.textField)
     }
 
-    public override func addView() {
+    override func addView() {
         [
             emailTextField,
             passWordTextField,
@@ -71,7 +73,8 @@ public class LoginViewController: BaseViewController {
         ].forEach { view.addSubview($0) }
 
     }
-    public override func layout() {
+
+    override func layout() {
         emailTextField.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).inset(30)
             $0.leading.trailing.equalToSuperview().inset(24)
@@ -100,10 +103,12 @@ public class LoginViewController: BaseViewController {
 
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        self.navigationItem.setHidesBackButton(true, animated: true)
         self.navigationItem.titleView = loginLabel
     }
 
-    @objc private func updateLoginButtonState() {
+    private func updateLoginButtonState() {
         let emailTFNil = !(emailTextField.textField.text ?? "").isEmpty
         let passWordTFNil = !(passWordTextField.textField.text ?? "").isEmpty
         if emailTFNil && passWordTFNil {
@@ -115,10 +120,5 @@ public class LoginViewController: BaseViewController {
             loginButton.button.setTitleColor(UIColor.text2, for: .normal)
             loginButton.button.isEnabled = false
         }
-    }
-
-    @objc private func passWordChagneButtonTapped() {
-        let vc = EmailSendViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

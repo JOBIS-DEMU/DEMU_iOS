@@ -45,7 +45,7 @@ class SettingViewController: BaseViewController {
     private let majorView = DMBackView(type: .major)
     private let logoutView = DMBackView(type: .logout)
 
-    override public func attribute() {
+    override func attribute() {
         view.backgroundColor = UIColor.background
 
         imagePicker.delegate = self
@@ -53,52 +53,52 @@ class SettingViewController: BaseViewController {
         imagePicker.allowsEditing = true
     }
 
-    override public func bindAction() {
+    override func bindAction() {
         xButton.rx.tap
-            .subscribe(onNext: { _ in
+            .bind {
                 self.navigationController?.popViewController(animated: true)
-            })
+            }
             .disposed(by: disposeBag)
         plusButton.rx.tap
-            .subscribe(onNext: { _ in
+            .bind {
                 self.present(self.imagePicker, animated: true)
-            })
+            }
             .disposed(by: disposeBag)
 
         let nickNametapGesture = UITapGestureRecognizer()
         nickNameView.addGestureRecognizer(nickNametapGesture)
         nickNametapGesture.rx.event
-            .subscribe(onNext: { _ in
+            .bind { _ in
                 let vc = NickNameChangeViewController()
                 self.navigationController?.pushViewController(vc, animated: true)
-            })
+            }
             .disposed(by: disposeBag)
         let pwdViewtapGesture = UITapGestureRecognizer()
         pwdView.addGestureRecognizer(pwdViewtapGesture)
         pwdViewtapGesture.rx.event
-            .subscribe(onNext: { _ in
+            .bind { _ in
                 let vc = PwdViewController()
                 self.navigationController?.pushViewController(vc, animated: true)
-            })
+            }
             .disposed(by: disposeBag)
         let majortapGesture = UITapGestureRecognizer()
         majorView.addGestureRecognizer(majortapGesture)
         majortapGesture.rx.event
-            .subscribe(onNext: { _ in
+            .bind { _ in
                 let vc = MajorChangeViewController()
                 self.navigationController?.pushViewController(vc, animated: true)
-            })
+            }
             .disposed(by: disposeBag)
         let logouttapGesture = UITapGestureRecognizer()
         logoutView.addGestureRecognizer(logouttapGesture)
         logouttapGesture.rx.event
-            .subscribe(onNext: { _ in
+            .bind { _ in
                 print("로그아웃")
-            })
+            }
             .disposed(by: disposeBag)
     }
 
-    override public func addView() {
+    override func addView() {
         [
             profileView,
             nickNameView,
@@ -116,7 +116,7 @@ class SettingViewController: BaseViewController {
         ].forEach{ profileView.addSubview($0) }
     }
 
-    override public func layout() {
+    override func layout() {
         profileView.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.leading.trailing.equalToSuperview()
@@ -169,7 +169,7 @@ class SettingViewController: BaseViewController {
         }
     }
 
-    override public func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationItem.setHidesBackButton(true, animated: true)
     }
@@ -180,7 +180,7 @@ class SettingViewController: BaseViewController {
 }
 
 extension SettingViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let editedImage = info[.editedImage] as? UIImage {
             profileEditImageView.image = editedImage
         } else if let originalImage = info[.originalImage] as? UIImage {
@@ -189,7 +189,7 @@ extension SettingViewController: UIImagePickerControllerDelegate, UINavigationCo
         picker.dismiss(animated: true, completion: nil)
     }
 
-    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
     }
 }

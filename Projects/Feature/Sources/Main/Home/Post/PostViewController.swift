@@ -7,6 +7,7 @@ import RxSwift
 import RxCocoa
 
 class PostViewController: BaseViewController, UIScrollViewDelegate {
+
     private let disposeBag = DisposeBag()
     private var images: [String] = []
     private var isHeartSelected = false
@@ -15,6 +16,7 @@ class PostViewController: BaseViewController, UIScrollViewDelegate {
         $0.alwaysBounceVertical = true
         $0.alwaysBounceHorizontal = false
     }
+
     private let contentView = UIView()
     private let titleBackView = UIView().then {
         $0.backgroundColor = UIColor.background
@@ -89,11 +91,11 @@ class PostViewController: BaseViewController, UIScrollViewDelegate {
         $0.font = .systemFont(ofSize: 15, weight: .semibold)
     }
 
-    override public func attribute() {
+    override func attribute() {
         view.backgroundColor = UIColor.background
     }
 
-    override public func bindAction() {
+    override func bindAction() {
         let heartTapGesture = UITapGestureRecognizer()
         heartImageView.addGestureRecognizer(heartTapGesture)
         heartTapGesture.rx.event
@@ -117,13 +119,13 @@ class PostViewController: BaseViewController, UIScrollViewDelegate {
             .disposed(by: disposeBag)
 
         beforeButton.rx.tap
-            .subscribe(onNext: { _ in
+            .bind {
                 self.navigationController?.popViewController(animated: true)
-            })
+            }
             .disposed(by: disposeBag)
     }
 
-    override public func addView() {
+    override func addView() {
         [
             scrollView,
             titleBackView,
@@ -153,7 +155,7 @@ class PostViewController: BaseViewController, UIScrollViewDelegate {
             commetNumberLabel
         ].forEach { bottomBackView.addSubview($0) }
     }
-    override public func layout() {
+    override func layout() {
         topBackView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
             $0.top.equalToSuperview()
@@ -239,8 +241,10 @@ class PostViewController: BaseViewController, UIScrollViewDelegate {
             $0.leading.equalTo(commentImageView.snp.trailing).offset(5)
         }
     }
-    override public func viewWillAppear(_ animated: Bool) {
+
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
         self.navigationItem.setHidesBackButton(true, animated: true)
     }
 }
@@ -261,7 +265,7 @@ extension PostViewController {
             imageScrollView.addSubview(imageView)
         }
     }
-    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let currentPage = Int(round(imageScrollView.contentOffset.x / UIScreen.main.bounds.width))
         imagePageControl.currentPage = currentPage
     }

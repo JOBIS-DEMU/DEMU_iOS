@@ -74,7 +74,7 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
         $0.isScrollEnabled = false
     }
 
-    public override func attribute() {
+    override func attribute() {
         view.backgroundColor = .background
         imagePicker.delegate = self
         detailTextView.delegate = self
@@ -87,27 +87,27 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
         detailPlaceholderText.isHidden = !detailTextView.text.isEmpty
     }
 
-    override public func bindAction() {
+    override func bindAction() {
         downButton.rx.tap
-            .subscribe(onNext: { _ in
+            .bind {
                 let modalVC = BlogModalViewController()
                 self.present(modalVC, animated: true, completion: nil)
                 modalVC.modalPresentationStyle = .formSheet
                 modalVC.modalTransitionStyle = .coverVertical
                 modalVC.delegate = self
-            })
+            }
             .disposed(by: disposeBag)
         cancelButton.rx.tap
-            .subscribe(onNext: { _ in
+            .bind {
                 let vc = TabBarController()
                 self.navigationController?.pushViewController(vc, animated: true)
-            })
+            }
             .disposed(by: disposeBag)
         checkButton.rx.tap
-            .subscribe(onNext: { _ in
+            .bind {
                 let vc = TabBarController()
                 self.navigationController?.pushViewController(vc, animated: true)
-            })
+            }
             .disposed(by: disposeBag)
 
         let tapGesture = UITapGestureRecognizer()
@@ -125,7 +125,7 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
             .disposed(by: disposeBag)
     }
 
-     override public func addView() {
+    override func addView() {
         [
             cancelButton,
             checkButton,
@@ -200,11 +200,6 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
             $0.top.equalToSuperview().inset(8)
             $0.leading.equalToSuperview().inset(5)
         }
-    }
-
-    override public func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: false)
     }
 
     public func didSelectMajor(_ major: String) {

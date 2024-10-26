@@ -27,24 +27,24 @@ class MajorChangeViewController: BaseViewController, UITableViewDelegate, UITabl
     }
     private let finishButton = DMButtonView(type: .finish)
 
-    override public func attribute() {
+    override func attribute() {
         view.backgroundColor = UIColor.background
     }
 
-    override public func bindAction() {
+    override func bindAction() {
         backButton.rx.tap
-            .subscribe(onNext: { _ in
+            .bind {
                 self.navigationController?.popViewController(animated: true)
-            })
+            }
             .disposed(by: disposeBag)
         finishButton.button.rx.tap
-            .subscribe(onNext: { _ in
+            .bind {
                 self.navigationController?.popViewController(animated: true)
-            })
+            }
             .disposed(by: disposeBag)
     }
 
-    override public func addView() {
+    override func addView() {
         [
             backButton,
             majorChangeLabel,
@@ -53,7 +53,7 @@ class MajorChangeViewController: BaseViewController, UITableViewDelegate, UITabl
         ].forEach{ view.addSubview($0) }
     }
 
-    override public func layout() {
+    override func layout() {
         backButton.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).inset(3)
             $0.leading.equalToSuperview().inset(20)

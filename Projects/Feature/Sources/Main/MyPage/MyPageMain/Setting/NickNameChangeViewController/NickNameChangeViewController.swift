@@ -18,6 +18,7 @@ class NickNameChangeViewController: BaseViewController {
         $0.numberOfLines = 0
         $0.font = .systemFont(ofSize: 20, weight: .semibold)
     }
+
     private let nickNameTextField = DMTextFieldView(type: .nickname)
     private let finishButton = DMButtonView(type: .finish)
 
@@ -25,20 +26,20 @@ class NickNameChangeViewController: BaseViewController {
         view.backgroundColor = UIColor.background
     }
 
-    override public func bindAction() {
+    override func bindAction() {
         backButton.rx.tap
-            .subscribe(onNext: {
+            .bind {
                 self.navigationController?.popViewController(animated: true)
-            })
+            }
             .disposed(by: disposeBag)
         finishButton.button.rx.tap
-            .subscribe(onNext: {
+            .bind {
                 self.navigationController?.popViewController(animated: true)
-            })
+            }
             .disposed(by: disposeBag)
 
         nickNameTextField.textField.rx.text
-            .subscribe(onNext: {_ in 
+            .subscribe(onNext: { _ in
                 let nickNameTFNil = !(self.nickNameTextField.textField.text ?? "").isEmpty
                 if nickNameTFNil {
                     self.finishButton.button.backgroundColor = UIColor.main1
@@ -53,7 +54,7 @@ class NickNameChangeViewController: BaseViewController {
             .disposed(by: disposeBag)
     }
 
-    override public func addView() {
+    override func addView() {
         [
             backButton,
             titleLabel,
@@ -62,7 +63,7 @@ class NickNameChangeViewController: BaseViewController {
         ].forEach{ view.addSubview($0) }
     }
 
-    override public func layout() {
+    override func layout() {
         backButton.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).inset(3)
             $0.leading.equalToSuperview().inset(20)

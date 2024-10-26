@@ -5,6 +5,7 @@ import Core
 import DesignSystem
 
 public final class TabBarController: UITabBarController {
+
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setTabbar()

@@ -4,7 +4,8 @@ import Core
 import SnapKit
 import Then
 
-public class SearchViewController: BaseViewController {
+class SearchViewController: BaseViewController {
+
     public let searchBar = UISearchBar().then {
         $0.searchBarStyle = .prominent
         $0.setBackgroundImage(UIImage(), for: .any, barMetrics: .default)
@@ -20,8 +21,10 @@ public class SearchViewController: BaseViewController {
         $0.font = .systemFont(ofSize: 14, weight: .medium)
         $0.textColor = .lightGray
     }
-    public override func attribute() {
+
+    override func attribute() {
         view.backgroundColor = .white
+
         if let textField = searchBar.value(forKey: "searchField") as? UITextField {
             textField.backgroundColor = UIColor.background2
             textField.layer.borderWidth = 1
@@ -29,17 +32,18 @@ public class SearchViewController: BaseViewController {
             textField.layer.cornerRadius = 5
             textField.placeholder = "검색"
             self.navigationItem.hidesBackButton = true
-
         }
     }
-    public override func addView() {
+
+    override func addView() {
         [
             searchBar,
             curiousLabel,
             moreLabel
         ].forEach {view.addSubview($0)}
     }
-    public override func layout() {
+
+    override func layout() {
         searchBar.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.leading.trailing.equalToSuperview().inset(24)

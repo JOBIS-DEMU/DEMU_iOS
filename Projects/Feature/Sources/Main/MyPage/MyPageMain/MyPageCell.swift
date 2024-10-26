@@ -5,6 +5,7 @@ import SnapKit
 import Then
 
 class MyPageCell: UITableViewCell {
+
     private let logoImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFit
         $0.layer.cornerRadius = 10

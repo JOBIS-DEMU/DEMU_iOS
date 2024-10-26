@@ -5,6 +5,7 @@ import SnapKit
 import Then
 
 class MajorChangeCell: UITableViewCell {
+
     public let identifier: String = "MajorChangeCell"
 
     public let titleLabel = UILabel().then {
