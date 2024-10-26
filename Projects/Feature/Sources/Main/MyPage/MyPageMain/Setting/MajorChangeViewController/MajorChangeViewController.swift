@@ -3,8 +3,12 @@ import DesignSystem
 import Core
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
 
 class MajorChangeViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
+
+    private let disposeBag = DisposeBag()
     private let tableView = UITableView()
     internal let major = ["backend", "frontend", "iOS", "AOS", "AI", "design", "flutter", "full stack", "game", "security", "embedded", "devops", "기타전공"]
     private var selectedIndexPath: IndexPath?
@@ -23,10 +27,21 @@ class MajorChangeViewController: BaseViewController, UITableViewDelegate, UITabl
         tableView.dataSource = self
         tableView.delegate = self
         tableView.allowsMultipleSelection = false
-
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        finishButton.button.addTarget(self, action: #selector(finishButtonTapped), for: .touchUpInside)
     }
+
+    override public func bindAction() {
+        backButton.rx.tap
+            .subscribe(onNext: { _ in
+                self.navigationController?.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
+        finishButton.button.rx.tap
+            .subscribe(onNext: { _ in
+                self.navigationController?.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
+    }
+
     override public func addView() {
         [
             majorChangeLabel,
@@ -57,10 +72,6 @@ class MajorChangeViewController: BaseViewController, UITableViewDelegate, UITabl
         self.navigationItem.setHidesBackButton(true, animated: true)
     }
 
-    @objc private func backButtonTapped() {
-        navigationController?.popViewController(animated: true)
-    }
-
     internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return major.count
     }
@@ -83,9 +94,5 @@ class MajorChangeViewController: BaseViewController, UITableViewDelegate, UITabl
         self.finishButton.button.backgroundColor = UIColor.main1
         self.finishButton.button.setTitleColor(UIColor.white, for: .normal)
         selectedIndexPath = indexPath
-    }
-
-    @objc private func finishButtonTapped() {
-        self.navigationController?.popViewController(animated: true)
     }
 }
