@@ -3,8 +3,13 @@ import DesignSystem
 import Core
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
 
 class SettingViewController: BaseViewController {
+
+    private let disposeBag = DisposeBag()
+
     private let profileView = DMBackView(type: .profile)
 
     private let xButton = UIButton().then {
@@ -43,17 +48,56 @@ class SettingViewController: BaseViewController {
     override public func attribute() {
         view.backgroundColor = UIColor.background
 
-        xButton.addTarget(self, action: #selector(xButtonTapped), for: .touchUpInside)
-        nickNameView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(nickNameTapped)))
-        pwdView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pwdTapped)))
-        majorView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(majorTapped)))
-        logoutView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(logoutTapped)))
-        plusButton.addTarget(self, action: #selector(pickImage), for: .touchUpInside)
-
         imagePicker.delegate = self
         imagePicker.sourceType = .photoLibrary
         imagePicker.allowsEditing = true
     }
+
+    override public func bindAction() {
+        xButton.rx.tap
+            .subscribe(onNext: { _ in
+                self.navigationController?.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
+        plusButton.rx.tap
+            .subscribe(onNext: { _ in
+                self.present(self.imagePicker, animated: true)
+            })
+            .disposed(by: disposeBag)
+
+        let nickNametapGesture = UITapGestureRecognizer()
+        nickNameView.addGestureRecognizer(nickNametapGesture)
+        nickNametapGesture.rx.event
+            .subscribe(onNext: { _ in
+                let vc = NickNameChangeViewController()
+                self.navigationController?.pushViewController(vc, animated: true)
+            })
+            .disposed(by: disposeBag)
+        let pwdViewtapGesture = UITapGestureRecognizer()
+        pwdView.addGestureRecognizer(pwdViewtapGesture)
+        pwdViewtapGesture.rx.event
+            .subscribe(onNext: { _ in
+                let vc = PwdViewController()
+                self.navigationController?.pushViewController(vc, animated: true)
+            })
+            .disposed(by: disposeBag)
+        let majortapGesture = UITapGestureRecognizer()
+        majorView.addGestureRecognizer(majortapGesture)
+        majortapGesture.rx.event
+            .subscribe(onNext: { _ in
+                let vc = MajorChangeViewController()
+                self.navigationController?.pushViewController(vc, animated: true)
+            })
+            .disposed(by: disposeBag)
+        let logouttapGesture = UITapGestureRecognizer()
+        logoutView.addGestureRecognizer(logouttapGesture)
+        logouttapGesture.rx.event
+            .subscribe(onNext: { _ in
+                print("로그아웃")
+            })
+            .disposed(by: disposeBag)
+    }
+
     override public func addView() {
         [
             profileView,
@@ -71,6 +115,7 @@ class SettingViewController: BaseViewController {
             emailLabel
         ].forEach{ profileView.addSubview($0) }
     }
+
     override public func layout() {
         profileView.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide)
@@ -123,32 +168,17 @@ class SettingViewController: BaseViewController {
             $0.height.equalTo(45)
         }
     }
-    public override func viewWillAppear(_ animated: Bool) {
+
+    override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationItem.setHidesBackButton(true, animated: true)
     }
-    @objc private func xButtonTapped() {
-        self.navigationController?.popViewController(animated: true)
-    }
-    @objc private func nickNameTapped() {
-        self.navigationController?.pushViewController(NickNameChangeViewController(), animated: true)
-    }
-    @objc private func pwdTapped() {
-        self.navigationController?.pushViewController(PwdViewController(), animated: true)
-    }
-    @objc private func majorTapped() {
-        self.navigationController?.pushViewController(MajorChangeViewController(), animated: true)
-    }
-    @objc private func logoutTapped() {
-        print("logout")
-    }
-    @objc func pickImage() {
-        self.present(self.imagePicker, animated: true)
-    }
+
     public func presentImagePicker() {
         self.present(imagePicker, animated: true, completion: nil)
     }
 }
+
 extension SettingViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let editedImage = info[.editedImage] as? UIImage {

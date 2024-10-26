@@ -3,8 +3,13 @@ import DesignSystem
 import Core
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
 
 class NickNameChangeViewController: BaseViewController {
+
+    private let disposeBag = DisposeBag()
+
     private let backButton = UIButton().then {
         $0.setImage(UIImage.back, for: .normal)
     }
@@ -18,21 +23,52 @@ class NickNameChangeViewController: BaseViewController {
 
     override public func attribute() {
         view.backgroundColor = UIColor.background
-
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        nickNameTextField.textField.addTarget(self, action: #selector(updateFinishButtonState), for: .editingChanged)
-        finishButton.button.addTarget(self, action: #selector(finishButtonTapped), for: .touchUpInside)
     }
+
+    override public func bindAction() {
+        backButton.rx.tap
+            .subscribe(onNext: {
+                self.navigationController?.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
+        finishButton.button.rx.tap
+            .subscribe(onNext: {
+                self.navigationController?.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
+
+        nickNameTextField.textField.rx.text
+            .subscribe(onNext: {_ in 
+                let nickNameTFNil = !(self.nickNameTextField.textField.text ?? "").isEmpty
+                if nickNameTFNil {
+                    self.finishButton.button.backgroundColor = UIColor.main1
+                    self.finishButton.button.setTitleColor(UIColor.white, for: .normal)
+                    self.finishButton.button.isEnabled = true
+                } else {
+                    self.finishButton.button.backgroundColor = UIColor.main2
+                    self.finishButton.button.setTitleColor(UIColor.text2, for: .normal)
+                    self.finishButton.button.isEnabled = false
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+
     override public func addView() {
         [
+            backButton,
             titleLabel,
             nickNameTextField,
             finishButton
         ].forEach{ view.addSubview($0) }
     }
+
     override public func layout() {
+        backButton.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(3)
+            $0.leading.equalToSuperview().inset(20)
+        }
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).inset(15)
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(50)
             $0.leading.equalToSuperview().inset(24)
         }
         nickNameTextField.snp.makeConstraints {
@@ -45,28 +81,5 @@ class NickNameChangeViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(64)
         }
-    }
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-        self.navigationItem.setHidesBackButton(true, animated: true)
-    }
-    @objc private func backButtonTapped() {
-        navigationController?.popViewController(animated: true)
-    }
-    @objc private func updateFinishButtonState() {
-        let nickNameTFNil = !(nickNameTextField.textField.text ?? "").isEmpty
-        if nickNameTFNil {
-            finishButton.button.backgroundColor = UIColor.main1
-            finishButton.button.setTitleColor(UIColor.white, for: .normal)
-            finishButton.button.isEnabled = true
-        } else {
-            finishButton.button.backgroundColor = UIColor.main2
-            finishButton.button.setTitleColor(UIColor.text2, for: .normal)
-            finishButton.button.isEnabled = false
-        }
-    }
-    @objc private func finishButtonTapped() {
-        self.navigationController?.popViewController(animated: true)
     }
 }
