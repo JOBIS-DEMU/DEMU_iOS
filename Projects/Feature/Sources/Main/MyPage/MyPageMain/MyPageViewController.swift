@@ -3,15 +3,29 @@ import DesignSystem
 import Core
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
 
-public class MyPageViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
+class MyPageViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
+    private let disposeBag = DisposeBag()
+    private let data = [
+        (imageName: "", description: "하원", level: "",title: "내가 최고 동아리 은하와 자비스에 합격했던 비결"),
+        (imageName: "", description: "히원", level: "", title: "내가 1학년 iOS 짱인 이유"),
+        (imageName: "", description: "하원", level: "", title: "먼작귀가 너무 귀여워요"),
+        (imageName: "", description: "하원", level: "", title: "컨플릭트 해결"),
+        (imageName: "", description: "이지훈", level: "", title: ""),
+        (imageName: "", description: "이지훈", level: "", title: ""),
+        (imageName: "", description: "이지훈", level: "", title: ""),
+        (imageName: "", description: "이지훈", level: "", title: "")
+    ]
+
     private let mypageLabel = UILabel().then {
         $0.text = "마이페이지"
         $0.font = .systemFont(ofSize: 20, weight: .bold)
         $0.textColor = .white
     }
     private let customBackView = UIView().then {
-        $0.backgroundColor = .main1
+        $0.backgroundColor = UIColor.main1
     }
     private let profileImageView = UIImageView().then {
         $0.image = UIImage.profile
@@ -24,7 +38,7 @@ public class MyPageViewController: BaseViewController, UITableViewDataSource, UI
     private let majorLabel = UILabel().then {
         $0.text = "backend"
         $0.font = .systemFont(ofSize: 12, weight: .medium)
-        $0.textColor = .textField
+        $0.textColor = UIColor.textField
     }
     private let complexTextView = DMTextView(type: .complexintro)
     private let editButton = UIButton().then {
@@ -61,27 +75,31 @@ public class MyPageViewController: BaseViewController, UITableViewDataSource, UI
         $0.delegate = self
         $0.dataSource = self
     }
-    private let data = [
-        (imageName: "", description: "하원", level: "",title: "내가 최고 동아리 은하와 자비스에 합격했던 비결", detail: "이번 글에서는 제가 동아리에 합격할 수 있었던 이유를 소개해 보려고 합니다. 네 저는 -1살 때부터 코딩을 시작했는데요. 네.. 코딩을 너무 늦게 시작했죠."),
-        (imageName: "", description: "히원", level: "", title: "내가 1학년 iOS 짱인 이유", detail: "그냥 내가 짱이니까"),
-        (imageName: "", description: "하원", level: "", title: "먼작귀가 너무 귀여워요", detail: "모두 치이카와 보구 가세용~"),
-        (imageName: "", description: "하원", level: "", title: "컨플릭트 해결", detail: "누가 컨플릭트 좀 해결해주세요 ㅜㅜ 이런 경우 어떻게 해결하나요 ㅜ"),
-        (imageName: "", description: "이지훈", level: "", title: "", detail: ""),
-        (imageName: "", description: "이지훈", level: "", title: "", detail: ""),
-        (imageName: "", description: "이지훈", level: "", title: "", detail: ""),
-        (imageName: "", description: "이지훈", level: "", title: "", detail: "")
-    ]
 
-    public override func attribute() {
+    override public func attribute() {
         view.backgroundColor = UIColor.background
-
-        editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
-        settingButton.addTarget(self, action: #selector(settingButtonTapped), for: .touchUpInside)
-        writeButton.addTarget(self, action: #selector(writeButtonTapped), for: .touchUpInside)
         self.navigationItem.hidesBackButton = true
     }
 
-    public override func addView() {
+    override public func bindAction() {
+        editButton.rx.tap
+            .subscribe(onNext: { _ in
+                self.complexTextView.textView.isEditable = true
+            })
+            .disposed(by: disposeBag)
+        settingButton.rx.tap
+            .subscribe(onNext: { _ in
+                self.navigationController?.pushViewController(SettingViewController(), animated: true)
+            })
+            .disposed(by: disposeBag)
+        writeButton.rx.tap
+            .subscribe(onNext: { _ in
+                self.navigationController?.pushViewController(BlogViewController(), animated: true)
+            })
+            .disposed(by: disposeBag)
+    }
+
+    override public func addView() {
         [
             customBackView,
             profileImageView,
@@ -101,7 +119,7 @@ public class MyPageViewController: BaseViewController, UITableViewDataSource, UI
         writeButton.addSubview(writeLabelView)
     }
 
-    public override func layout() {
+    override public func layout() {
         customBackView.snp.makeConstraints {
             $0.top.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(view.snp.bottom).inset(744)
@@ -170,17 +188,6 @@ public class MyPageViewController: BaseViewController, UITableViewDataSource, UI
             $0.centerX.equalToSuperview()
         }
     }
-
-    @objc private func editButtonTapped() {
-        self.complexTextView.textView.isEditable = true
-    }
-
-    @objc private func settingButtonTapped() {
-        self.navigationController?.pushViewController(SettingViewController(), animated: true)
-    }
-    @objc private func writeButtonTapped() {
-        self.navigationController?.pushViewController(BlogViewController(), animated: true)
-    }
 }
 extension MyPageViewController  {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -191,7 +198,7 @@ extension MyPageViewController  {
             return UITableViewCell()
         }
         let club = data[indexPath.row]
-        cell.configure(imageName: club.imageName, description: club.description, level: club.level, title: club.title, detail: club.detail)
+        cell.configure(imageName: club.imageName, description: club.description, level: club.level, title: club.title)
         cell.selectionStyle = .none
         return cell
     }
