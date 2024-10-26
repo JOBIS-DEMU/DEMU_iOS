@@ -9,9 +9,15 @@ import RxCocoa
 class MajorChangeViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
 
     private let disposeBag = DisposeBag()
-    private let tableView = UITableView()
-    internal let major = ["backend", "frontend", "iOS", "AOS", "AI", "design", "flutter", "full stack", "game", "security", "embedded", "devops", "기타전공"]
+    private let major = ["backend", "frontend", "iOS", "AOS", "AI", "design", "flutter", "full stack", "game", "security", "embedded", "devops", "기타전공"]
     private var selectedIndexPath: IndexPath?
+
+    private lazy var tableView = UITableView().then {
+        $0.register(MajorChangeCell.self, forCellReuseIdentifier: "MajorChangeCell")
+        $0.dataSource = self
+        $0.delegate = self
+        $0.allowsMultipleSelection = false
+    }
     private let backButton = UIButton().then {
         $0.setImage(UIImage.back, for: .normal)
     }
@@ -20,13 +26,9 @@ class MajorChangeViewController: BaseViewController, UITableViewDelegate, UITabl
         $0.font = .systemFont(ofSize: 20, weight: .semibold)
     }
     private let finishButton = DMButtonView(type: .finish)
+
     override public func attribute() {
         view.backgroundColor = UIColor.background
-
-        tableView.register(MajorChangeCell.self, forCellReuseIdentifier: "MajorChangeCell")
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.allowsMultipleSelection = false
     }
 
     override public func bindAction() {
@@ -44,14 +46,20 @@ class MajorChangeViewController: BaseViewController, UITableViewDelegate, UITabl
 
     override public func addView() {
         [
+            backButton,
             majorChangeLabel,
             tableView,
             finishButton
         ].forEach{ view.addSubview($0) }
     }
+
     override public func layout() {
+        backButton.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(3)
+            $0.leading.equalToSuperview().inset(20)
+        }
         majorChangeLabel.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).inset(15)
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(50)
             $0.leading.equalToSuperview().inset(24)
         }
         tableView.snp.makeConstraints {
@@ -65,25 +73,21 @@ class MajorChangeViewController: BaseViewController, UITableViewDelegate, UITabl
             $0.height.equalTo(64)
         }
     }
+}
 
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-        self.navigationItem.setHidesBackButton(true, animated: true)
-    }
-
-    internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension MajorChangeViewController {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return major.count
     }
 
-    internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "MajorChangeCell", for: indexPath) as? MajorChangeCell else { return UITableViewCell() }
         cell.selectionStyle = .none
         cell.titleLabel.text = major[indexPath.row]
         return cell
     }
 
-    internal func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let previousIndexPath = selectedIndexPath {
             guard let previousCell = tableView.cellForRow(at: previousIndexPath) as? MajorChangeCell else { return }
             previousCell.titleLabel.textColor = UIColor.textField
