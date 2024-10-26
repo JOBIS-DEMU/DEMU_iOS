@@ -3,8 +3,11 @@ import DesignSystem
 import Core
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
 
 class PwdViewController: BaseViewController {
+    private let disposeBag = DisposeBag()
     private let backButton = UIButton().then {
         $0.setImage(UIImage.back, for: .normal)
     }
@@ -22,6 +25,33 @@ class PwdViewController: BaseViewController {
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         pwdTextField.textField.addTarget(self, action: #selector(updateNextButtonState), for: .editingChanged)
         nextButton.button.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+    }
+    override public func bindAction() {
+        backButton.rx.tap
+            .subscribe(onNext: {
+                self.navigationController?.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
+        nextButton.button.rx.tap
+            .subscribe(onNext: {
+                self.navigationController?.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
+
+        pwdTextField.textField.rx.text
+            .subscribe(onNext: {_ in
+                let nickNameTFNil = !(self.pwdTextField.textField.text ?? "").isEmpty
+                if nickNameTFNil {
+                    self.nextButton.button.backgroundColor = UIColor.main1
+                    self.nextButton.button.setTitleColor(UIColor.white, for: .normal)
+                    self.nextButton.button.isEnabled = true
+                } else {
+                    self.nextButton.button.backgroundColor = UIColor.main2
+                    self.nextButton.button.setTitleColor(UIColor.text2, for: .normal)
+                    self.nextButton.button.isEnabled = false
+                }
+            })
+            .disposed(by: disposeBag)
     }
     override internal func addView() {
         [
