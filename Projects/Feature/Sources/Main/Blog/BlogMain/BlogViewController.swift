@@ -4,9 +4,11 @@ import Core
 import SnapKit
 import Then
 import RxSwift
+import RxCocoa
 
 class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
 
+    private let disposeBag = DisposeBag()
     private let maxImageCount = 5
     private var selectedImages = [UIImageView]()
 
@@ -83,13 +85,39 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
         titleTextView.delegate = self
         titlePlaceholderText.isHidden = !titleTextView.text.isEmpty
         detailPlaceholderText.isHidden = !detailTextView.text.isEmpty
-
-        downButton.addTarget(self, action: #selector(presentBlogModal), for: .touchUpInside)
-        cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(pickImage))
-        profileEditImageView.addGestureRecognizer(tapGestureRecognizer)
     }
-    
+
+    public override func bindAction() {
+        downButton.rx.tap
+            .subscribe(onNext: { _ in
+                let modalVC = BlogModalViewController()
+                self.present(modalVC, animated: true, completion: nil)
+                modalVC.modalPresentationStyle = .formSheet
+                modalVC.modalTransitionStyle = .coverVertical
+                modalVC.delegate = self
+            })
+            .disposed(by: disposeBag)
+        cancelButton.rx.tap
+            .subscribe(onNext: { _ in
+                self.navigationController?.popViewController(animated: true)
+            })
+            .disposed(by: disposeBag)
+
+        let tapGesture = UITapGestureRecognizer()
+        profileEditImageView.addGestureRecognizer(tapGesture)
+        tapGesture.rx.event
+            .subscribe(onNext: { _ in
+                if self.selectedImages.count >= self.maxImageCount {
+                    let alert = UIAlertController(title: "알림", message: "최대 5장까지 선택할 수 있습니다.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                } else {
+                    self.present(self.imagePicker, animated: true)
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+
     public override func addView() {
         [
             cancelButton,
@@ -172,20 +200,8 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
 
-    @objc func presentBlogModal() {
-        let modalVC = BlogModalViewController()
-        modalVC.modalPresentationStyle = .formSheet
-        modalVC.modalTransitionStyle = .coverVertical
-        modalVC.delegate = self
-        self.present(modalVC, animated: true, completion: nil)
-    }
-
-    func didSelectMajor(_ major: String) {
+    public func didSelectMajor(_ major: String) {
         dropDownLabel.text = major
-    }
-
-    @objc func cancelButtonTapped() {
-        self.navigationController?.popViewController(animated: true)
     }
 }
 
