@@ -3,8 +3,11 @@ import DesignSystem
 import Core
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
 
 class HomeViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate, HomeModalViewControllerDelegate {
+    private let disposeBag = DisposeBag()
     private let dropDownLabel = UILabel().then {
         $0.text = "backend"
         $0.font = .systemFont(ofSize: 24, weight: .semibold)
@@ -66,6 +69,19 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
         tableView.delegate = self
         self.navigationItem.hidesBackButton = true
     }
+
+    override public func bindAction() {
+        downButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                let modalVC = HomeModalViewController()
+                self?.present(modalVC, animated: true, completion: nil)
+                modalVC.modalPresentationStyle = .formSheet
+                modalVC.modalTransitionStyle = .coverVertical
+                modalVC.delegate = self
+            })
+            .disposed(by: disposeBag)
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.isNavigationBarHidden = true
