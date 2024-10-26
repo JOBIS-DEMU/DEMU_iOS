@@ -21,13 +21,13 @@ class EmailSendViewController: BaseViewController {
     private let emailSendTextField = DMTextFieldView(type: .emailsend)
     private let finishButton = DMButtonView(type: .finish)
 
-    override public func attribute() {
+    override func attribute() {
         view.backgroundColor = UIColor.background
     }
 
-    override public func bindAction() {
+    override func bindAction() {
         backButton.rx.tap
-            .bind { _ in
+            .bind {
                 self.navigationController?.popViewController(animated: true)
             }
             .disposed(by: disposeBag)
@@ -39,27 +39,27 @@ class EmailSendViewController: BaseViewController {
             })
             .disposed(by: disposeBag)
         emailSendTextField.sendButton.rx.tap
-            .bind { _ in
+            .bind {
                 self.onButton()
             }
             .disposed(by: disposeBag)
 
         finishButton.button.rx.tap
-            .bind { _ in
+            .bind {
                 let vc = PassWordChangeViewController()
                 self.navigationController?.pushViewController(vc, animated: true)
             }
             .disposed(by: disposeBag)
     }
 
-    override public func addView() {
+    override func addView() {
         [
             emailSendTextField,
             finishButton
         ].forEach { view.addSubview($0) }
     }
 
-    override public func layout() {
+    override func layout() {
         emailSendTextField.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).inset(30)
             $0.leading.trailing.equalToSuperview().inset(24)
@@ -72,7 +72,7 @@ class EmailSendViewController: BaseViewController {
         }
     }
 
-    override public func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationItem.titleView = passWordChageLabel
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)

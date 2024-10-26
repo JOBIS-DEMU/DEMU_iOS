@@ -10,6 +10,7 @@ public class OnboardingViewController: BaseViewController {
     let disposeBag = DisposeBag()
     let gradietView = UIView()
     let gradietLayer = CAGradientLayer()
+
     private let method = UILabel().then {
         $0.textColor = .white
         $0.text = "대마고에서\n살아 남는 방법"
@@ -19,8 +20,10 @@ public class OnboardingViewController: BaseViewController {
     private let logoImageView = UIImageView().then {
         $0.image = UIImage.logo
     }
+
     private let startButton = DMButtonView(type: .start)
-    override public func attribute() {
+
+    public override func attribute() {
         gradietView.layer.addSublayer(gradietLayer)
         gradietLayer.colors = [
             UIColor.white.cgColor,
@@ -30,15 +33,17 @@ public class OnboardingViewController: BaseViewController {
         gradietLayer.endPoint = CGPoint(x: 1, y: 0.35)
         gradietLayer.frame = gradietView.bounds
     }
-    override public func bindAction() {
+
+    public override func bindAction() {
         startButton.button.rx.tap
-            .subscribe(onNext: { [weak self] in
+            .bind {
                 let vc = LoginViewController()
-                self?.navigationController?.pushViewController(vc, animated: true)
-            })
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
             .disposed(by: disposeBag)
     }
-    override public func addView() {
+
+    public override func addView() {
         view.addSubview(gradietView)
         [
             method,
@@ -46,7 +51,8 @@ public class OnboardingViewController: BaseViewController {
             startButton
         ].forEach { gradietView.addSubview($0) }
     }
-    override public func layout() {
+
+    public override func layout() {
         gradietView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
@@ -64,8 +70,10 @@ public class OnboardingViewController: BaseViewController {
             $0.height.equalTo(64)
         }
     }
+
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+
         gradietLayer.frame = gradietView.bounds
     }
 }
