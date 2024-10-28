@@ -22,6 +22,10 @@ class PwdViewController: BaseViewController {
     private let pwdTextField = DMTextFieldView(type: .pwd)
     private let nextButton = DMButtonView(type: .next)
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+    }
     override func attribute() {
         view.backgroundColor = UIColor.background
     }
@@ -57,7 +61,6 @@ class PwdViewController: BaseViewController {
 
     override func addView() {
         [
-            backButton,
             titleLabel,
             pwdTextField,
             nextButton
@@ -65,12 +68,8 @@ class PwdViewController: BaseViewController {
     }
 
     override func layout() {
-        backButton.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).inset(3)
-            $0.leading.equalToSuperview().inset(20)
-        }
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).inset(50)
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(10)
             $0.leading.equalToSuperview().inset(24)
         }
         pwdTextField.snp.makeConstraints {

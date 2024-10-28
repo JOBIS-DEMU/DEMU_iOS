@@ -37,7 +37,7 @@ public final class TabBarController: UITabBarController {
             image: UIImage.vlogFalse,
             selectedImage: UIImage.vlogTrue
         )
-        let myPageViewController = MyPageViewController()
+        let myPageViewController = UINavigationController(rootViewController: MyPageViewController())
         myPageViewController.tabBarItem = UITabBarItem(
             title: "마이페이지",
             image: UIImage.myFalse,

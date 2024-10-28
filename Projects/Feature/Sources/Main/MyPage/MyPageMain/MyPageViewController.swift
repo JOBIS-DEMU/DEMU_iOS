@@ -82,6 +82,7 @@ class MyPageViewController: BaseViewController, UITableViewDataSource, UITableVi
     override func attribute() {
         view.backgroundColor = UIColor.background
         self.navigationItem.hidesBackButton = true
+        navigationItem.titleView = mypageLabel
     }
 
     override func bindAction() {
@@ -116,7 +117,6 @@ class MyPageViewController: BaseViewController, UITableViewDataSource, UITableVi
             settingButton,
             writeButton,
             tableView,
-            mypageLabel
         ].forEach { view.addSubview($0) }
         complexTextView.addSubview(editButton)
         progressBackView.addSubview(progressView)
@@ -187,10 +187,6 @@ class MyPageViewController: BaseViewController, UITableViewDataSource, UITableVi
         tableView.snp.makeConstraints {
             $0.top.equalTo(settingButton.snp.bottom).offset(20)
             $0.leading.trailing.bottom.equalToSuperview()
-        }
-        mypageLabel.snp.makeConstraints {
-            $0.top.equalTo(75)
-            $0.centerX.equalToSuperview()
         }
     }
 }
