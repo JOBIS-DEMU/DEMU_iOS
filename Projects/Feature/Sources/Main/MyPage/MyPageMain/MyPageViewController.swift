@@ -73,7 +73,7 @@ class MyPageViewController: BaseViewController, UITableViewDataSource, UITableVi
     private lazy var tableView = UITableView().then {
         $0.backgroundColor = UIColor.background
         $0.separatorStyle = .none
-        $0.register(MyPageCell.self, forCellReuseIdentifier: "ClubCell")
+        $0.register(MyPageCell.self, forCellReuseIdentifier: MyPageCell.identifier)
         $0.rowHeight = UITableView.automaticDimension
         $0.delegate = self
         $0.dataSource = self
@@ -199,7 +199,7 @@ extension MyPageViewController  {
         return data.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ClubCell", for: indexPath) as? MyPageCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MyPageCell.identifier, for: indexPath) as? MyPageCell else {
             return UITableViewCell()
         }
         let club = data[indexPath.row]

@@ -6,7 +6,7 @@ import Then
 
 class MajorChangeCell: UITableViewCell {
 
-    public let identifier: String = "MajorChangeCell"
+    static let identifier: String = "MajorChangeCell"
 
     public let titleLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 15, weight: .semibold)

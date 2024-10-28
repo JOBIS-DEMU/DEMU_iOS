@@ -6,6 +6,8 @@ import Then
 
 class MyPageCell: UITableViewCell {
 
+    static let identifier: String = "MyPageCell"
+
     private let logoImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFit
         $0.layer.cornerRadius = 10
