@@ -123,6 +123,13 @@ class PostViewController: BaseViewController, UIScrollViewDelegate {
                 self.navigationController?.popViewController(animated: true)
             }
             .disposed(by: disposeBag)
+        moreButton.rx.tap
+                .bind { [weak self] in
+                    let modalVC = MoreViewController()
+                    modalVC.modalPresentationStyle = .pageSheet
+                    self?.present(modalVC, animated: true, completion: nil)
+                }
+                .disposed(by: disposeBag)
     }
 
     override func addView() {
