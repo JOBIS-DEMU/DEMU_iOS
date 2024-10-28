@@ -4,7 +4,6 @@ import SwiftKeychainWrapper
 struct Token {
     static var localRefreshToken: String?
     static var localAccessToken: String?
-    
     static var refreshToken: String? {
         get {
             localRefreshToken = KeychainWrapper.standard.string(forKey: "refreshToken")

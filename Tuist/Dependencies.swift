@@ -29,6 +29,10 @@ let dependencies = Dependencies.init(
                 url: "https://github.com/RxSwiftCommunity/RxDataSources.git",
                 requirement: .upToNextMajor(from: "5.0.0")
                        ),
+//            //keychainwrapper
+//            .remote(url: "https://github.com/jrendel/SwiftKeychainWrapper",
+//                requirement: .upToNextMajor(from: "2.1.1")
+//                    ),
         ]
         
 //        
