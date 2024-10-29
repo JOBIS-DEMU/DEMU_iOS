@@ -11,6 +11,7 @@ let project = Project.makeModule(
         .SPM.SnapKit,
         .SPM.Then,
         .SPM.RxSwift,
-        .SPM.RxCocoa
+        .SPM.RxCocoa,
+        .SPM.KeychainSwift
     ]
 )

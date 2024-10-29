@@ -1,6 +1,6 @@
 import Foundation
 
-enum networkingResult: Int {
+enum NetworkingResult: Int {
     case ok = 200
     case deleteOk = 204
     case createOk = 201

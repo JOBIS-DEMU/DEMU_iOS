@@ -28,20 +28,20 @@ let dependencies = Dependencies.init(
             .remote(
                 url: "https://github.com/RxSwiftCommunity/RxDataSources.git",
                 requirement: .upToNextMajor(from: "5.0.0")
-                       ),
-//            //keychainwrapper
-//            .remote(url: "https://github.com/jrendel/SwiftKeychainWrapper",
-//                requirement: .upToNextMajor(from: "2.1.1")
-//                    ),
+            ),
+            .remote(
+                url: "https://github.com/kishikawakatsumi/KeychainAccess",
+                requirement: .upToNextMajor(from: "5.2.0")
+            ),
         ]
         
-//        
-//        baseSettings: .settings(
-//            configurations: [
-//                .debug(name: .stage),
-//                .release(name: .prod)
-//            ]
-//        )
+        //
+        //        baseSettings: .settings(
+        //            configurations: [
+        //                .debug(name: .stage),
+        //                .release(name: .prod)
+        //            ]
+        //        )
     ),
     platforms: [.iOS]
 )
