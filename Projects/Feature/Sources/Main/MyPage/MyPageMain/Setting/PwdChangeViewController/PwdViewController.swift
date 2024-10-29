@@ -28,18 +28,21 @@ class PwdViewController: BaseViewController {
     }
     override func attribute() {
         view.backgroundColor = UIColor.background
+        tabBarController?.tabBar.isHidden = true
     }
 
     override func bindAction() {
         backButton.rx.tap
             .bind {
                 self.navigationController?.popViewController(animated: true)
+                self.tabBarController?.tabBar.isHidden = false
             }
             .disposed(by: disposeBag)
         nextButton.button.rx.tap
             .bind {
                 let vc = PassWordChangeViewController()
                 self.navigationController?.pushViewController(vc, animated: true)
+                self.tabBarController?.tabBar.isHidden = false
             }
             .disposed(by: disposeBag)
 

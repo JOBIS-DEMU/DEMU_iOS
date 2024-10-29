@@ -81,8 +81,10 @@ class MyPageViewController: BaseViewController, UITableViewDataSource, UITableVi
 
     override func attribute() {
         view.backgroundColor = UIColor.background
-        self.navigationItem.hidesBackButton = true
+        navigationItem.hidesBackButton = true
+        navigationController?.navigationBar.isHidden = false
         navigationItem.titleView = mypageLabel
+        tabBarController?.tabBar.isHidden = false
     }
 
     override func bindAction() {

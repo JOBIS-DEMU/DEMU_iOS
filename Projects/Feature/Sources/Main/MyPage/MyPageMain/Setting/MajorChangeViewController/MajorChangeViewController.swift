@@ -34,17 +34,20 @@ class MajorChangeViewController: BaseViewController, UITableViewDelegate, UITabl
     }
     override func attribute() {
         view.backgroundColor = UIColor.background
+        tabBarController?.tabBar.isHidden = true
     }
 
     override func bindAction() {
         backButton.rx.tap
             .bind {
                 self.navigationController?.popViewController(animated: true)
+                self.tabBarController?.tabBar.isHidden = false
             }
             .disposed(by: disposeBag)
         finishButton.button.rx.tap
             .bind {
                 self.navigationController?.popViewController(animated: true)
+                self.tabBarController?.tabBar.isHidden = false
             }
             .disposed(by: disposeBag)
     }

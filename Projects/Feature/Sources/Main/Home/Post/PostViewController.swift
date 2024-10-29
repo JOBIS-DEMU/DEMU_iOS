@@ -93,6 +93,7 @@ class PostViewController: BaseViewController, UIScrollViewDelegate {
 
     override func attribute() {
         view.backgroundColor = UIColor.background
+        navigationController?.navigationBar.isHidden = true
     }
 
     override func bindAction() {
@@ -121,6 +122,7 @@ class PostViewController: BaseViewController, UIScrollViewDelegate {
         beforeButton.rx.tap
             .bind {
                 self.navigationController?.popViewController(animated: true)
+                self.navigationController?.navigationBar.isHidden = false
             }
             .disposed(by: disposeBag)
     }
