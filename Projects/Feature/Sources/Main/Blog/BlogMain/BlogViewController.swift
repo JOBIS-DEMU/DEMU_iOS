@@ -74,6 +74,11 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
         $0.isScrollEnabled = false
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = true
+    }
+
     override func attribute() {
         view.backgroundColor = .background
         imagePicker.delegate = self
@@ -99,14 +104,27 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
             .disposed(by: disposeBag)
         cancelButton.rx.tap
             .bind {
-                let vc = TabBarController()
-                self.navigationController?.pushViewController(vc, animated: true)
+                if let previousViewController = self.navigationController?.viewControllers.dropLast().last {
+                    if previousViewController is MyPageViewController {
+                        self.navigationController?.popViewController(animated: true)
+                        self.navigationController?.navigationBar.isHidden = false
+                    } else {
+                        let vc = TabBarController()
+                        self.navigationController?.pushViewController(vc, animated: true)
+                    }
+                }
             }
             .disposed(by: disposeBag)
         checkButton.rx.tap
             .bind {
-                let vc = TabBarController()
-                self.navigationController?.pushViewController(vc, animated: true)
+                if let previousViewController = self.navigationController?.viewControllers.dropLast().last {
+                    if previousViewController is MyPageViewController {
+                        self.navigationController?.popViewController(animated: true)
+                    } else {
+                        let vc = TabBarController()
+                        self.navigationController?.pushViewController(vc, animated: true)
+                    }
+                }
             }
             .disposed(by: disposeBag)
 

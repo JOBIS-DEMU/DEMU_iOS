@@ -5,6 +5,9 @@ import SnapKit
 import Then
 
 class BlogChatCell: UITableViewCell {
+
+    static let identifier: String = "BlogChatCell"
+
     private let profileImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFit
         $0.layer.cornerRadius = 12

@@ -73,7 +73,7 @@ class MyPageViewController: BaseViewController, UITableViewDataSource, UITableVi
     private lazy var tableView = UITableView().then {
         $0.backgroundColor = UIColor.background
         $0.separatorStyle = .none
-        $0.register(MyPageCell.self, forCellReuseIdentifier: "ClubCell")
+        $0.register(MyPageCell.self, forCellReuseIdentifier: MyPageCell.identifier)
         $0.rowHeight = UITableView.automaticDimension
         $0.delegate = self
         $0.dataSource = self
@@ -81,7 +81,10 @@ class MyPageViewController: BaseViewController, UITableViewDataSource, UITableVi
 
     override func attribute() {
         view.backgroundColor = UIColor.background
-        self.navigationItem.hidesBackButton = true
+        navigationItem.hidesBackButton = true
+        navigationController?.navigationBar.isHidden = false
+        navigationItem.titleView = mypageLabel
+        tabBarController?.tabBar.isHidden = false
     }
 
     override func bindAction() {
@@ -116,7 +119,6 @@ class MyPageViewController: BaseViewController, UITableViewDataSource, UITableVi
             settingButton,
             writeButton,
             tableView,
-            mypageLabel
         ].forEach { view.addSubview($0) }
         complexTextView.addSubview(editButton)
         progressBackView.addSubview(progressView)
@@ -188,10 +190,6 @@ class MyPageViewController: BaseViewController, UITableViewDataSource, UITableVi
             $0.top.equalTo(settingButton.snp.bottom).offset(20)
             $0.leading.trailing.bottom.equalToSuperview()
         }
-        mypageLabel.snp.makeConstraints {
-            $0.top.equalTo(75)
-            $0.centerX.equalToSuperview()
-        }
     }
 }
 extension MyPageViewController  {
@@ -199,7 +197,7 @@ extension MyPageViewController  {
         return data.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ClubCell", for: indexPath) as? MyPageCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MyPageCell.identifier, for: indexPath) as? MyPageCell else {
             return UITableViewCell()
         }
         let club = data[indexPath.row]

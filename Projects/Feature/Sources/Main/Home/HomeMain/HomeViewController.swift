@@ -33,7 +33,7 @@ class HomeViewController: BaseViewController, UITableViewDataSource, UITableView
     private lazy var tableView = UITableView().then {
         $0.backgroundColor = UIColor.background
         $0.separatorStyle = .none
-        $0.register(CommunityCell.self, forCellReuseIdentifier: "ClubCell")
+        $0.register(CommunityCell.self, forCellReuseIdentifier: CommunityCell.identifier)
         $0.rowHeight = UITableView.automaticDimension
         $0.estimatedRowHeight = 100
         $0.dataSource = self
@@ -155,7 +155,7 @@ extension HomeViewController {
         return data.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ClubCell", for: indexPath) as? CommunityCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CommunityCell.identifier, for: indexPath) as? CommunityCell else {
             return UITableViewCell()
         }
         let club = data[indexPath.row]

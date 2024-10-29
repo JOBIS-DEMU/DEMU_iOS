@@ -26,7 +26,7 @@ class BlogChatViewController: BaseViewController, UITableViewDataSource, UITable
     private lazy var tableView = UITableView().then {
         $0.dataSource = self
         $0.delegate = self
-        $0.register(BlogChatCell.self, forCellReuseIdentifier: "BlogChatCell")
+        $0.register(BlogChatCell.self, forCellReuseIdentifier: BlogChatCell.identifier)
     }
     private let backButton = UIButton().then {
         $0.setImage(UIImage.back, for: .normal)
@@ -154,7 +154,7 @@ extension BlogChatViewController {
         return clubs.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "BlogChatCell", for: indexPath) as? BlogChatCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: BlogChatCell.identifier, for: indexPath) as? BlogChatCell else {
             return UITableViewCell()
         }
         let club = clubs[indexPath.row]

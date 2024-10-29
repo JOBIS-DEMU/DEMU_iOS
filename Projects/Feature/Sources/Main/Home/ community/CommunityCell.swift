@@ -5,6 +5,9 @@ import SnapKit
 import Then
 
 class CommunityCell: UITableViewCell {
+
+    static let identifier: String = "CommunityCell"
+
     private let logoImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFit
         $0.layer.cornerRadius = 10

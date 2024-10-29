@@ -13,10 +13,11 @@ class MajorChangeViewController: BaseViewController, UITableViewDelegate, UITabl
     private var selectedIndexPath: IndexPath?
 
     private lazy var tableView = UITableView().then {
-        $0.register(MajorChangeCell.self, forCellReuseIdentifier: "MajorChangeCell")
+        $0.register(MajorChangeCell.self, forCellReuseIdentifier: MajorChangeCell.identifier)
         $0.dataSource = self
         $0.delegate = self
         $0.allowsMultipleSelection = false
+        $0.backgroundColor = UIColor.background
     }
     private let backButton = UIButton().then {
         $0.setImage(UIImage.back, for: .normal)
@@ -27,26 +28,32 @@ class MajorChangeViewController: BaseViewController, UITableViewDelegate, UITabl
     }
     private let finishButton = DMButtonView(type: .finish)
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+    }
     override func attribute() {
         view.backgroundColor = UIColor.background
+        tabBarController?.tabBar.isHidden = true
     }
 
     override func bindAction() {
         backButton.rx.tap
             .bind {
                 self.navigationController?.popViewController(animated: true)
+                self.tabBarController?.tabBar.isHidden = false
             }
             .disposed(by: disposeBag)
         finishButton.button.rx.tap
             .bind {
                 self.navigationController?.popViewController(animated: true)
+                self.tabBarController?.tabBar.isHidden = false
             }
             .disposed(by: disposeBag)
     }
 
     override func addView() {
         [
-            backButton,
             majorChangeLabel,
             tableView,
             finishButton
@@ -54,12 +61,8 @@ class MajorChangeViewController: BaseViewController, UITableViewDelegate, UITabl
     }
 
     override func layout() {
-        backButton.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).inset(3)
-            $0.leading.equalToSuperview().inset(20)
-        }
         majorChangeLabel.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).inset(50)
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(10)
             $0.leading.equalToSuperview().inset(24)
         }
         tableView.snp.makeConstraints {
@@ -81,7 +84,7 @@ extension MajorChangeViewController {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "MajorChangeCell", for: indexPath) as? MajorChangeCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MajorChangeCell.identifier, for: indexPath) as? MajorChangeCell else { return UITableViewCell() }
         cell.selectionStyle = .none
         cell.titleLabel.text = major[indexPath.row]
         return cell
