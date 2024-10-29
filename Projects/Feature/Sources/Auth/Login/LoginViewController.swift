@@ -7,6 +7,7 @@ import RxSwift
 import RxCocoa
 
 class LoginViewController: BaseViewController {
+    private let viewModel = LoginViewModel()
 
     private let disposeBag = DisposeBag()
 
