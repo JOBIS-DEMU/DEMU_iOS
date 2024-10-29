@@ -1,5 +1,5 @@
 import Foundation
-import SwiftKeychainWrapper
+import KeychainSwift
 
 struct Token {
     static var localRefreshToken: String?
