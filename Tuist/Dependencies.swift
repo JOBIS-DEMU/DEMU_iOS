@@ -30,8 +30,8 @@ let dependencies = Dependencies.init(
                 requirement: .upToNextMajor(from: "5.0.0")
             ),
             .remote(
-                url: "https://github.com/kishikawakatsumi/KeychainAccess",
-                requirement: .upToNextMajor(from: "5.2.0")
+                url: "https://github.com/evgenyneu/keychain-swift.git",
+                requirement: .upToNextMajor(from: "24.0.0")
             ),
         ]
         
