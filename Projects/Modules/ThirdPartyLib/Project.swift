@@ -12,6 +12,7 @@ let project = Project.makeModule(
         .SPM.Then,
         .SPM.RxSwift,
         .SPM.RxCocoa,
-        .SPM.KeychainSwift
+        .SPM.KeychainSwift,
+        .SPM.SwiftKeychainWrapper
     ]
 )

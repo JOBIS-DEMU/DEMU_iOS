@@ -1,12 +1,14 @@
 import Foundation
 import KeychainSwift
+import SwiftKeychainWrapper
 
 struct Token {
     static var localRefreshToken: String?
     static var localAccessToken: String?
+
     static var refreshToken: String? {
         get {
-            localRefreshToken = KeychainSwift..string(forKey: "refreshToken")
+            localRefreshToken = KeychainWrapper.standard.string(forKey: "refreshToken")
             return localRefreshToken
         }
         set(newToken) {
