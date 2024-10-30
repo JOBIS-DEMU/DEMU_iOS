@@ -20,6 +20,8 @@ open class BaseViewController: UIViewController {
     }
     open func addView() {
     }
+    open func subscribe() {
+    }
     open func layout() {
     }
 }

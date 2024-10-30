@@ -6,7 +6,7 @@ struct Token {
     static var localAccessToken: String?
     static var refreshToken: String? {
         get {
-            localRefreshToken = KeychainWrapper.standard.string(forKey: "refreshToken")
+            localRefreshToken = KeychainSwift..string(forKey: "refreshToken")
             return localRefreshToken
         }
         set(newToken) {
