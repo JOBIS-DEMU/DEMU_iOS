@@ -5,6 +5,7 @@ import SnapKit
 import Then
 
 class SearchViewController: BaseViewController {
+    static let identifier: String = "SearchCell"
 
     public let searchBar = UISearchBar().then {
         $0.searchBarStyle = .prominent
