@@ -7,7 +7,7 @@ class LoginViewModel: ViewModelType {
     private let disposeBag = DisposeBag()
     
     struct Input {
-        let id: Driver<String>
+        let email: Driver<String>
         let password: Driver<String>
         let doneTap: Signal<Void>
     }
@@ -18,12 +18,12 @@ class LoginViewModel: ViewModelType {
     
     func transform(_ input: Input) -> Output {
         let api = AuthService()
-        let info = Driver.combineLatest(input.id, input.password)
+        let info = Driver.combineLatest(input.email, input.password)
         let result = PublishRelay<Bool>()
         
         input.doneTap.withLatestFrom(info).asObservable().flatMap {
-            id, password in
-            api.login(id, password)
+            email, password in
+            api.login(email, password)
         }.subscribe(onNext: { res in
             switch res {
                 case .ok:
