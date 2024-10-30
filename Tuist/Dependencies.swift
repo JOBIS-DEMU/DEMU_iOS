@@ -33,6 +33,10 @@ let dependencies = Dependencies.init(
                 url: "https://github.com/evgenyneu/keychain-swift.git",
                 requirement: .upToNextMajor(from: "24.0.0")
             ),
+            .remote(
+                url: "https://github.com/jrendel/SwiftKeychainWrapper.git",
+                requirement: .upToNextMajor(from: "4.0")
+            ),
         ]
         
         //

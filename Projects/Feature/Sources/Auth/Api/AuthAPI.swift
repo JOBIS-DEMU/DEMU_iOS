@@ -4,13 +4,7 @@ import RxCocoa
 import Moya
 
 enum AuthAPI {
-    case signup(SignupInfo)
-    case login(id: String, password: String)
-    case loadUserInfo
-    case loadUserPetition
-    case idCheck(accountId: String)
-    case passwordCheck(password: String)
-    case userWithdrawal
+    case login(email: String, password: String)
 }
 
 extension AuthAPI: TargetType {
@@ -20,65 +14,30 @@ extension AuthAPI: TargetType {
     
     var path: String {
         switch self {
-        case .signup:
-            return "/public/signup"
         case .login:
-            return "/public/login"
+            return "/public/signin"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .signup, .login:
+        case .login:
             return .post
-        case  .loadUserInfo, .loadUserPetition, .idCheck, .passwordCheck:
-            return .get
-        case .userWithdrawal:
-            return .delete
         }
     }
     var task: Moya.Task {
         switch self {
-        case .signup(let signupInfo):
+        case .login(let email, let password):
             return .requestParameters(
                 parameters: [
-                    "accountId": signupInfo.accountId,
-                    "password": signupInfo.password
-                ],
-                encoding: JSONEncoding.default
-            )
-        case .login(let id, let password):
-            return .requestParameters(
-                parameters: [
-                    "accountId": id,
+                    "accountId": email,
                     "password": password
                 ],
                 encoding: JSONEncoding.default
             )
-        case .idCheck(let accountId):
-            return .requestParameters(
-                parameters: [
-                    "accountId": accountId
-                ],
-                encoding: URLEncoding.queryString
-            )
-        case .passwordCheck(let password):
-            return .requestParameters(
-                parameters: [
-                    "password": password
-                ],
-                encoding: URLEncoding.queryString
-            )
-        default:
-            return .requestPlain
         }
     }
-    var headers: [String: String]? {
-        switch self {
-        case .loadUserInfo, .loadUserPetition, .userWithdrawal:
-            return Header.accessToken.header()
-        default:
-            return Header.tokenIsEmpty.header()
-        }
+    var headers: [String : String]? {
+        return Header.tokenIsEmpty.header()
     }
 }

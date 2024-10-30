@@ -4,7 +4,6 @@ import RxSwift
 import Moya
 
 final class AuthService {
-    
     let provider = MoyaProvider<AuthAPI>(plugins: [MoyaLoggerPlugin()])
     
     func login(_ id: String, _ password: String) -> Single<NetworkingResult> {

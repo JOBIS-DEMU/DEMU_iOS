@@ -7,8 +7,8 @@ import RxSwift
 import RxCocoa
 
 class LoginViewController: BaseViewController {
-    private let viewModel = LoginViewModel()
 
+    private let viewModel = LoginViewModel()
     private let disposeBag = DisposeBag()
 
     private let loginLabel = UILabel().then {
@@ -40,7 +40,26 @@ class LoginViewController: BaseViewController {
             .disposed(by: disposeBag)
     }
 
-    override public func bindAction() {
+    override func bind() {
+        let input = LoginViewModel.Input(
+            email: emailTextField.textField.rx.text.orEmpty.asDriver(),
+            password: passWordTextField.textField.rx.text.orEmpty.asDriver(),
+            doneTap: loginButton.button.rx.tap.asSignal()
+        )
+        let output = viewModel.transform(input)
+        
+        output.result.subscribe(onNext: { [weak self] bool in
+            if bool {
+                let vc = TabBarController()
+                self?.navigationController?.pushViewController(vc, animated: true)
+            } else {
+                self?.emailTextField.errorLabel.text = "유효하지 않은 이메일 입니다."
+                self?.passWordTextField.errorLabel.text = "비밀번호가 올바르지 않습니다."
+            }
+        }).disposed(by: disposeBag)
+    }
+
+    override func bindAction() {
         loginButton.button.rx.tap
             .bind {
                 let vc = TabBarController()
