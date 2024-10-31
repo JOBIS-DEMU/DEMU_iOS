@@ -7,7 +7,7 @@ import RxMoya
 final class AuthService {
     let provider = MoyaProvider<AuthAPI>(plugins: [MoyaLoggerPlugin()])
     func login(_ id: String, _ password: String) -> Single<NetworkingResult> {
-        return provider.rx.request(.login(id: id, password: password))
+        return provider.rx.request(.login(email: id, password: password))
             .filterSuccessfulStatusCodes()
             .map(AuthModel.self)
             .map { response -> NetworkingResult in

@@ -6,6 +6,7 @@ import Moya
 enum AuthAPI {
     case login(email: String, password: String)
     case signup(SignupInfo)
+    case refreshToken
 }
 
 extension AuthAPI: TargetType {
@@ -19,6 +20,8 @@ extension AuthAPI: TargetType {
             return "/public/signin"
         case .signup:
             return "/public/signup"
+        case .refreshToken:
+            <#code#>
         }
     }
     
@@ -51,6 +54,12 @@ extension AuthAPI: TargetType {
         }
     }
     var headers: [String : String]? {
-        return Header.tokenIsEmpty.header()
+        switch self {
+        case .refreshToken:
+            return Header.refreshToken.header()
+        default:
+            return Header.tokenIsEmpty.header()
+            
+        }
     }
 }
