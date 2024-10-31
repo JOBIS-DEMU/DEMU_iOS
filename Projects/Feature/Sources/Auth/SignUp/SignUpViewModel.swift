@@ -2,12 +2,13 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class LoginViewModel: ViewModelType {
+class SignUpViewModel: ViewModelType {
 
     private let disposeBag = DisposeBag()
 
     struct Input {
         let email: Driver<String>
+        let nickname: Driver<String>
         let password: Driver<String>
         let doneTap: Signal<Void>
     }
@@ -18,22 +19,18 @@ class LoginViewModel: ViewModelType {
 
     func transform(_ input: Input) -> Output {
         let api = AuthService()
-        let info = Driver.combineLatest(input.email, input.password)
+        let info = Driver.combineLatest(input.email, input.nickname, input.password)
         let result = PublishRelay<Bool>()
 
         input.doneTap.withLatestFrom(info).asObservable()
             .flatMap {
-                email, password in
-                api.login(email, password)
-            }
-            .subscribe(onNext: { res in
-                switch res {
-                    case .ok:
-                        result.accept(true)
-                    default:
-                        result.accept(false)
+                email, nickname, password -> PrimitiveSequence<SingleTrait, Bool> in
+                api.signup(email, nickname, password).map { res in
+                    return res == NetworkingResult.ok
                 }
-            }).disposed(by: disposeBag)
+            }
+            .bind(to: result)
+            .disposed(by: disposeBag)
         return Output(result: result)
     }
 
