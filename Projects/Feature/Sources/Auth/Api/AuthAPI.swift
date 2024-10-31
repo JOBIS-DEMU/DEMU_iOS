@@ -34,7 +34,7 @@ extension AuthAPI: TargetType {
 
     var task: Moya.Task {
         switch self {
-            
+
         case .signup(let email, let nickname, let password):
             return .requestParameters(
                 parameters: [
