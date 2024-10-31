@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 import RxSwift
 import Moya
+import RxMoya
 
 final class AuthService {
     let provider = MoyaProvider<AuthAPI>(plugins: [MoyaLoggerPlugin()])

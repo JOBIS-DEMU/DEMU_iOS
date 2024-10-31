@@ -5,6 +5,7 @@ import Moya
 
 enum AuthAPI {
     case login(email: String, password: String)
+    case signup(SignupInfo)
 }
 
 extension AuthAPI: TargetType {
@@ -16,6 +17,8 @@ extension AuthAPI: TargetType {
         switch self {
         case .login:
             return "/public/signin"
+        case .signup:
+            return "/public/signup"
         }
     }
     
@@ -23,10 +26,20 @@ extension AuthAPI: TargetType {
         switch self {
         case .login:
             return .post
+        case .signup:
+            return .post
         }
     }
     var task: Moya.Task {
         switch self {
+            
+        case .signup:
+            return .requestParameters(
+                parameters: [
+                    "userName": SignupInfo.shared.userName.value!,
+                    "accountId": SignupInfo.shared.accountId.value!,
+                    "password": SignupInfo.shared.password.value!
+                ], encoding: JSONEncoding.default)
         case .login(let email, let password):
             return .requestParameters(
                 parameters: [
