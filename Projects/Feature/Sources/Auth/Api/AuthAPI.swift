@@ -21,15 +21,14 @@ extension AuthAPI: TargetType {
         case .signup:
             return "/public/signup"
         case .refreshToken:
-            <#code#>
+            return "/public/token/reissue"
+            
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .login:
-            return .post
-        case .signup:
+        default:
             return .post
         }
     }
@@ -51,6 +50,8 @@ extension AuthAPI: TargetType {
                 ],
                 encoding: JSONEncoding.default
             )
+        case .refreshToken:
+            return .requestPlain
         }
     }
     var headers: [String : String]? {

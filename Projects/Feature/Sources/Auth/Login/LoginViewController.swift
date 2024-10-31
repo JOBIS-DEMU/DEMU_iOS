@@ -60,12 +60,6 @@ class LoginViewController: BaseViewController {
     }
 
     override func bindAction() {
-        loginButton.button.rx.tap
-            .bind {
-                let vc = TabBarController()
-                self.navigationController?.pushViewController(vc, animated: true)
-            }
-            .disposed(by: disposeBag)
         signUpButton.textButton.rx.tap
             .bind {
                 let vc = SignUpViewController()
