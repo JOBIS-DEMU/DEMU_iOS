@@ -6,6 +6,7 @@ public extension TargetDependency {
 
 public extension TargetDependency.SPM {
     static let Moya = TargetDependency.external(name: "Moya")
+    static let RxMoya = TargetDependency.external(name: "RxMoya")
     static let RxSwift = TargetDependency.external(name: "RxSwift")
     static let SnapKit = TargetDependency.external(name: "SnapKit")
     static let Then = TargetDependency.external(name: "Then")

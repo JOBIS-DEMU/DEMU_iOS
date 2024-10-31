@@ -6,4 +6,3 @@ struct AuthModel: Codable {
     let role: String?
     let userName: String?
 }
-

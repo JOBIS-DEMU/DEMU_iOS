@@ -5,6 +5,8 @@ import Moya
 
 enum AuthAPI {
     case login(email: String, password: String)
+    case signup(SignupInfo)
+    case refreshToken
 }
 
 extension AuthAPI: TargetType {
@@ -16,17 +18,30 @@ extension AuthAPI: TargetType {
         switch self {
         case .login:
             return "/public/signin"
+        case .signup:
+            return "/public/signup"
+        case .refreshToken:
+            return "/public/token/reissue"
+            
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .login:
+        default:
             return .post
         }
     }
     var task: Moya.Task {
         switch self {
+            
+        case .signup:
+            return .requestParameters(
+                parameters: [
+                    "userName": SignupInfo.shared.userName.value!,
+                    "accountId": SignupInfo.shared.accountId.value!,
+                    "password": SignupInfo.shared.password.value!
+                ], encoding: JSONEncoding.default)
         case .login(let email, let password):
             return .requestParameters(
                 parameters: [
@@ -35,9 +50,17 @@ extension AuthAPI: TargetType {
                 ],
                 encoding: JSONEncoding.default
             )
+        case .refreshToken:
+            return .requestPlain
         }
     }
     var headers: [String : String]? {
-        return Header.tokenIsEmpty.header()
+        switch self {
+        case .refreshToken:
+            return Header.refreshToken.header()
+        default:
+            return Header.tokenIsEmpty.header()
+            
+        }
     }
 }

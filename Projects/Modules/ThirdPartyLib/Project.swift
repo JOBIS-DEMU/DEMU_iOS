@@ -8,6 +8,7 @@ let project = Project.makeModule(
     product: .staticFramework,
     dependencies: [
         .SPM.Moya,
+        .SPM.RxMoya,
         .SPM.SnapKit,
         .SPM.Then,
         .SPM.RxSwift,

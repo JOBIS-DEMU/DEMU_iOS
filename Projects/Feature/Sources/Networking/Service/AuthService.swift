@@ -2,12 +2,12 @@ import Foundation
 import UIKit
 import RxSwift
 import Moya
+import RxMoya
 
 final class AuthService {
     let provider = MoyaProvider<AuthAPI>(plugins: [MoyaLoggerPlugin()])
-    
     func login(_ id: String, _ password: String) -> Single<NetworkingResult> {
-        return provider.rx.request(.login(id: id, password: password))
+        return provider.rx.request(.login(email: id, password: password))
             .filterSuccessfulStatusCodes()
             .map(AuthModel.self)
             .map { response -> NetworkingResult in
@@ -20,7 +20,6 @@ final class AuthService {
                 return Single.just(setNetworkError(error))
             }
     }
-    
     func refreshToken() -> Single<NetworkingResult> {
         return provider.rx.request(.refreshToken)
             .filterSuccessfulStatusCodes()
@@ -33,7 +32,6 @@ final class AuthService {
                 return Single.just(setNetworkError(error))
             }
     }
- 
     func signup(_ signup: SignupInfo) -> Single<NetworkingResult> {
         return provider.rx.request(.signup(signup))
             .filterSuccessfulStatusCodes()
@@ -48,7 +46,6 @@ final class AuthService {
                 return Single.just(setNetworkError(error))
             }
     }
-    
     func setNetworkError(_ error: Error) -> NetworkingResult {
         print(error)
         print(error.localizedDescription)
