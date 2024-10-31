@@ -14,6 +14,7 @@ let project = Project.makeModule(
         .SPM.RxSwift,
         .SPM.RxCocoa,
         .SPM.KeychainSwift,
-        .SPM.SwiftKeychainWrapper
+        .SPM.SwiftKeychainWrapper,
+        .SPM.Kingfisher
     ]
 )
