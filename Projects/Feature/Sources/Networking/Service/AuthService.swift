@@ -32,15 +32,15 @@ final class AuthService {
                 return Single.just(setNetworkError(error))
             }
     }
-    func signup(_ signup: SignupInfo) -> Single<NetworkingResult> {
-        return provider.rx.request(.signup(signup))
+    func signup(_ id: String, _ username: String, _ password: String) -> Single<NetworkingResult> {
+        return provider.rx.request(.signup(email: id, nickname: username, password: password))
             .filterSuccessfulStatusCodes()
             .map(AuthModel.self)
             .map { response -> NetworkingResult in
                 Token.accessToken = response.accessToken
                 Token.refreshToken = response.refreshToken
-                UserDefaults.standard.setValue(signup.accountId.value, forKey: "userID")
-                return .createOk
+                UserDefaults.standard.setValue(id, forKey: "userID")
+                return .ok
             }
             .catchError { [unowned self] error in
                 return Single.just(setNetworkError(error))

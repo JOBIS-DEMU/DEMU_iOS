@@ -118,7 +118,7 @@ class MyPageViewController: BaseViewController, UITableViewDataSource, UITableVi
             progressBackView,
             settingButton,
             writeButton,
-            tableView,
+            tableView
         ].forEach { view.addSubview($0) }
         complexTextView.addSubview(editButton)
         progressBackView.addSubview(progressView)

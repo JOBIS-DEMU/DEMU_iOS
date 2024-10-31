@@ -27,7 +27,7 @@ public enum BvType {
 }
 
 public class DMBackView: UIView {
-    
+
     private let backView = UIView().then {
         $0.backgroundColor = .white
     }

@@ -47,7 +47,7 @@ class LoginViewController: BaseViewController {
             doneTap: loginButton.button.rx.tap.asSignal()
         )
         let output = viewModel.transform(input)
-        
+
         output.result.subscribe(onNext: { [weak self] bool in
             if bool {
                 let vc = TabBarController()

@@ -8,6 +8,7 @@ import RxCocoa
 
 class SignUpViewController: BaseViewController {
 
+    private let viewModel = SignUpViewModel()
     private let disposeBag = DisposeBag()
 
     private let signUpLabel = UILabel().then {
@@ -36,18 +37,33 @@ class SignUpViewController: BaseViewController {
             .disposed(by: disposeBag)
     }
 
+    override func bind() {
+        let input = SignUpViewModel.Input(
+            email: emailTextField.textField.rx.text.orEmpty.asDriver(),
+            nickname: nicknameTextField.textField.rx.text.orEmpty.asDriver(),
+            password: pwdTextField.textField.rx.text.orEmpty.asDriver(),
+            doneTap: signUpButton.button.rx.tap.asSignal()
+        )
+        let output = viewModel.transform(input)
+
+        output.result.subscribe(onNext: { [weak self] bool in
+            if bool {
+                let vc = LoginViewController()
+                self?.navigationController?.pushViewController(vc, animated: true)
+            } else {
+                self?.emailTextField.errorLabel.text = "유효하지 않은 이메일 입니다."
+                self?.nicknameTextField.errorLabel.text = "이미 있는 닉네임 입니다."
+                self?.pwdTextField.errorLabel.text = "올바르지 않은 형식의 비밀번호 입니다."
+            }
+        }).disposed(by: disposeBag)
+    }
+
     override func bindAction() {
         bindTextField(emailTextField.textField)
         bindTextField(nicknameTextField.textField)
         bindTextField(pwdTextField.textField)
         bindTextField(confirmPwdTextField.textField)
 
-        signUpButton.button.rx.tap
-            .bind {
-                let vc = SignUpViewController()
-                self.navigationController?.pushViewController(vc, animated: true)
-            }
-            .disposed(by: disposeBag)
         loginButton.textButton.rx.tap
             .bind {
                 self.navigationController?.popViewController(animated: true)
