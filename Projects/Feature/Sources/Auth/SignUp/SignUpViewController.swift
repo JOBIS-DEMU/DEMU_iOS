@@ -46,14 +46,18 @@ class SignUpViewController: BaseViewController {
         )
         let output = viewModel.transform(input)
 
-        output.result.subscribe(onNext: { [weak self] bool in
-            if bool {
+        output.result.subscribe(onNext: { [weak self] result in
+            switch result {
+            case .ok:
                 let vc = LoginViewController()
                 self?.navigationController?.pushViewController(vc, animated: true)
-            } else {
-                self?.emailTextField.errorLabel.text = "유효하지 않은 이메일 입니다."
-                self?.nicknameTextField.errorLabel.text = "이미 있는 닉네임 입니다."
-                self?.pwdTextField.errorLabel.text = "올바르지 않은 형식의 비밀번호 입니다."
+            case .conflict:
+                self?.emailTextField.errorLabel.text = ""
+                self?.nicknameTextField.errorLabel.text = ""
+            default:
+                self?.emailTextField.errorLabel.text = ""
+                self?.nicknameTextField.errorLabel.text = ""
+                self?.pwdTextField.errorLabel.text = ""
             }
         }).disposed(by: disposeBag)
     }

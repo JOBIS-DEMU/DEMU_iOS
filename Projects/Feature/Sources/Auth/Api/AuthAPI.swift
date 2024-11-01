@@ -39,7 +39,7 @@ extension AuthAPI: TargetType {
             return .requestParameters(
                 parameters: [
                     "accountId": email,
-                    "userName": nickname,
+                    "nickname": nickname,
                     "password": password
                 ], encoding: JSONEncoding.default)
         case .login(let email, let password):
