@@ -22,19 +22,6 @@ final class AuthService {
             }
     }
 
-    func refreshToken() -> Single<NetworkingResult> {
-        return provider.rx.request(.refreshToken)
-            .filterSuccessfulStatusCodes()
-            .map(TokenModel.self)
-            .map { response -> NetworkingResult in
-                Token.accessToken = response.accessToken
-                return .ok
-            }
-            .catchError { [unowned self] error in
-                return Single.just(setNetworkError(error))
-            }
-    }
-
     func signup(_ id: String, _ username: String, _ password: String) -> Single<NetworkingResult> {
         return provider.rx.request(.signup(email: id, nickname: username, password: password))
             .filterSuccessfulStatusCodes()
@@ -43,6 +30,34 @@ final class AuthService {
                 Token.accessToken = response.accessToken
                 Token.refreshToken = response.refreshToken
                 UserDefaults.standard.setValue(id, forKey: "userID")
+                return .ok
+            }
+            .catchError { [unowned self] error in
+                return Single.just(setNetworkError(error))
+            }
+    }
+
+    func checkPwd(_ password: String) -> Single<NetworkingResult> {
+        return provider.rx.request(.checkPwd(password: password))
+            .filterSuccessfulStatusCodes()
+            .map(AuthModel.self)
+            .map { response -> NetworkingResult in
+                Token.accessToken = response.accessToken
+                Token.refreshToken = response.refreshToken
+                UserDefaults.standard.setValue(password, forKey: "userID")
+                return .ok
+            }
+            .catchError { [unowned self] error in
+                return Single.just(setNetworkError(error))
+            }
+    }
+
+    func refreshToken() -> Single<NetworkingResult> {
+        return provider.rx.request(.refreshToken)
+            .filterSuccessfulStatusCodes()
+            .map(TokenModel.self)
+            .map { response -> NetworkingResult in
+                Token.accessToken = response.accessToken
                 return .ok
             }
             .catchError { [unowned self] error in
