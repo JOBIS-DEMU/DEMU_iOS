@@ -15,19 +15,19 @@ class SignUpViewController: BaseViewController {
         $0.text = "회원가입"
         $0.font = .boldSystemFont(ofSize: 22)
     }
-
+    
     private let emailTextField = DMTextFieldView(type: .email)
     private let nicknameTextField = DMTextFieldView(type: .nickname)
     private let pwdTextField = DMTextFieldView(type: .pwd)
     private let confirmPwdTextField = DMTextFieldView(type: .confirmpwd)
-
+    
     private let signUpButton = DMButtonView(type: .signup)
     private let loginButton = DMTextButtonView(type: .login)
-
+    
     override func attribute() {
         view.backgroundColor = UIColor.background
     }
-
+    
     private func bindTextField(_ textField: UITextField) {
         textField.rx.text
             .orEmpty
@@ -36,7 +36,7 @@ class SignUpViewController: BaseViewController {
             }
             .disposed(by: disposeBag)
     }
-
+    
     override func bind() {
         let input = SignUpViewModel.Input(
             email: emailTextField.textField.rx.text.orEmpty.asDriver(),
@@ -44,22 +44,49 @@ class SignUpViewController: BaseViewController {
             password: pwdTextField.textField.rx.text.orEmpty.asDriver(),
             doneTap: signUpButton.button.rx.tap.asSignal()
         )
+        
         let output = viewModel.transform(input)
+        
+        input.doneTap
+            .withLatestFrom(Driver.combineLatest(input.nickname, input.password))
+            .asObservable()
+            .flatMap { [weak self] nickname, password -> Observable<Void> in
+                var valid = true
+                if nickname.count < 3 || nickname.count > 10 {
+                    self?.nicknameTextField.errorLabel.text = "닉네임은 3~10자여야 합니다."
+                    valid = false
+                } else {
+                    self?.nicknameTextField.errorLabel.text = ""
+                }
 
-        output.result.subscribe(onNext: { [weak self] result in
-            switch result {
-            case .ok:
-                let vc = LoginViewController()
-                self?.navigationController?.pushViewController(vc, animated: true)
-            case .conflict:
-                self?.emailTextField.errorLabel.text = ""
-                self?.nicknameTextField.errorLabel.text = ""
-            default:
-                self?.emailTextField.errorLabel.text = ""
-                self?.nicknameTextField.errorLabel.text = ""
-                self?.pwdTextField.errorLabel.text = ""
+                if password.count < 8 || password.count > 20 {
+                    self?.pwdTextField.errorLabel.text = "비밀번호는 8~20자여야 합니다."
+                    valid = false
+                } else {
+                    self?.pwdTextField.errorLabel.text = ""
+                }
+
+                return valid ? Observable.just(()) : Observable.empty()
+                valid = true
             }
-        }).disposed(by: disposeBag)
+            .flatMapLatest { _ in
+                output.result.asObservable()
+            }
+            .subscribe(onNext: { [weak self] result in
+                switch result {
+                case .ok:
+                    let vc = LoginViewController()
+                    self?.navigationController?.pushViewController(vc, animated: true)
+                case .conflict:
+                    self?.emailTextField.errorLabel.text = ""
+                    self?.nicknameTextField.errorLabel.text = "이미 있는 닉네임입니다."
+                default:
+                    self?.emailTextField.errorLabel.text = ""
+                    self?.nicknameTextField.errorLabel.text = ""
+                    self?.pwdTextField.errorLabel.text = ""
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
     override func bindAction() {
@@ -67,7 +94,7 @@ class SignUpViewController: BaseViewController {
         bindTextField(nicknameTextField.textField)
         bindTextField(pwdTextField.textField)
         bindTextField(confirmPwdTextField.textField)
-
+        
         loginButton.textButton.rx.tap
             .bind {
                 self.navigationController?.popViewController(animated: true)
@@ -85,7 +112,7 @@ class SignUpViewController: BaseViewController {
             loginButton
         ].forEach{ view.addSubview($0)}
     }
-
+    
     override func layout() {
         emailTextField.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).inset(30)
@@ -125,7 +152,7 @@ class SignUpViewController: BaseViewController {
         self.navigationItem.titleView = signUpLabel
         self.navigationItem.setHidesBackButton(true, animated: false)
     }
-
+    
     private func updateLoginButtonState() {
         let emailTFNil = !(emailTextField.textField.text ?? "").isEmpty
         let nickNameTFNil = !(nicknameTextField.textField.text ?? "").isEmpty
