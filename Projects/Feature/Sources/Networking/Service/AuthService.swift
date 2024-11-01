@@ -37,6 +37,16 @@ final class AuthService {
             }
     }
 
+    func emailsend(_ email: String) -> Single<NetworkingResult> {
+        return provider.rx.request(.emailsend(email: email))
+            .filterSuccessfulStatusCodes()
+            .map{ _ -> NetworkingResult in
+                print("Success")
+                return .ok
+            }
+            .catch{[unowned self] in return .just(setNetworkError($0))}
+    }
+
     func checkPwd(_ password: String) -> Single<NetworkingResult> {
         return provider.rx.request(.checkPwd(password: password))
             .filterSuccessfulStatusCodes()
