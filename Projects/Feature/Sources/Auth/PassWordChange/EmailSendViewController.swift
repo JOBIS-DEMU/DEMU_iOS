@@ -8,6 +8,7 @@ import RxCocoa
 
 class EmailSendViewController: BaseViewController {
 
+    private let viewModel = EmailSendViewModel()
     private let disposeBag = DisposeBag()
 
     private let passWordChageLabel = UILabel().then {
@@ -25,6 +26,25 @@ class EmailSendViewController: BaseViewController {
         view.backgroundColor = UIColor.background
     }
 
+    override func bind() {
+        let input = EmailSendViewModel.Input(
+            email: emailSendTextField.textField.rx.text.orEmpty.asDriver(),
+            doneTap: emailSendTextField.sendButton.rx.tap.asSignal()
+        )
+        let output = viewModel.transform(input)
+
+        output.result.subscribe(onNext: { [weak self] bool in
+            if bool {
+                self?.emailSendTextField.sendButton.backgroundColor = UIColor.textField
+                self?.finishButton.button.backgroundColor = UIColor.main1
+                self?.finishButton.button.setTitleColor(UIColor.white, for: .normal)
+                self?.finishButton.button.isEnabled = true
+            } else {
+                self?.emailSendTextField.errorLabel.text = "존재하지 않는 이메일 입니다."
+            }
+        }).disposed(by: disposeBag)
+    }
+
     override func bindAction() {
         backButton.rx.tap
             .bind {
@@ -35,15 +55,9 @@ class EmailSendViewController: BaseViewController {
             .map { !$0.isEmpty }
             .subscribe(onNext: { isEnabled in
                 self.emailSendTextField.sendButton.isEnabled = isEnabled
-                self.emailSendTextField.sendButton.backgroundColor = isEnabled ? UIColor.main1 : UIColor.gray
+                self.emailSendTextField.sendButton.backgroundColor = isEnabled ? UIColor.main1 : UIColor.textField
             })
             .disposed(by: disposeBag)
-        emailSendTextField.sendButton.rx.tap
-            .bind {
-                self.onButton()
-            }
-            .disposed(by: disposeBag)
-
         finishButton.button.rx.tap
             .bind {
                 let vc = PassWordChangeViewController()
