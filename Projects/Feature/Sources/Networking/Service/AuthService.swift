@@ -7,14 +7,14 @@ import RxMoya
 final class AuthService {
     let provider = MoyaProvider<AuthAPI>(plugins: [MoyaLoggerPlugin()])
 
-    func login(_ id: String, _ password: String) -> Single<NetworkingResult> {
-        return provider.rx.request(.login(email: id, password: password))
+    func login(_ email: String, _ password: String) -> Single<NetworkingResult> {
+        return provider.rx.request(.login(email: email, password: password))
             .filterSuccessfulStatusCodes()
             .map(AuthModel.self)
             .map { response -> NetworkingResult in
                 Token.accessToken = response.accessToken
                 Token.refreshToken = response.refreshToken
-                UserDefaults.standard.setValue(id, forKey: "userID")
+                UserDefaults.standard.setValue(email, forKey: "userID")
                 return .ok
             }
             .catchError { [unowned self] error in
@@ -22,19 +22,29 @@ final class AuthService {
             }
     }
 
-    func signup(_ id: String, _ username: String, _ password: String) -> Single<NetworkingResult> {
-        return provider.rx.request(.signup(email: id, nickname: username, password: password))
+    func signup(_ email: String, _ username: String, _ password: String) -> Single<NetworkingResult> {
+        return provider.rx.request(.signup(email: email, nickname: username, password: password))
             .filterSuccessfulStatusCodes()
             .map(AuthModel.self)
             .map { response -> NetworkingResult in
                 Token.accessToken = response.accessToken
                 Token.refreshToken = response.refreshToken
-                UserDefaults.standard.setValue(id, forKey: "userID")
+                UserDefaults.standard.setValue(email, forKey: "userID")
                 return .ok
             }
             .catchError { [unowned self] error in
                 return Single.just(setNetworkError(error))
             }
+    }
+
+    func emailsend(_ email: String) -> Single<NetworkingResult> {
+        return provider.rx.request(.emailsend(email: email))
+            .filterSuccessfulStatusCodes()
+            .map{ _ -> NetworkingResult in
+                print("Success")
+                return .ok
+            }
+            .catch{[unowned self] in return .just(setNetworkError($0))}
     }
 
     func checkPwd(_ password: String) -> Single<NetworkingResult> {
