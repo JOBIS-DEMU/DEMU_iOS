@@ -6,6 +6,7 @@ import Moya
 enum AuthAPI {
     case login(email: String, password: String)
     case signup(email: String, nickname: String, password: String)
+    case checkPwd(password: String)
     case refreshToken
 }
 
@@ -20,6 +21,8 @@ extension AuthAPI: TargetType {
             return "/public/signin"
         case .signup:
             return "/public/signup"
+        case .checkPwd:
+            return "/password/validate"
         case .refreshToken:
             return "/public/token/reissue"
         }
@@ -34,18 +37,25 @@ extension AuthAPI: TargetType {
 
     var task: Moya.Task {
         switch self {
-
         case .signup(let email, let nickname, let password):
             return .requestParameters(
                 parameters: [
                     "accountId": email,
                     "nickname": nickname,
                     "password": password
-                ], encoding: JSONEncoding.default)
+                ], encoding: JSONEncoding.default
+            )
         case .login(let email, let password):
             return .requestParameters(
                 parameters: [
                     "accountId": email,
+                    "password": password
+                ],
+                encoding: JSONEncoding.default
+            )
+        case .checkPwd(password: let password):
+            return .requestParameters(
+                parameters: [
                     "password": password
                 ],
                 encoding: JSONEncoding.default
@@ -59,6 +69,8 @@ extension AuthAPI: TargetType {
         switch self {
         case .refreshToken:
             return Header.refreshToken.header()
+        case .checkPwd:
+            return Header.accessToken.header()
         default:
             return Header.tokenIsEmpty.header()
         }

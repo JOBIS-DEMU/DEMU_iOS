@@ -8,6 +8,7 @@ import RxCocoa
 
 class PwdViewController: BaseViewController {
 
+    private let viewModel = PwdViewModel()
     private let disposeBag = DisposeBag()
 
     private let backButton = UIButton().then {
@@ -22,7 +23,7 @@ class PwdViewController: BaseViewController {
     private let pwdTextField = DMTextFieldView(type: .pwd)
     private let nextButton = DMButtonView(type: .next)
 
-    override func viewWillAppear(_ animated: Bool) {
+    public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
     }
@@ -31,17 +32,28 @@ class PwdViewController: BaseViewController {
         tabBarController?.tabBar.isHidden = true
     }
 
+    override func bind() {
+        let input = PwdViewModel.Input(
+            password: pwdTextField.textField.rx.text.orEmpty.asDriver(),
+            doneTap: nextButton.button.rx.tap.asSignal()
+        )
+        let output = viewModel.transform(input)
+
+        output.result.subscribe(onNext: { [weak self] bool in
+            if bool {
+                let vc = PassWordChangeViewController()
+                self?.navigationController?.pushViewController(vc, animated: true)
+                self?.tabBarController?.tabBar.isHidden = false
+            } else {
+                self?.pwdTextField.errorLabel.text = "비밀번호가 일치하지 않습니다."
+            }
+        }).disposed(by: disposeBag)
+    }
+
     override func bindAction() {
         backButton.rx.tap
             .bind {
                 self.navigationController?.popViewController(animated: true)
-                self.tabBarController?.tabBar.isHidden = false
-            }
-            .disposed(by: disposeBag)
-        nextButton.button.rx.tap
-            .bind {
-                let vc = PassWordChangeViewController()
-                self.navigationController?.pushViewController(vc, animated: true)
                 self.tabBarController?.tabBar.isHidden = false
             }
             .disposed(by: disposeBag)
