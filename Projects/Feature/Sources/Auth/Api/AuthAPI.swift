@@ -23,7 +23,7 @@ extension AuthAPI: TargetType {
         case .signup:
             return "/public/signup"
         case .emailsend(let email):
-            return "/public/password/find/\(email)"
+            return "/public/password/find/\(email)@dsm.hs.kr"
         case .checkPwd:
             return "/password/validate"
         case .refreshToken:
