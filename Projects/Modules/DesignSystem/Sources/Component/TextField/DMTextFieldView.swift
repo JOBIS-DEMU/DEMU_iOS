@@ -77,7 +77,7 @@ public class DMTextFieldView: UIView {
         $0.setImage(UIImage.send.withRenderingMode(.alwaysOriginal), for: .normal)
         $0.backgroundColor = UIColor.main1
         $0.layer.cornerRadius = 4
-        $0.isHidden = true
+        $0.isEnabled = true
     }
     public init(type: TfType) {
         self.type = type
@@ -111,12 +111,12 @@ public class DMTextFieldView: UIView {
         [
             titleLabel,
             textField,
+            sendButton,
             errorLabel
         ].forEach{ self.addSubview($0) }
         [
             line,
-            emailLabel,
-            sendButton
+            emailLabel
         ].forEach{ textField.addSubview($0) }
     }
     private func layout() {
@@ -138,7 +138,8 @@ public class DMTextFieldView: UIView {
                 $0.centerY.equalToSuperview()
             }
             sendButton.snp.makeConstraints {
-                $0.top.bottom.equalToSuperview().inset(13)
+                $0.top.equalTo(textField.snp.top).inset(13)
+                $0.bottom.equalTo(textField.snp.bottom).inset(13)
                 $0.trailing.equalToSuperview().inset(5)
                 $0.width.equalTo(26)
             }
