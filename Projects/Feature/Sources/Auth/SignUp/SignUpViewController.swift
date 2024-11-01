@@ -15,19 +15,19 @@ class SignUpViewController: BaseViewController {
         $0.text = "회원가입"
         $0.font = .boldSystemFont(ofSize: 22)
     }
-    
+
     private let emailTextField = DMTextFieldView(type: .email)
     private let nicknameTextField = DMTextFieldView(type: .nickname)
     private let pwdTextField = DMTextFieldView(type: .pwd)
     private let confirmPwdTextField = DMTextFieldView(type: .confirmpwd)
-    
+
     private let signUpButton = DMButtonView(type: .signup)
     private let loginButton = DMTextButtonView(type: .login)
-    
+
     override func attribute() {
         view.backgroundColor = UIColor.background
     }
-    
+
     private func bindTextField(_ textField: UITextField) {
         textField.rx.text
             .orEmpty
@@ -36,7 +36,7 @@ class SignUpViewController: BaseViewController {
             }
             .disposed(by: disposeBag)
     }
-    
+
     override func bind() {
         let input = SignUpViewModel.Input(
             email: emailTextField.textField.rx.text.orEmpty.asDriver(),
@@ -44,9 +44,9 @@ class SignUpViewController: BaseViewController {
             password: pwdTextField.textField.rx.text.orEmpty.asDriver(),
             doneTap: signUpButton.button.rx.tap.asSignal()
         )
-        
+
         let output = viewModel.transform(input)
-        
+
         input.doneTap
             .withLatestFrom(Driver.combineLatest(input.nickname, input.password))
             .asObservable()
@@ -66,8 +66,14 @@ class SignUpViewController: BaseViewController {
                     self?.pwdTextField.errorLabel.text = ""
                 }
 
+                if self?.confirmPwdTextField.textField.text != password {
+                    self?.confirmPwdTextField.errorLabel.text = "비밀번호가 일치하지 않습니다."
+                    valid = false
+                } else {
+                    self?.confirmPwdTextField.errorLabel.text = ""
+                }
+
                 return valid ? Observable.just(()) : Observable.empty()
-                valid = true
             }
             .flatMapLatest { _ in
                 output.result.asObservable()
@@ -94,7 +100,7 @@ class SignUpViewController: BaseViewController {
         bindTextField(nicknameTextField.textField)
         bindTextField(pwdTextField.textField)
         bindTextField(confirmPwdTextField.textField)
-        
+
         loginButton.textButton.rx.tap
             .bind {
                 self.navigationController?.popViewController(animated: true)
@@ -112,7 +118,7 @@ class SignUpViewController: BaseViewController {
             loginButton
         ].forEach{ view.addSubview($0)}
     }
-    
+
     override func layout() {
         emailTextField.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).inset(30)
@@ -152,7 +158,7 @@ class SignUpViewController: BaseViewController {
         self.navigationItem.titleView = signUpLabel
         self.navigationItem.setHidesBackButton(true, animated: false)
     }
-    
+
     private func updateLoginButtonState() {
         let emailTFNil = !(emailTextField.textField.text ?? "").isEmpty
         let nickNameTFNil = !(nicknameTextField.textField.text ?? "").isEmpty
