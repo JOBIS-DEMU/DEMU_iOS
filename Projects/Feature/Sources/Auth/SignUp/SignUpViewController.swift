@@ -44,18 +44,55 @@ class SignUpViewController: BaseViewController {
             password: pwdTextField.textField.rx.text.orEmpty.asDriver(),
             doneTap: signUpButton.button.rx.tap.asSignal()
         )
+
         let output = viewModel.transform(input)
 
-        output.result.subscribe(onNext: { [weak self] bool in
-            if bool {
-                let vc = LoginViewController()
-                self?.navigationController?.pushViewController(vc, animated: true)
-            } else {
-                self?.emailTextField.errorLabel.text = "유효하지 않은 이메일 입니다."
-                self?.nicknameTextField.errorLabel.text = "이미 있는 닉네임 입니다."
-                self?.pwdTextField.errorLabel.text = "올바르지 않은 형식의 비밀번호 입니다."
+        input.doneTap
+            .withLatestFrom(Driver.combineLatest(input.nickname, input.password))
+            .asObservable()
+            .flatMap { [weak self] nickname, password -> Observable<Void> in
+                var valid = true
+                if nickname.count < 3 || nickname.count > 10 {
+                    self?.nicknameTextField.errorLabel.text = "닉네임은 3~10자여야 합니다."
+                    valid = false
+                } else {
+                    self?.nicknameTextField.errorLabel.text = ""
+                }
+
+                if password.count < 8 || password.count > 20 {
+                    self?.pwdTextField.errorLabel.text = "비밀번호는 8~20자여야 합니다."
+                    valid = false
+                } else {
+                    self?.pwdTextField.errorLabel.text = ""
+                }
+
+                if self?.confirmPwdTextField.textField.text != password {
+                    self?.confirmPwdTextField.errorLabel.text = "비밀번호가 일치하지 않습니다."
+                    valid = false
+                } else {
+                    self?.confirmPwdTextField.errorLabel.text = ""
+                }
+
+                return valid ? Observable.just(()) : Observable.empty()
             }
-        }).disposed(by: disposeBag)
+            .flatMapLatest { _ in
+                output.result.asObservable()
+            }
+            .subscribe(onNext: { [weak self] result in
+                switch result {
+                case .ok:
+                    let vc = LoginViewController()
+                    self?.navigationController?.pushViewController(vc, animated: true)
+                case .conflict:
+                    self?.emailTextField.errorLabel.text = ""
+                    self?.nicknameTextField.errorLabel.text = "이미 있는 닉네임입니다."
+                default:
+                    self?.emailTextField.errorLabel.text = ""
+                    self?.nicknameTextField.errorLabel.text = ""
+                    self?.pwdTextField.errorLabel.text = ""
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
     override func bindAction() {

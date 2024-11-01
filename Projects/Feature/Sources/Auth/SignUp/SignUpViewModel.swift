@@ -14,20 +14,18 @@ class SignUpViewModel: ViewModelType {
     }
 
     struct Output {
-        let result: PublishRelay<Bool>
+        let result: PublishRelay<NetworkingResult>
     }
 
     func transform(_ input: Input) -> Output {
         let api = AuthService()
         let info = Driver.combineLatest(input.email, input.nickname, input.password)
-        let result = PublishRelay<Bool>()
+        let result = PublishRelay<NetworkingResult>()
 
         input.doneTap.withLatestFrom(info).asObservable()
-            .flatMap {
-                email, nickname, password -> PrimitiveSequence<SingleTrait, Bool> in
-                api.signup(email, nickname, password).map { res in
-                    return res == NetworkingResult.ok
-                }
+            .flatMapLatest {
+                email, nickname, password in
+                api.signup(email+"@dsm.hs.kr", nickname, password)
             }
             .bind(to: result)
             .disposed(by: disposeBag)

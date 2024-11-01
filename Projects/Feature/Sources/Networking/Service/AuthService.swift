@@ -6,6 +6,7 @@ import RxMoya
 
 final class AuthService {
     let provider = MoyaProvider<AuthAPI>(plugins: [MoyaLoggerPlugin()])
+
     func login(_ id: String, _ password: String) -> Single<NetworkingResult> {
         return provider.rx.request(.login(email: id, password: password))
             .filterSuccessfulStatusCodes()
@@ -20,6 +21,7 @@ final class AuthService {
                 return Single.just(setNetworkError(error))
             }
     }
+
     func refreshToken() -> Single<NetworkingResult> {
         return provider.rx.request(.refreshToken)
             .filterSuccessfulStatusCodes()
@@ -32,6 +34,7 @@ final class AuthService {
                 return Single.just(setNetworkError(error))
             }
     }
+
     func signup(_ id: String, _ username: String, _ password: String) -> Single<NetworkingResult> {
         return provider.rx.request(.signup(email: id, nickname: username, password: password))
             .filterSuccessfulStatusCodes()
@@ -46,6 +49,7 @@ final class AuthService {
                 return Single.just(setNetworkError(error))
             }
     }
+
     func setNetworkError(_ error: Error) -> NetworkingResult {
         print(error)
         print(error.localizedDescription)
