@@ -69,6 +69,8 @@ extension AuthAPI: TargetType {
         switch self {
         case .refreshToken:
             return Header.refreshToken.header()
+        case .checkPwd:
+            return Header.accessToken.header()
         default:
             return Header.tokenIsEmpty.header()
         }
