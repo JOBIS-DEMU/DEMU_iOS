@@ -4,7 +4,7 @@ import RxCocoa
 import Moya
 
 enum SearchAPI {
-    
+    case nameSearch(keyworld: Int)
 }
 
 extension SearchAPI: TargetType {
@@ -15,7 +15,8 @@ extension SearchAPI: TargetType {
     
     var path: String {
         switch self {
-            
+        case .nameSearch:
+            return "/search/title/{keyword}"
         }
     }
     
