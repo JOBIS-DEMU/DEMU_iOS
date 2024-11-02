@@ -5,7 +5,11 @@ import Moya
 
 enum PostAPI {
     case postCreate(title: String, content: String, major: String)
-    case postFix(content: String, title: String, major: String)
+    case postFix(content: String, title: String, major: String, postId: Int)
+    case postSuggestion(postId: Int)
+    case postCheck(postId: Int)
+    case postUserCheck
+    case postDelete(postId: Int)
 }
 
 extension PostAPI: TargetType {
@@ -17,8 +21,15 @@ extension PostAPI: TargetType {
         switch self {
         case .postCreate:
             return "/post/create"
-        case .postFix:
-            return "/post/update/{post-id}"
+        case .postFix(let postId):
+            return "/post/update/\(postId)"
+        case .postSuggestion(let postId):
+            return "/post/recommend/\(postId)"
+        case .postCheck(let postId):
+            return "/post/get/\(postId)"
+        case .postUserCheck:
+            return "/post/get/my-posts"
+        case 
         }
     }
 
@@ -26,6 +37,8 @@ extension PostAPI: TargetType {
         switch self {
         case .postFix:
             return .patch
+        case .postCheck, .postUserCheck:
+            return .get
         default:
             return .post
         }
@@ -47,7 +60,7 @@ extension PostAPI: TargetType {
     }
     var headers: [String: String]? {
         switch self {
-        case .postCreate, .postFix:
+        case .postCreate, .postFix, .postSuggestion, .postCheck, .postUserCheck:
             return Header.accessToken.header()
         default:
             return Header.tokenIsEmpty.header()
