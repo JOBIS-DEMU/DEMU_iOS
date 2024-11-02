@@ -30,9 +30,17 @@ final class PostService {
             .filterSuccessfulStatusCodes()
             .map{ _ -> NetworkingResult in
                 print("Success")
-                return .deleteOk
+                return .createOk
             }
             .catch{[unowned self] in return .just(setNetworkError($0))}
+    }
+    func postDelete(_ postId: Int) -> Single<NetworkingResult> {
+        return provider.rx.request(.postDelete(postId: postId))
+            .filterSuccessfulStatusCodes()
+            .map{ _ -> NetworkingResult in
+                print("Success")
+                return .deleteOk
+            }
     }
 
     func setNetworkError(_ error: Error) -> NetworkingResult {
