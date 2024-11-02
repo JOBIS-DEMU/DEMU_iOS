@@ -25,6 +25,15 @@ final class PostService {
             }
             .catch{[unowned self] in return .just(setNetworkError($0))}
     }
+    func postSuggestion(_ postId: Int) -> Single<NetworkingResult> {
+        return provider.rx.request(.postSuggestion(postId: postId))
+            .filterSuccessfulStatusCodes()
+            .map{ _ -> NetworkingResult in
+                print("Success")
+                return .deleteOk
+            }
+            .catch{[unowned self] in return .just(setNetworkError($0))}
+    }
 
     func setNetworkError(_ error: Error) -> NetworkingResult {
            print(error)
