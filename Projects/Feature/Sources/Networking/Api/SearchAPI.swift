@@ -5,7 +5,7 @@ import Moya
 
 enum SearchAPI {
     case nameSearch(keyworld: Int)
-    case major(major: Int
+    case major(major: Int)
 }
 
 extension SearchAPI: TargetType {
@@ -34,11 +34,11 @@ extension SearchAPI: TargetType {
     var task: Moya.Task {
         switch self {
         case .nameSearch:
-            return .requestParameters(
-                parameters: [
-                    
-                ], encoding: JSONEncoding.default)
-            )
+//            return .requestParameters(
+//                parameters: [
+//                    
+//                ], encoding: JSONEncoding.default)
+//            )
         default:
             return .requestPlain
         }

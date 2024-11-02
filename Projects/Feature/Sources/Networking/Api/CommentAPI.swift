@@ -3,9 +3,51 @@ import RxSwift
 import RxCocoa
 import Moya
 
-enum SearchAPI {
-    
+enum CommentAPI {
+    case commentCreat(content: String)
 }
 
 
-
+extension CommentAPI: TargetType {
+    var baseURL: URL {
+        return URL(string: "http://3.37.219.136:8080")!
+    }
+    
+    
+    var path: String {
+        switch self {
+        case.commentCreat(let postId):
+            return "/comment/create/{post-id}"
+        }
+    }
+    
+    
+    
+    var method: Moya.Method {
+        switch self {
+        default:
+            return .post
+        }
+    }
+ 
+    
+    var task: Moya.Task {
+        switch self {
+        case .commentCreat(let content):
+            return .requestParameters(
+                parameters: [
+                    "content": content
+                ], encoding: JSONEncoding.default
+            )
+        }
+    }
+    
+    var headers: [String : String]? {
+        switch self {
+        case .commentCreat:
+            return Header.accessToken.header()
+        default:
+            return Header.tokenIsEmpty.header()
+        }
+    }
+}
