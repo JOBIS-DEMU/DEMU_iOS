@@ -17,7 +17,7 @@ extension PostAPI: TargetType {
     var baseURL: URL {
         return URL(string: "http://3.37.219.136:8080")!
     }
-    
+
     var path: String {
         switch self {
         case .postCreate:
@@ -30,8 +30,8 @@ extension PostAPI: TargetType {
             return "/post/get/\(postId)"
         case .postUserCheck:
             return "/post/get/my-posts"
-        case .postDelete:
-            return "/post/delete/{post-id}"
+        case .postDelete(let postId):
+            return "/post/delete/\(postId)"
         case .postRate:
             return "/post/grade"
         }
@@ -64,6 +64,7 @@ extension PostAPI: TargetType {
             return .requestPlain
         }
     }
+
     var headers: [String: String]? {
         switch self {
         case .postCreate, .postFix, .postSuggestion, .postCheck, .postUserCheck, .postDelete, .postRate:
