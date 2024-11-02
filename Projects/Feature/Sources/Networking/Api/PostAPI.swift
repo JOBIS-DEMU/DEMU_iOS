@@ -4,8 +4,8 @@ import RxCocoa
 import Moya
 
 enum PostAPI {
-    case postCreate(title : String,content : String,major : Enum)
-    
+    case postCreate(title : String, content : String, major : Enum)
+    case 
 }
 
 extension PostAPI: TargetType {
@@ -15,7 +15,7 @@ extension PostAPI: TargetType {
     
     var path: String {
         switch self {
-        case .postCreate
+        case .postCreate:
             return "/post/create"
         }
     }
@@ -28,4 +28,30 @@ extension PostAPI: TargetType {
             return .post
         }
     }
-}
+    
+    
+    var task: Moya.Task {
+        switch self {
+        case .postCreate(let title, let content, let major):
+            return .requestParameters(
+                parameters: [
+                    "title": title,
+                    "content": content,
+                    "major": major
+                ], encoding: JSONEncoding.default
+            )
+        default:
+            return .requestPlain
+        }
+            
+            
+            var headers: [String : String]? {
+                switch self {
+                case .postCreate:
+                    return Header.accessToken.header()
+                default:
+                    return Header.tokenIsEmpty.header()
+                }
+            }
+        }
+    }
