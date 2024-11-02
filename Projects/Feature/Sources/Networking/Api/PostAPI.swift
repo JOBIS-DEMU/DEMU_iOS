@@ -29,7 +29,8 @@ extension PostAPI: TargetType {
             return "/post/get/\(postId)"
         case .postUserCheck:
             return "/post/get/my-posts"
-        case 
+        case .postDelete:
+            return "/post/delete/{post-id}"
         }
     }
 
@@ -39,6 +40,8 @@ extension PostAPI: TargetType {
             return .patch
         case .postCheck, .postUserCheck:
             return .get
+        case .postDelete:
+            return .delete
         default:
             return .post
         }
@@ -60,7 +63,7 @@ extension PostAPI: TargetType {
     }
     var headers: [String: String]? {
         switch self {
-        case .postCreate, .postFix, .postSuggestion, .postCheck, .postUserCheck:
+        case .postCreate, .postFix, .postSuggestion, .postCheck, .postUserCheck, .postDelete:
             return Header.accessToken.header()
         default:
             return Header.tokenIsEmpty.header()
