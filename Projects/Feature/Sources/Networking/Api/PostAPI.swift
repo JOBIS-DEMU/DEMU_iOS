@@ -5,7 +5,7 @@ import Moya
 
 enum PostAPI {
     case postCreate(title: String, content: String, major: String)
-    case postFix(content: String, title: String, major: String, postId: Int)
+    case postFix(content: String, title: String, major: String)
     case postSuggestion(postId: Int)
     case postCheck(postId: Int)
     case postUserCheck
