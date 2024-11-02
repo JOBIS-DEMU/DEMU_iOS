@@ -24,7 +24,7 @@ class BlogViewModel: ViewModelType {
 
         input.doneTap.withLatestFrom(info).asObservable()
             .flatMapLatest { title, content, major in
-                api.postCreate(title, content: content, major: major)
+                api.postCreate(title, content: content, major: major.uppercased())
             }
             .subscribe(onNext: { res in
                 switch res {
