@@ -5,6 +5,7 @@ import Moya
 
 enum CommentAPI {
     case commentCreat(content: String)
+    case commentDelete(commentId: Int)
 }
 
 
@@ -16,8 +17,10 @@ extension CommentAPI: TargetType {
     
     var path: String {
         switch self {
-        case.commentCreat(let postId):
+        case .commentCreat(let postId):
             return "/comment/create/{post-id}"
+        case .commentDelete(let commentId):
+            return "/comment/delete/{comment-id}"
         }
     }
     
@@ -25,6 +28,8 @@ extension CommentAPI: TargetType {
     
     var method: Moya.Method {
         switch self {
+        case .commentDelete:
+            return .delete
         default:
             return .post
         }
@@ -39,12 +44,15 @@ extension CommentAPI: TargetType {
                     "content": content
                 ], encoding: JSONEncoding.default
             )
+            
+        default:
+            return .requestPlain
         }
     }
     
     var headers: [String : String]? {
         switch self {
-        case .commentCreat:
+        case .commentCreat, .commentDelete:
             return Header.accessToken.header()
         default:
             return Header.tokenIsEmpty.header()
