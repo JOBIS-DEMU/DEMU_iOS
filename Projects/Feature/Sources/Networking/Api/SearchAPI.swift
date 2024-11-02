@@ -30,15 +30,25 @@ extension SearchAPI: TargetType {
     
     var task: Moya.Task {
         switch self {
-            
+        case .nameSearch:
+            return .requestParameters(
+                parameters: [
+                    
+                ], encoding: JSONEncoding.default)
+            )
+        default:
+            return .requestPlain
         }
-    default:
-        return .requestPlain
     }
     
     var headers: [String : String]? {
         switch self {
-            
+//            case .:
+//                return Header.accessToken.header()
+//            case .refreshToken:
+//                return Header.refreshToken.header()
+            default:
+                return Header.tokenIsEmpty.header()
         }
     }
 }
