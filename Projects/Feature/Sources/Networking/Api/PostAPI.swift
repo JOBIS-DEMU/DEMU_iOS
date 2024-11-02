@@ -3,6 +3,20 @@ import RxSwift
 import RxCocoa
 import Moya
 
-enum AuthAPI {
+enum PostAPI {
+    case postCreate(title : String,content : String,major : Enum)
     
+}
+
+extension PostAPI: TargetType {
+    var baseURL: URL {
+        return URL(string: "http://3.37.219.136:8080")!
+    }
+    
+    var path: String {
+        switch self {
+        case .postCreate
+            return "/post/create"
+        }
+    }
 }
