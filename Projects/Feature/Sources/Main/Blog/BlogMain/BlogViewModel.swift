@@ -28,10 +28,10 @@ class BlogViewModel: ViewModelType {
             }
             .subscribe(onNext: { res in
                 switch res {
-                    case .ok:
-                        result.accept(true)
-                    default:
-                        result.accept(false)
+                case .createOk:
+                    result.accept(true)
+                default:
+                    result.accept(false)
                 }
             })
             .disposed(by: disposeBag)

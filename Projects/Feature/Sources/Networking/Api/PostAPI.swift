@@ -4,7 +4,7 @@ import RxCocoa
 import Moya
 
 enum PostAPI {
-    case postCreate(title : String, content : String, major : String)
+    case postCreate(title: String, content: String, major: String)
 }
 
 extension PostAPI: TargetType {
@@ -40,7 +40,7 @@ extension PostAPI: TargetType {
             return .requestPlain
         }
     }
-    var headers: [String : String]? {
+    var headers: [String: String]? {
         switch self {
         case .postCreate:
             return Header.accessToken.header()
