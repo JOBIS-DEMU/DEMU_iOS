@@ -5,6 +5,7 @@ import Moya
 
 enum SearchAPI {
     case nameSearch(keyworld: Int)
+    case major(major: Int
 }
 
 extension SearchAPI: TargetType {
@@ -15,8 +16,10 @@ extension SearchAPI: TargetType {
     
     var path: String {
         switch self {
-        case .nameSearch:
-            return "/search/title/{keyword}"
+        case .nameSearch(let keyword):
+            return "/search/title/\(keyword)"
+        case .major(let major):
+            return "public/search/major/\(major)"
         }
     }
     
