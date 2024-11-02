@@ -97,13 +97,14 @@ public class BlogViewController: BaseViewController, BlogModalViewControllerDele
         let input = BlogViewModel.Input(
             title: titleTextView.rx.text.orEmpty.asDriver(),
             content: detailTextView.rx.text.orEmpty.asDriver(),
-            major: dropDownLabel.rx.text.orEmpty.asDriver(),
+//            major: dropDownLabel.rx.text.orEmpty.asDriver(),
+            major: Driver.just(dropDownLabel.text ?? ""),
             doneTap: checkButton.rx.tap.asSignal()
         )
         let output = viewModel.transform(input)
 
-        output.result.subscribe(onNext: { [weak self] bool in
-            if bool {
+        output.result.subscribe(onNext: { [weak self] (success: Bool) in
+            if success {
                 if let previousViewController = self?.navigationController?.viewControllers.dropLast().last {
                     if previousViewController is MyPageViewController {
                         self?.navigationController?.popViewController(animated: true)
