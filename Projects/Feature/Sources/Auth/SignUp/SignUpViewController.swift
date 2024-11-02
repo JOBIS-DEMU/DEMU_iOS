@@ -81,7 +81,7 @@ class SignUpViewController: BaseViewController {
             .subscribe(onNext: { [weak self] result in
                 switch result {
                 case .ok:
-                    let vc = LoginViewController()
+                    let vc = TabBarController()
                     self?.navigationController?.pushViewController(vc, animated: true)
                 case .conflict:
                     self?.emailTextField.errorLabel.text = ""
