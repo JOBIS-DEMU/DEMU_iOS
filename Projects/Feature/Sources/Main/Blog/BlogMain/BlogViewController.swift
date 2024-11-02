@@ -6,8 +6,9 @@ import Then
 import RxSwift
 import RxCocoa
 
-class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
+public class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
 
+    private let viewModel = BlogViewModel()
     private let disposeBag = DisposeBag()
     private let maxImageCount = 5
     private var selectedImages = [UIImageView]()
@@ -74,12 +75,12 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
         $0.isScrollEnabled = false
     }
 
-    override func viewWillAppear(_ animated: Bool) {
+    public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = true
     }
 
-    override func attribute() {
+    public override func attribute() {
         view.backgroundColor = .background
         imagePicker.delegate = self
         detailTextView.delegate = self
@@ -92,7 +93,32 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
         detailPlaceholderText.isHidden = !detailTextView.text.isEmpty
     }
 
-    override func bindAction() {
+    public override func bind() {
+        let input = BlogViewModel.Input(
+            title: titleTextView.rx.text.orEmpty.asDriver(),
+            content: detailTextView.rx.text.orEmpty.asDriver(),
+            major: dropDownLabel.rx.text.orEmpty.asDriver(),
+            doneTap: checkButton.rx.tap.asSignal()
+        )
+        let output = viewModel.transform(input)
+
+        output.result.subscribe(onNext: { [weak self] bool in
+            if bool {
+                if let previousViewController = self?.navigationController?.viewControllers.dropLast().last {
+                    if previousViewController is MyPageViewController {
+                        self?.navigationController?.popViewController(animated: true)
+                    } else {
+                        let vc = TabBarController()
+                        self?.navigationController?.pushViewController(vc, animated: true)
+                    }
+                }
+            } else {
+                print("Fail")
+            }
+        }).disposed(by: disposeBag)
+    }
+
+    public override func bindAction() {
         downButton.rx.tap
             .bind {
                 let modalVC = BlogModalViewController()
@@ -108,18 +134,6 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
                     if previousViewController is MyPageViewController {
                         self.navigationController?.popViewController(animated: true)
                         self.navigationController?.navigationBar.isHidden = false
-                    } else {
-                        let vc = TabBarController()
-                        self.navigationController?.pushViewController(vc, animated: true)
-                    }
-                }
-            }
-            .disposed(by: disposeBag)
-        checkButton.rx.tap
-            .bind {
-                if let previousViewController = self.navigationController?.viewControllers.dropLast().last {
-                    if previousViewController is MyPageViewController {
-                        self.navigationController?.popViewController(animated: true)
                     } else {
                         let vc = TabBarController()
                         self.navigationController?.pushViewController(vc, animated: true)
@@ -143,7 +157,7 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
             .disposed(by: disposeBag)
     }
 
-    override func addView() {
+    public override func addView() {
         [
             cancelButton,
             checkButton,
@@ -226,7 +240,7 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
 }
 
 extension BlogViewController: UITextViewDelegate {
-    func textViewDidBeginEditing(_ textView: UITextView) {
+    public func textViewDidBeginEditing(_ textView: UITextView) {
         if textView == titleTextView {
             titlePlaceholderText.isHidden = true
         } else if textView == detailTextView {
@@ -234,7 +248,7 @@ extension BlogViewController: UITextViewDelegate {
         }
     }
 
-    func textViewDidChange(_ textView: UITextView) {
+    public func textViewDidChange(_ textView: UITextView) {
         if textView == titleTextView {
             if titleTextView.text.count > 25 {
                 titleTextView.text = String(titleTextView.text.prefix(25))
@@ -248,7 +262,7 @@ extension BlogViewController: UITextViewDelegate {
         }
     }
 
-    func textViewDidEndEditing(_ textView: UITextView) {
+    public func textViewDidEndEditing(_ textView: UITextView) {
         if textView == titleTextView {
             titlePlaceholderText.isHidden = !titleTextView.text.isEmpty
         } else if textView == detailTextView {
@@ -268,7 +282,7 @@ extension BlogViewController: UIImagePickerControllerDelegate, UINavigationContr
         }
     }
 
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let selectedImage = info[.originalImage] as? UIImage {
             addImageView(with: selectedImage)
         }
@@ -279,7 +293,7 @@ extension BlogViewController: UIImagePickerControllerDelegate, UINavigationContr
         numberCountLabel.text = "\(selectedImages.count)/\(maxImageCount)"
     }
 
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
     private func addImageView(with image: UIImage) {
