@@ -14,8 +14,8 @@ class BlogViewModel: ViewModelType {
     }
 
     struct Output {
-        let result: PublishRelay<Bool>
-    }
+           let result: Observable<Bool>
+       }
 
     func transform(_ input: Input) -> Output {
         let api = PostService()
@@ -35,7 +35,7 @@ class BlogViewModel: ViewModelType {
                 }
             })
             .disposed(by: disposeBag)
-        return Output(result: result)
+        return Output(result: result.asObservable())
     }
 
 }
