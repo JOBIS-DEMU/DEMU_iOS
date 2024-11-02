@@ -6,7 +6,7 @@ import Then
 import RxSwift
 import RxCocoa
 
-public class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
+class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
 
     private let viewModel = BlogViewModel()
     private let disposeBag = DisposeBag()
@@ -75,12 +75,12 @@ public class BlogViewController: BaseViewController, BlogModalViewControllerDele
         $0.isScrollEnabled = false
     }
 
-    public override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = true
     }
 
-    public override func attribute() {
+    override func attribute() {
         view.backgroundColor = .background
         imagePicker.delegate = self
         detailTextView.delegate = self
@@ -93,11 +93,10 @@ public class BlogViewController: BaseViewController, BlogModalViewControllerDele
         detailPlaceholderText.isHidden = !detailTextView.text.isEmpty
     }
 
-    public override func bind() {
+    override func bind() {
         let input = BlogViewModel.Input(
             title: titleTextView.rx.text.orEmpty.asDriver(),
             content: detailTextView.rx.text.orEmpty.asDriver(),
-//            major: dropDownLabel.rx.text.orEmpty.asDriver(),
             major: Driver.just(dropDownLabel.text ?? ""),
             doneTap: checkButton.rx.tap.asSignal()
         )
@@ -119,7 +118,7 @@ public class BlogViewController: BaseViewController, BlogModalViewControllerDele
         }).disposed(by: disposeBag)
     }
 
-    public override func bindAction() {
+    override func bindAction() {
         downButton.rx.tap
             .bind {
                 let modalVC = BlogModalViewController()
@@ -158,7 +157,7 @@ public class BlogViewController: BaseViewController, BlogModalViewControllerDele
             .disposed(by: disposeBag)
     }
 
-    public override func addView() {
+    override func addView() {
         [
             cancelButton,
             checkButton,
@@ -179,7 +178,7 @@ public class BlogViewController: BaseViewController, BlogModalViewControllerDele
         ].forEach { imageSquareView.addSubview($0) }
     }
 
-    override public func layout() {
+    override func layout() {
         cancelButton.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(14)
             $0.leading.equalToSuperview().inset(24)
@@ -241,7 +240,7 @@ public class BlogViewController: BaseViewController, BlogModalViewControllerDele
 }
 
 extension BlogViewController: UITextViewDelegate {
-    public func textViewDidBeginEditing(_ textView: UITextView) {
+    func textViewDidBeginEditing(_ textView: UITextView) {
         if textView == titleTextView {
             titlePlaceholderText.isHidden = true
         } else if textView == detailTextView {
@@ -249,7 +248,7 @@ extension BlogViewController: UITextViewDelegate {
         }
     }
 
-    public func textViewDidChange(_ textView: UITextView) {
+    func textViewDidChange(_ textView: UITextView) {
         if textView == titleTextView {
             if titleTextView.text.count > 25 {
                 titleTextView.text = String(titleTextView.text.prefix(25))
@@ -263,7 +262,7 @@ extension BlogViewController: UITextViewDelegate {
         }
     }
 
-    public func textViewDidEndEditing(_ textView: UITextView) {
+    func textViewDidEndEditing(_ textView: UITextView) {
         if textView == titleTextView {
             titlePlaceholderText.isHidden = !titleTextView.text.isEmpty
         } else if textView == detailTextView {
@@ -283,7 +282,7 @@ extension BlogViewController: UIImagePickerControllerDelegate, UINavigationContr
         }
     }
 
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let selectedImage = info[.originalImage] as? UIImage {
             addImageView(with: selectedImage)
         }
@@ -294,7 +293,7 @@ extension BlogViewController: UIImagePickerControllerDelegate, UINavigationContr
         numberCountLabel.text = "\(selectedImages.count)/\(maxImageCount)"
     }
 
-    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
     private func addImageView(with image: UIImage) {

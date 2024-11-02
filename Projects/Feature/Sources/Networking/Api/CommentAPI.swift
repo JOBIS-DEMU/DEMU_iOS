@@ -8,24 +8,20 @@ enum CommentAPI {
     case commentDelete(commentId: Int)
 }
 
-
 extension CommentAPI: TargetType {
     var baseURL: URL {
         return URL(string: "http://3.37.219.136:8080")!
     }
-    
-    
+
     var path: String {
         switch self {
         case .commentCreat(let postId):
-            return "/comment/create/{post-id}"
+            return "/comment/create/\(postId)"
         case .commentDelete(let commentId):
-            return "/comment/delete/{comment-id}"
+            return "/comment/delete/\(commentId)"
         }
     }
-    
-    
-    
+
     var method: Moya.Method {
         switch self {
         case .commentDelete:
@@ -35,7 +31,6 @@ extension CommentAPI: TargetType {
         }
     }
  
-    
     var task: Moya.Task {
         switch self {
         case .commentCreat(let content):
@@ -49,7 +44,7 @@ extension CommentAPI: TargetType {
             return .requestPlain
         }
     }
-    
+
     var headers: [String : String]? {
         switch self {
         case .commentCreat, .commentDelete:
