@@ -19,4 +19,13 @@ extension PostAPI: TargetType {
             return "/post/create"
         }
     }
+    
+    
+    
+    var method: Moya.Method {
+        switch self {
+        default:
+            return .post
+        }
+    }
 }
