@@ -11,12 +11,12 @@ class SearchCell: UITableViewCell {
         $0.clipsToBounds = true
         $0.backgroundColor = .systemGray5
     }
-    private let ProfileImageView = UIImageView().then {
+    private let profileImageView = UIImageView().then {
         $0.image = UIImage.profile
         $0.layer.cornerRadius = 12
         $0.layer.masksToBounds = true
     }
-    private let NameLabel = UILabel().then {
+    private let nameLabel = UILabel().then {
         $0.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
         $0.textColor = .black
     }
@@ -66,8 +66,8 @@ class SearchCell: UITableViewCell {
     
     private func addView() {
         [
-            ProfileImageView,
-            NameLabel,
+            profileImageView,
+            nameLabel,
             levelImageView,
             logoImageView,
             titleLabel,
@@ -79,20 +79,20 @@ class SearchCell: UITableViewCell {
     }
     
     private func layout() {
-        ProfileImageView.snp.makeConstraints {
+        profileImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(26)
             $0.leading.equalToSuperview().offset(14)
             $0.height.width.equalTo(24)
         }
         
-        NameLabel.snp.makeConstraints {
+        nameLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(29)
-            $0.leading.equalTo(ProfileImageView.snp.trailing).offset(4)
+            $0.leading.equalTo(profileImageView.snp.trailing).offset(4)
         }
         
         levelImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(30)
-            $0.leading.equalTo(NameLabel.snp.trailing).offset(4)
+            $0.leading.equalTo(nameLabel.snp.trailing).offset(4)
             $0.height.equalTo(16)
             $0.width.equalTo(15)
         }
@@ -104,7 +104,7 @@ class SearchCell: UITableViewCell {
         }
         
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(NameLabel.snp.bottom).offset(12)
+            $0.top.equalTo(nameLabel.snp.bottom).offset(12)
             $0.leading.equalToSuperview().offset(14)
             $0.width.equalTo(220)
         }
@@ -134,7 +134,7 @@ class SearchCell: UITableViewCell {
     
     func configure(imageName: String, description: String, level: String, title: String) {
         logoImageView.image = UIImage(named: imageName)
-        NameLabel.text = description
+        nameLabel.text = description
         levelImageView.image = UIImage.bronze
         titleLabel.text = title
     }
