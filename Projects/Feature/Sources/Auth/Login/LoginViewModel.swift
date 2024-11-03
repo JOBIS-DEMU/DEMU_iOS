@@ -24,7 +24,7 @@ class LoginViewModel: ViewModelType {
         input.doneTap.withLatestFrom(info).asObservable()
             .flatMap {
                 email, password in
-                api.login(email, password)
+                api.login(email+"@dsm.hs.kr", password)
             }
             .subscribe(onNext: { res in
                 switch res {
