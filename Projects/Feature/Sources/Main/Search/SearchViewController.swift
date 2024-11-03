@@ -25,13 +25,11 @@ class SearchViewController: BaseViewController {
         $0.font = .systemFont(ofSize: 22, weight: .medium)
         $0.textColor = .black
     }
-    
     private let moreLabel = UILabel().then {
         $0.text = "더 많은 지식을 찾아봐요!"
         $0.font = .systemFont(ofSize: 14, weight: .medium)
         $0.textColor = .lightGray
     }
-    
     private var allSearchResults: [SearchResult] = [
         SearchResult(imageName: "image", description: "작성자1", level: "bronze", title: "테스트 게시글1"),
         SearchResult(imageName: "image", description: "작성자2", level: "bronze", title: "테스트 게시글2"),
@@ -63,7 +61,6 @@ class SearchViewController: BaseViewController {
             self.navigationItem.hidesBackButton = true
         }
     }
-    
     override func addView() {
         [
             searchBar,
@@ -72,19 +69,16 @@ class SearchViewController: BaseViewController {
             moreLabel
         ].forEach { view.addSubview($0) }
     }
-    
     override func layout() {
         searchBar.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.leading.trailing.equalToSuperview().inset(24)
         }
-        
         tableView.snp.makeConstraints {
             $0.top.equalTo(searchBar.snp.bottom).offset(8)
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview()
         }
-        
         curiousLabel.snp.makeConstraints {
             $0.top.equalTo(searchBar.snp.bottom).offset(243)
             $0.centerX.equalToSuperview()
@@ -95,7 +89,6 @@ class SearchViewController: BaseViewController {
             $0.centerX.equalToSuperview()
         }
     }
-    
     private func updateLabel() {
         curiousLabel.isHidden = !searchResult.isEmpty
         moreLabel.isHidden = !searchResult.isEmpty
@@ -106,12 +99,10 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchResult.count
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchCell.identifier, for: indexPath) as? SearchCell else {
             return UITableViewCell()
         }
-        
         let result = searchResult[indexPath.row]
         cell.configure(imageName: result.imageName,
                       description: result.description,
@@ -132,7 +123,6 @@ extension SearchViewController: UISearchBarDelegate {
         } else {
             searchResult = []
         }
-        
         updateLabel()
         tableView.reloadData()
     }
