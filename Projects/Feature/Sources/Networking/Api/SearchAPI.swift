@@ -10,7 +10,7 @@ enum SearchAPI {
 
 extension SearchAPI: TargetType {
     var baseURL: URL {
-        return URL(string: "http://3.37.219.136:8080")!
+        return URL(string: "3.37.25.126:8080")!
     }
 
     var path: String {

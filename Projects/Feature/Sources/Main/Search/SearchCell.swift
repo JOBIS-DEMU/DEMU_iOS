@@ -3,7 +3,119 @@ import DesignSystem
 import Core
 import SnapKit
 import Then
-
 class SearchCell: UITableViewCell {
     static let identifier: String = "SearchCell"
+    private let logoImageView = UIImageView().then {
+        $0.contentMode = .scaleAspectFit
+        $0.layer.cornerRadius = 10
+        $0.clipsToBounds = true
+        $0.backgroundColor = .systemGray5
+    }
+    private let profileImageView = UIImageView().then {
+        $0.image = UIImage.profile
+        $0.layer.cornerRadius = 12
+        $0.layer.masksToBounds = true
+    }
+    private let nameLabel = UILabel().then {
+        $0.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
+        $0.textColor = .black
+    }
+    private let levelImageView = UIImageView()
+    private let titleLabel = UILabel().then {
+        $0.font = .systemFont(ofSize: 12, weight: .semibold)
+    }
+    private let heartButton = UIButton().then {
+        $0.setImage(UIImage.heart, for: .normal)
+    }
+    private let heartNumberLabel = UILabel().then {
+        $0.text = "16"
+        $0.textColor = UIColor.textField
+        $0.font = .systemFont(ofSize: 9, weight: .semibold)
+    }
+    private let commentButton = UIButton().then {
+        $0.setImage(UIImage.comment, for: .normal)
+    }
+    private let commentNumberLabel = UILabel().then {
+        $0.text = "16"
+        $0.textColor = UIColor.textField
+        $0.font = .systemFont(ofSize: 9, weight: .semibold)
+    }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        contentView.backgroundColor = UIColor.white
+        self.backgroundColor = .background
+        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0))
+    }
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        addView()
+        layout()
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    private func addView() {
+        [
+            profileImageView,
+            nameLabel,
+            levelImageView,
+            logoImageView,
+            titleLabel,
+            heartButton,
+            heartNumberLabel,
+            commentButton,
+            commentNumberLabel
+        ].forEach { contentView.addSubview($0) }
+    }
+    private func layout() {
+        profileImageView.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(26)
+            $0.leading.equalToSuperview().offset(14)
+            $0.height.width.equalTo(24)
+        }
+        nameLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(29)
+            $0.leading.equalTo(profileImageView.snp.trailing).offset(4)
+        }
+        levelImageView.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(30)
+            $0.leading.equalTo(nameLabel.snp.trailing).offset(4)
+            $0.height.equalTo(16)
+            $0.width.equalTo(15)
+        }
+        logoImageView.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.trailing.equalToSuperview().inset(14)
+            $0.width.height.equalTo(102)
+        }
+        titleLabel.snp.makeConstraints {
+            $0.top.equalTo(nameLabel.snp.bottom).offset(12)
+            $0.leading.equalToSuperview().offset(14)
+            $0.width.equalTo(220)
+        }
+        heartButton.snp.makeConstraints {
+            $0.bottom.equalToSuperview().inset(26)
+            $0.leading.equalToSuperview().inset(14)
+            $0.height.equalTo(11)
+        }
+        heartNumberLabel.snp.makeConstraints {
+            $0.bottom.equalToSuperview().inset(27)
+            $0.leading.equalTo(heartButton.snp.trailing).offset(4)
+        }
+        commentButton.snp.makeConstraints {
+            $0.bottom.equalToSuperview().inset(26)
+            $0.leading.equalTo(heartNumberLabel.snp.trailing).offset(8)
+            $0.height.equalTo(11)
+        }
+        commentNumberLabel.snp.makeConstraints {
+            $0.bottom.equalToSuperview().inset(27)
+            $0.leading.equalTo(commentButton.snp.trailing).offset(4)
+        }
+    }
+    func configure(imageName: String, description: String, level: String, title: String) {
+        logoImageView.image = UIImage(named: imageName)
+        nameLabel.text = description
+        levelImageView.image = UIImage.bronze
+        titleLabel.text = title
+    }
 }
