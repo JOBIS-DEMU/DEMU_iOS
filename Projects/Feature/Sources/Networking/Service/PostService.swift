@@ -42,9 +42,6 @@ final class PostService {
                 return .deleteOk
             }
     }
-//    func loadPost() -> Single<(PostModel?, NetworkingResult)> {
-//        
-//    }
 
     func setNetworkError(_ error: Error) -> NetworkingResult {
            print(error)
