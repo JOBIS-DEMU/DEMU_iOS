@@ -23,7 +23,7 @@ class HomeModalViewController: BaseViewController, UITableViewDelegate, UITableV
         $0.textColor = .main1
     }
 
-    public override func addView() {
+    override func addView() {
         [
             titleLabel,
             tableView
@@ -38,7 +38,7 @@ class HomeModalViewController: BaseViewController, UITableViewDelegate, UITableV
         tableView.allowsMultipleSelection = false
     }
 
-    public override func layout() {
+    override func layout() {
         titleLabel.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.centerX.equalToSuperview()
@@ -50,18 +50,18 @@ class HomeModalViewController: BaseViewController, UITableViewDelegate, UITableV
         }
     }
 
-    internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return major.count
     }
 
-    internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "HomeModalCell", for: indexPath) as? HomeModalCell else { return UITableViewCell() }
         cell.selectionStyle = .none
         cell.titleLabel.text = major[indexPath.row]
         return cell
     }
 
-    internal func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let previousIndexPath = selectedIndexPath {
             guard let previousCell = tableView.cellForRow(at: previousIndexPath) as? HomeModalCell else { return }
             previousCell.titleLabel.textColor = UIColor.textField

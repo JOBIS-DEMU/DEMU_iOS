@@ -19,7 +19,7 @@ class EmailSendViewModel: ViewModelType {
     func transform(_ input: Input) -> Output {
         let api = AuthService()
         let result = PublishRelay<Bool>()
-        
+
         input.doneTap.asObservable()
             .withLatestFrom(input.email)
             .flatMap{ email in

@@ -11,7 +11,7 @@ public class OnboardingViewController: BaseViewController {
     let gradietView = UIView()
     let gradietLayer = CAGradientLayer()
 
-    private let method = UILabel().then {
+    private let methodLabel = UILabel().then {
         $0.textColor = .white
         $0.text = "대마고에서\n살아 남는 방법"
         $0.numberOfLines = 0
@@ -46,7 +46,7 @@ public class OnboardingViewController: BaseViewController {
     public override func addView() {
         view.addSubview(gradietView)
         [
-            method,
+            methodLabel,
             logoImageView,
             startButton
         ].forEach { gradietView.addSubview($0) }
@@ -56,8 +56,8 @@ public class OnboardingViewController: BaseViewController {
         gradietView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-        method.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).inset(40)
+        methodLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(80)
             $0.leading.equalToSuperview().inset(30)
         }
         logoImageView.snp.makeConstraints {
