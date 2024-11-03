@@ -111,6 +111,9 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         cell.selectionStyle = .none
         return cell
     }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.navigationController?.pushViewController(PostViewController(), animated: true)
+    }
 }
 
 extension SearchViewController: UISearchBarDelegate {
