@@ -5,21 +5,18 @@ import SnapKit
 import Then
 class SearchCell: UITableViewCell {
     static let identifier: String = "SearchCell"
-    
     private let logoImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFit
         $0.layer.cornerRadius = 10
         $0.clipsToBounds = true
         $0.backgroundColor = .systemGray5
     }
-    
-    private let writerProfileImageView = UIImageView().then {
+    private let ProfileImageView = UIImageView().then {
         $0.image = UIImage.profile
         $0.layer.cornerRadius = 12
         $0.layer.masksToBounds = true
     }
-    
-    private let writerNameLabel = UILabel().then {
+    private let NameLabel = UILabel().then {
         $0.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
         $0.textColor = .black
     }
@@ -43,7 +40,6 @@ class SearchCell: UITableViewCell {
     private let commentButton = UIButton().then {
         $0.setImage(UIImage.comment, for: .normal)
     }
-    
     private let commentNumberLabel = UILabel().then {
         $0.text = "16"
         $0.textColor = UIColor.textField
@@ -52,7 +48,6 @@ class SearchCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
         contentView.backgroundColor = UIColor.white
         self.backgroundColor = .background
         contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0))
@@ -71,8 +66,8 @@ class SearchCell: UITableViewCell {
     
     private func addView() {
         [
-            writerProfileImageView,
-            writerNameLabel,
+            ProfileImageView,
+            NameLabel,
             levelImageView,
             logoImageView,
             titleLabel,
@@ -84,20 +79,20 @@ class SearchCell: UITableViewCell {
     }
     
     private func layout() {
-        writerProfileImageView.snp.makeConstraints {
+        ProfileImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(26)
             $0.leading.equalToSuperview().offset(14)
             $0.height.width.equalTo(24)
         }
         
-        writerNameLabel.snp.makeConstraints {
+        NameLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(29)
-            $0.leading.equalTo(writerProfileImageView.snp.trailing).offset(4)
+            $0.leading.equalTo(ProfileImageView.snp.trailing).offset(4)
         }
         
         levelImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(30)
-            $0.leading.equalTo(writerNameLabel.snp.trailing).offset(4)
+            $0.leading.equalTo(NameLabel.snp.trailing).offset(4)
             $0.height.equalTo(16)
             $0.width.equalTo(15)
         }
@@ -109,7 +104,7 @@ class SearchCell: UITableViewCell {
         }
         
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(writerNameLabel.snp.bottom).offset(12)
+            $0.top.equalTo(NameLabel.snp.bottom).offset(12)
             $0.leading.equalToSuperview().offset(14)
             $0.width.equalTo(220)
         }
@@ -139,7 +134,7 @@ class SearchCell: UITableViewCell {
     
     func configure(imageName: String, description: String, level: String, title: String) {
         logoImageView.image = UIImage(named: imageName)
-        writerNameLabel.text = description
+        NameLabel.text = description
         levelImageView.image = UIImage.bronze
         titleLabel.text = title
     }
