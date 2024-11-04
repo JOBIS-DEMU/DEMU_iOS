@@ -94,10 +94,12 @@ class BlogViewController: BaseViewController, BlogModalViewControllerDelegate {
     }
 
     override func bind() {
+        let imagesData = selectedImages.compactMap { $0.image?.jpegData(compressionQuality: 0.8) }
         let input = BlogViewModel.Input(
             title: titleTextView.rx.text.orEmpty.asDriver(),
             content: detailTextView.rx.text.orEmpty.asDriver(),
             major: Driver.just(dropDownLabel.text ?? ""),
+            images: Driver.just(imagesData),
             doneTap: checkButton.rx.tap.asSignal()
         )
         let output = viewModel.transform(input)

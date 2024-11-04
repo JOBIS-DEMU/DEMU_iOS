@@ -10,6 +10,7 @@ class BlogViewModel: ViewModelType {
         let title: Driver<String>
         let content: Driver<String>
         let major: Driver<String>
+        let images: Driver<[Data]>
         let doneTap: Signal<Void>
     }
 
@@ -19,12 +20,12 @@ class BlogViewModel: ViewModelType {
 
     func transform(_ input: Input) -> Output {
         let api = PostService()
-        let info = Driver.combineLatest(input.title, input.content, input.major)
+        let info = Driver.combineLatest(input.title, input.content, input.major, input.images)
         let result = PublishRelay<Bool>()
 
         input.doneTap.withLatestFrom(info).asObservable()
-            .flatMapLatest { title, content, major in
-                api.postCreate(title, content: content, major: major.uppercased())
+            .flatMapLatest { title, content, major, images in
+                api.postCreate(title, content: content, major: major.uppercased(), images: images)
             }
             .subscribe(onNext: { res in
                 switch res {

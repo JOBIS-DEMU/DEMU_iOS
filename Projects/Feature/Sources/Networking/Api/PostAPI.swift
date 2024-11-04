@@ -4,7 +4,7 @@ import RxCocoa
 import Moya
 
 enum PostAPI {
-    case postCreate(title: String, content: String, major: String)
+    case postCreate(title: String, content: String, major: String, images: [Data])
     case postFix(content: String, title: String, major: String)
     case postSuggestion(postId: Int)
     case postCheck(postId: Int)
@@ -36,7 +36,7 @@ extension PostAPI: TargetType {
             return "/post/grade"
         }
     }
-
+    
     var method: Moya.Method {
         switch self {
         case .postFix, .postRate:
@@ -49,22 +49,47 @@ extension PostAPI: TargetType {
             return .post
         }
     }
-
+    
     var task: Moya.Task {
         switch self {
-        case .postCreate(let title, let content, let major):
-            return .requestParameters(
-                parameters: [
+        case .postCreate(let title, let content, let major, let images):
+            var formData = [MultipartFormData]()
+            if let jsonData = try? JSONSerialization.data(
+                withJSONObject: [
                     "title": title,
                     "content": content,
                     "major": major
-                ], encoding: JSONEncoding.default
-            )
+                ],
+                options: []
+            ) {
+                let jsonPart = MultipartFormData(provider: .data(jsonData), name: "post", mimeType: "application/json")
+                formData.append(jsonPart)
+            }
+
+            for (index, imageData) in images.enumerated() {
+                let imagePart = MultipartFormData(
+                    provider: .data(imageData),
+                    name: "images",
+                    fileName: "image\(index).jpg",
+                    mimeType: "image/jpeg"
+                )
+                formData.append(imagePart)
+            }
+
+            return .uploadMultipart(formData)
+            //            var formData = [MultipartFormData]()
+            //            return .requestParameters(
+            //                parameters: [
+            //                    "title": title,
+            //                    "content": content,
+            //                    "major": major
+            //                ], encoding: JSONEncoding.default
+            //            )
         default:
             return .requestPlain
         }
     }
-
+    
     var headers: [String: String]? {
         switch self {
         case .postCreate, .postFix, .postSuggestion, .postCheck, .postUserCheck, .postDelete, .postRate:
