@@ -7,77 +7,38 @@ import RxSwift
 import RxCocoa
 
 class MoreViewController: UIViewController {
-   private let tableView = UITableView(frame: .zero, style: .grouped).then {
-       $0.backgroundColor = .systemGray6
-       $0.separatorStyle = .none
-       $0.register(MoreTableViewCell.self, forCellReuseIdentifier: MoreTableViewCell.identifier)
-   }
-   private let section = ["수정하기", "게시물 삭제"]
-   override func viewDidLoad() {
-       super.viewDidLoad()
-       view.backgroundColor = .systemGray6
-       layOut()
-       setupConstraints()
-       setupTableView()
-   }
-   private func layOut() {
-       view.addSubview(tableView)
-   }
-   private func setupConstraints() {
-       tableView.snp.makeConstraints {
-           $0.edges.equalToSuperview()
-       }
-   }
-   private func setupTableView() {
-       tableView.delegate = self
-       tableView.dataSource = self
-   }
-   private func showAlert(for section: Int) {
-       let title = section == 0 ? "수정하기" : "게시물 삭제"
-       let message = section == 0 ? "게시물을 수정하시겠습니까?" : "게시물을 삭제하시겠습니까?"
-       let alertStyle: UIAlertController.Style = .alert
-       let alert = UIAlertController(title: title, message: message, preferredStyle: alertStyle)
-       let confirmTitle = section == 0 ? "수정" : "삭제"
-       let confirmAction = UIAlertAction(title: confirmTitle, style: section == 0 ? .default : .destructive) { [weak self] _ in
-           if section == 0 {
-               // 수정로직
-           } else {
-               // 삭제로직
-           }
-       }
-       let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-       alert.addAction(cancelAction)
-       alert.addAction(confirmAction)
-       present(alert, animated: true)
-   }
-}
+    @objc public func didTapMoreButton() {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let editAction = UIAlertAction(title: "수정하기", style: .default) { _ in
+            print("수정뷰 ㄱㄱ")
+        }
+        let deleteAction = UIAlertAction(title: "게시물 삭제", style: .destructive) { _ in
+            self.showAlert()
+        }
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
 
-extension MoreViewController: UITableViewDataSource, UITableViewDelegate {
-   func numberOfSections(in tableView: UITableView) -> Int {
-       return section.count
-   }
-   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       return 1
-   }
-   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-       guard let cell = tableView.dequeueReusableCell(withIdentifier: MoreTableViewCell.identifier, for: indexPath) as? MoreTableViewCell else {
-           return UITableViewCell()
-       }
-       let title = section[indexPath.section]
-       cell.configure(with: title)
-       return cell
-   }
-   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-       return 50
-   }
-   func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-       return UIView()
-   }
-   func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-       return section == 0 ? 0 : 1
-   }
-   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       tableView.deselectRow(at: indexPath, animated: true)
-       showAlert(for: indexPath.section)
-   }
+        alertController.addAction(editAction)
+        alertController.addAction(deleteAction)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+
+    private func showAlert() {
+        let title = "게시물을 삭제하시겠습니까?"
+        let message = "삭제하면 다시 복구할 수 없습니다"
+        let alertStyle: UIAlertController.Style = .alert
+        let alert = UIAlertController(title: title, message: message, preferredStyle: alertStyle)
+        let confirmAction = UIAlertAction(title: "삭제", style: .destructive) {_ in
+            self.cancel()
+        }
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        alert.addAction(cancelAction)
+        alert.addAction(confirmAction)
+        present(alert, animated: true)
+    }
+
+    private func cancel() {
+        print("게시물이 삭제되었따 ㅋㅋㄹㅃㅃ")
+    }
 }
