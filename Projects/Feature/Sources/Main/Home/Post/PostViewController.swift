@@ -104,8 +104,14 @@ class PostViewController: BaseViewController, UIScrollViewDelegate {
                 self.isHeartSelected.toggle()
                 if self.isHeartSelected {
                     self.heartImageView.image = UIImage.heartFilled
+                    if let heartText = self.heartNumberLabel.text, let heartNumber = Int(heartText) {
+                        self.heartNumberLabel.text = String(heartNumber + 1)
+                    }
                 } else {
                     self.heartImageView.image = UIImage.heart
+                    if let heartText = self.heartNumberLabel.text, let heartNumber = Int(heartText) {
+                        self.heartNumberLabel.text = String(heartNumber - 1)
+                    }
                 }
             })
             .disposed(by: disposeBag)
