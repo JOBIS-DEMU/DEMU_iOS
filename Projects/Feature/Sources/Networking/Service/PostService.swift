@@ -7,8 +7,8 @@ import RxMoya
 final class PostService {
     let provider = MoyaProvider<PostAPI>(plugins: [MoyaLoggerPlugin()])
 
-    func postCreate(_ title: String, content: String, major: String) -> Single<NetworkingResult> {
-        return provider.rx.request(.postCreate(title: title, content: content, major: major))
+    func postCreate(_ title: String, content: String, major: String, images: [Data]) -> Single<NetworkingResult> {
+        return provider.rx.request(.postCreate(title: title, content: content, major: major, images: images))
             .filterSuccessfulStatusCodes()
             .map{ _ -> NetworkingResult in
                 print("Success")
