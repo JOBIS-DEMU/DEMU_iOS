@@ -8,6 +8,7 @@ import RxCocoa
 
 class NickNameChangeViewController: BaseViewController {
 
+    private let viewModel = NickNameViewModel()
     private let disposeBag = DisposeBag()
 
     private let backButton = UIButton().then {
@@ -31,14 +32,45 @@ class NickNameChangeViewController: BaseViewController {
         tabBarController?.tabBar.isHidden = true
     }
 
+    override func bind() {
+        let input = NickNameViewModel.Input(
+            nickname: nickNameTextField.textField.rx.text.orEmpty.asDriver(),
+            doneTap: finishButton.button.rx.tap.asSignal()
+        )
+        let output = viewModel.transform(input)
+
+        input.doneTap
+            .withLatestFrom(input.nickname)
+            .asObservable()
+            .flatMap { nickname -> Observable<Void> in
+                if nickname.count < 3 || nickname.count > 10 {
+                    self.nickNameTextField.errorLabel.text = "닉네임은 3~10자여야 합니다."
+                    return Observable.empty()
+                } else {
+                    self.nickNameTextField.errorLabel.text = ""
+                    return Observable.just(())
+                }
+            }
+            .flatMapLatest { _ in
+                output.result.asObservable()
+                    .do(onNext: { bool in
+                        print("API Result: \(bool)")
+                    })
+            }
+            .subscribe(onNext: { bool in
+                if bool {
+                    self.navigationController?.popViewController(animated: true)
+                    self.tabBarController?.tabBar.isHidden = false
+                    print("성공")
+                } else {
+                    self.nickNameTextField.errorLabel.text = "이미 있는 닉네임 입니다."
+                    print("실패")
+                }
+            }).disposed(by: disposeBag)
+    }
+
     override func bindAction() {
         backButton.rx.tap
-            .bind {
-                self.navigationController?.popViewController(animated: true)
-                self.tabBarController?.tabBar.isHidden = false
-            }
-            .disposed(by: disposeBag)
-        finishButton.button.rx.tap
             .bind {
                 self.navigationController?.popViewController(animated: true)
                 self.tabBarController?.tabBar.isHidden = false
