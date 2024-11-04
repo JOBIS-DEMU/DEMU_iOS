@@ -10,11 +10,14 @@ final class UserService {
     func nickname(_ nickname: String) -> Single<NetworkingResult> {
         return provider.rx.request(.nickname(nickname: nickname))
             .filterSuccessfulStatusCodes()
-            .map{ _ -> NetworkingResult in
+            .map { _ in
                 print("Success")
                 return .ok
             }
-            .catch{[unowned self] in return .just(setNetworkError($0))}
+            .catch { [weak self] error in
+                guard let self = self else { return .just(.fault) }
+                return .just(self.setNetworkError(error))
+            }
     }
 
     func setNetworkError(_ error: Error) -> NetworkingResult {
