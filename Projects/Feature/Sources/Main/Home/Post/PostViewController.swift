@@ -314,6 +314,7 @@ extension PostViewController {
     }
 
     private func cancel() {
-        print("게시물이 삭제되었따 ㅋㅋㄹㅃㅃ")
+        let vc = TabBarController()
+        self.navigationController?.popViewController(animated: true)
     }
 }

@@ -40,4 +40,5 @@ public extension UIImage {
     static let more = DesignSystemAsset.demuMore.image
     static let heartFilled = DesignSystemAsset.demuHeartFilled.image
     static let before = DesignSystemAsset.demuBefore.image
+    static let mandoo = DesignSystemAsset.demuMandoo.image
 }
