@@ -12,18 +12,26 @@ class NickNameViewModel: ViewModelType {
     }
 
     struct Output {
-        let result: PublishRelay<NetworkingResult>
+        let result: PublishRelay<Bool>
     }
 
     func transform(_ input: Input) -> Output {
+        print("Transform called")
         let api = UserService()
-        let result = PublishRelay<NetworkingResult>()
+        let result = PublishRelay<Bool>()
 
-        input.doneTap.withLatestFrom(input.nickname).asObservable()
+        input.doneTap.asObservable()
+            .withLatestFrom(input.nickname)
             .flatMap { nickname in
                 api.nickname(nickname)
-            }
-            .bind(to: result)
+            }.subscribe(onNext: { res in
+                switch res {
+                case .ok:
+                    result.accept(true)
+                default:
+                    result.accept(false)
+                }
+            })
             .disposed(by: disposeBag)
         return Output(result: result)
     }
